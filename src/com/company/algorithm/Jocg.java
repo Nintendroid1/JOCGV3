@@ -54,28 +54,28 @@ public class Jocg {
                  */
                 tempE = new HashMap<>();
                 path = new LinkedList<>();
-                newdfs(v,null);
-//                if(newdfs(v)){
-//                    HashSet<Graph> affectedP = new HashSet<>();
-//                    for(Vertex u:path){
-//                        affectedP.add(u.piece);
-//                    }
-//                    for(Vertex a:tempE.keySet()){
-//                        for(Vertex b:new HashSet<>(tempE.get(a))){
-//                            if(!(affectedP.contains(a.piece) && affectedP.contains(b.piece))){
-//                                tempE.get(a).remove(b);
-//                            }
-//                        }
-//                    }
-//                }
-//                for(Vertex a:tempE.keySet()){
-//                    if(!visitedE.containsKey(a)){
-//                        visitedE.put(a,tempE.get(a));
-//                    }
-//                    else{
-//                        visitedE.get(a).addAll(tempE.get(a));
-//                    }
-//                }
+                //newdfs(v,null);
+                if(newdfs(v,null)){
+                    HashSet<Graph> affectedP = new HashSet<>();
+                    for(Vertex u:path){
+                        affectedP.add(u.piece);
+                    }
+                    for(Vertex a:tempE.keySet()){
+                        for(Vertex b:new HashSet<>(tempE.get(a))){
+                            if(!(affectedP.contains(a.piece) && affectedP.contains(b.piece))){
+                                tempE.get(a).remove(b);
+                            }
+                        }
+                    }
+                }
+                for(Vertex a:tempE.keySet()){
+                    if(!visitedE.containsKey(a)){
+                        visitedE.put(a,tempE.get(a));
+                    }
+                    else{
+                        visitedE.get(a).addAll(tempE.get(a));
+                    }
+                }
             }
         }
     }
@@ -137,11 +137,11 @@ public class Jocg {
             return true;
         }
 
-        if(!visitedE.containsKey(v)){
-            visitedE.put(v,new HashSet<>());
+        if(!tempE.containsKey(v)){
+            tempE.put(v,new HashSet<>());
         }
         if(parent != null){
-            visitedE.get(v).add(parent);
+            tempE.get(v).add(parent);
         }
 
 
@@ -156,7 +156,7 @@ public class Jocg {
 //                    continue;
 //                }
 
-                if(containE(visitedE,u.matching,u)){
+                if(containE(visitedE,u.matching,u) || containE(tempE,u.matching,u)){
                     continue;
                 }
 
