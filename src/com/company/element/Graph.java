@@ -54,6 +54,13 @@ public class Graph {
         }
     }
 
+    public void resetVisit(){
+        for(Vertex v:vertices){
+            v.visitedE = new HashSet<>();
+            v.tempE = new HashSet<>();
+        }
+    }
+
     public int matchCount(){
         assert freeV(Label.A).size() == freeV(Label.B).size();
         assert  freeV(null).size()%2 == 0;

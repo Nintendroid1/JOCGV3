@@ -26,7 +26,7 @@ public class EuclideanGen {
 
     public Graph generate(int num, double large,double middle, double small, double bottleneck){
         /*
-         * 随机种子
+         * random seed
          */
         Random r = new Random(seed);
 
@@ -39,12 +39,6 @@ public class EuclideanGen {
          * step表示一个middle行中有几个small square
          * hstep表示一个完整行中有几个samll square
          */
-
-        int b = (int)(middle%small);
-
-        int a = 0;
-
-
         assert (int)(large%middle) == 0;
         assert (int)(middle%small) == 0;
         assert bottleneck < middle;

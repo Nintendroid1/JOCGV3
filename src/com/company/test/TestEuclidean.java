@@ -3,6 +3,7 @@ package com.company.test;
 import com.company.algorithm.Hop;
 import com.company.algorithm.Jocg;
 import com.company.algorithm.Jocg_ND;
+import com.company.algorithm.Jocg_OPT;
 import com.company.element.Graph;
 import com.company.generator.EuclideanGen;
 
@@ -24,15 +25,14 @@ public class TestEuclidean {
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
-        int step = 1000;
-        for(int i = 1000; i <= 10000; i+=1000){
+        for(int i = 80000; i <= 80000; i+=1000){
             double timeElapsedHop = 0;
             double timeElapsedJocg = 0;
-            int times = 1;
+            int times = 5;
             for(int time = 0; time < times; time++){
                 System.out.println("|V| = " + 2*i);
                 EuclideanGen euclideanGen = new EuclideanGen(100);
-                Graph graph = euclideanGen.generate(i,80,20,0.01,5);
+                Graph graph = euclideanGen.generate(i,80,20,0.01,0.1);
                 //TestGraph.ifValid(graph);
 
 //                EuclideanGen euclideanGen = new EuclideanGen(100);
@@ -44,16 +44,10 @@ public class TestEuclidean {
                 long finishh = System.currentTimeMillis();
                 timeElapsedHop += finishh - starth;
                 int hopMatchCount = graph.matchCount();
+
                 graph.resetMatch();
                 //matchingTable_Hop.printMatching();
                 assert graph.matchCount() == 0;
-
-//                graph.resetMatch();
-//                Jocg_ND jocgnd = new Jocg_ND(graph);
-//                jocgnd.start();
-//                int ndMatchCount = graph.matchCount();
-//                assert ndMatchCount == hopMatchCount;
-
 
                 graph.resetMatch();
                 long startj = System.currentTimeMillis();
@@ -65,6 +59,7 @@ public class TestEuclidean {
                 System.out.println(hop.iterate);
                 System.out.println(jocg.iterate);
                 assert joMatchCount == hopMatchCount;
+                //assert hop.iterate >= jocg.iterate;
 
 
 

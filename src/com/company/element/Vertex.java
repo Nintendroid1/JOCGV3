@@ -9,6 +9,8 @@ public class Vertex {
     public Vertex matching;
     public Graph piece;
     public boolean explored;
+    public HashSet<Vertex> visitedE;
+    public HashSet<Vertex> tempE;
 
     public Vertex(int id, Label label){
         this.id = id;
