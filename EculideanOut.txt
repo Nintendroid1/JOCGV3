@@ -1,1 +1,21 @@
-80000 1.3147792706333972
+|V| = 100000 bottleneck = 1.0 times = 20
+average Edge number: 303507.15
+average Matching number: 24537.65
+average Jocg: 1173.55
+average Hop: 1211.35
+average Jocg/Hop: 0.9687951459115863
+----------------------------------------------------------
+|V| = 100000 bottleneck = 0.1 times = 20
+average Edge number: 3067.15
+average Matching number: 2736.65
+average Jocg: 46.85
+average Hop: 37.6
+average Jocg/Hop: 1.2460106382978724
+----------------------------------------------------------
+|V| = 100000 bottleneck = 0.01 times = 20
+average Edge number: 31.0
+average Matching number: 30.8
+average Jocg: 22.35
+average Hop: 22.8
+average Jocg/Hop: 0.9802631578947368
+----------------------------------------------------------

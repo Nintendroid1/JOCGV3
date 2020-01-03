@@ -45,7 +45,9 @@ public class EuclideanGen {
         assert (int)(bottleneck%(2*small)) == 0;
 
         int step = (int)(middle/small);
-        int hstep = (int)(large/small);;
+        int hstep = (int)(large/small);
+
+
 
         /*
          * 在side*side的square中生成2n个点
@@ -53,6 +55,7 @@ public class EuclideanGen {
          */
         ArrayList<Point> points = new ArrayList<>();
         HashMap<Point,Vertex> vertices = new HashMap<>();
+
         for(int i = 0; i < num; i++){
             Point point = new Point(r.nextDouble()*large,r.nextDouble()*large);
             points.add(point);
@@ -66,30 +69,30 @@ public class EuclideanGen {
         }
 
         //生成长度为bottleneck以下的edge
-        {
-            for(Point source:points){
-                HashSet<Vertex> edges = new HashSet<>();
-                for(Point target:points){
-                    //如果label相同，或者是source自身，则不计算距离
-                    if(source == target || vertices.get(source).label == vertices.get(target).label){
-                        continue;
-                    }
-                    double x = source.x - target.x;
-                    double y = source.y - target.y;
-                    double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
-                    if(d <= bottleneck){
-                        edges.add(vertices.get(target));
-                    }
-                }
-                vertices.get(source).edges = edges;
-            }
 
-            for(Vertex v:vertices.values()){
-                for(Vertex u:v.edges){
-                    assert v.hasEdgewith(u);
+        for(Point source:points){
+            HashSet<Vertex> edges = new HashSet<>();
+            for(Point target:points){
+                //如果label相同，或者是source自身，则不计算距离
+                if(source == target || vertices.get(source).label == vertices.get(target).label){
+                    continue;
                 }
+                double x = source.x - target.x;
+                double y = source.y - target.y;
+                double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                if(d <= bottleneck){
+                    edges.add(vertices.get(target));
+                }
+            }
+            vertices.get(source).edges = edges;
+        }
+
+        for(Vertex v:vertices.values()){
+            for(Vertex u:v.edges){
+                assert v.hasEdgewith(u);
             }
         }
+
 
 
 
@@ -270,7 +273,11 @@ public class EuclideanGen {
         Graph graph = new Graph();
         graph.vertices = new HashSet<>(vertices.values());
         graph.pieces = piecesset;
-
+        for(Vertex v:graph.vertices){
+            graph.edgeNum += v.edges.size();
+        }
+        assert graph.edgeNum%2 == 0;
+        graph.edgeNum = graph.edgeNum/2;
 
         return graph;
 
@@ -339,6 +346,7 @@ public class EuclideanGen {
         Graph graph = new Graph();
         graph.vertices = vertices;
         graph.pieces = ps;
+
 
         return graph;
     }
