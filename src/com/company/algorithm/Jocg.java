@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class Jocg {
+public class Jocg extends Algo{
 
-    int INF;
+    private int INF;
     Graph graph;
     HashMap<Vertex,Integer> dist;
     HashMap<Vertex,HashSet<Vertex>> visitedE;
@@ -31,13 +31,9 @@ public class Jocg {
 
         for(Graph g:graph.pieces) {
             Hop hop = new Hop(g);
+            hop.print = false;
             hop.start();
         }
-
-
-//        Hop hop = new Hop(graph);
-//        hop.mode = 1;
-//        hop.start();
 
         iterate = 0;
         while(newbfs()){
@@ -130,7 +126,7 @@ public class Jocg {
                 }
             }
         }
-        System.out.println("new bfs returns: " + dist.get(null));
+        System.out.println("Jocg bfs returns: " + dist.get(null));
         return dist.get(null) != INF;
     }
 

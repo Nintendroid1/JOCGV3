@@ -5,9 +5,11 @@ import java.util.HashSet;
 public class Graph {
     public HashSet<Vertex> vertices;
     public HashSet<Graph> pieces;
+    public int edgeNum;
     public Graph(){
         vertices = new HashSet<>();
         pieces = new HashSet<>();
+        edgeNum = 0;
     }
 
     public int getWeight(Vertex v, Vertex u){

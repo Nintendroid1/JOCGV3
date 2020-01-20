@@ -7,11 +7,12 @@ import com.company.element.Vertex;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class Hop {
+public class Hop extends Algo{
     private Graph graph;
     private HashMap<Vertex,Integer> dist;
     private Integer INF;
     public Integer iterate;
+    public boolean print;
     public Integer mode;
 
     public Hop(Graph graph){
@@ -20,6 +21,7 @@ public class Hop {
         this.INF = Integer.MAX_VALUE;
         this.mode = 0;
         this.iterate = 0;
+        this.print = true;
     }
 
     public void start(){
@@ -80,7 +82,10 @@ public class Hop {
             }
         }
         //In <dist.get(null)> != INF, means <null> has been explored, which means a free vertex has been explored
-        //System.out.println("Hop bfs returns: " + dist.get(null));
+        if(print){
+            System.out.println("Hop bfs returns: " + dist.get(null));
+        }
+
         return dist.get(null) != INF;
     }
 
