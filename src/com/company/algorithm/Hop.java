@@ -34,9 +34,14 @@ public class Hop {
     }
 
     private boolean bfs(){
+        //generate an empty queue
         LinkedList<Vertex> queue = new LinkedList<>();
         dist = new HashMap<>();
         dist.put(null,INF);
+
+        //set all free As' distance to 0, and push them to the queue
+        //set all un-free As' distance to INF
+        //Bs' distances are not stored since B->A is always unique (matching)
         for(Vertex v:graph.V(Label.A)){
             if(v.isFree()){
                 queue.addLast(v); dist.put(v,0);
@@ -45,7 +50,13 @@ public class Hop {
                 dist.put(v,INF);
             }
         }
+
+
         while (!queue.isEmpty()){
+            /*
+             * v (- A
+             * u (- B
+             */
             Vertex v = queue.pop();
             if(dist.get(v) < dist.get(null)){
                 for(Vertex u:v.edges){
@@ -92,7 +103,6 @@ public class Hop {
                     }
                 }
             }
-
         }
         //set the distance to the explored vertex to INF
         //so no explored vertex will be explored twice

@@ -31,7 +31,7 @@ public class EuclideanGen {
         Random r = new Random(seed);
 
         /*
-         * 定义grid
+         * define grid
          * side为middle的整数倍
          * middle为small的整数倍
          * bottleneck为2*small的整数倍
@@ -45,11 +45,11 @@ public class EuclideanGen {
         assert (int)(bottleneck%(2*small)) == 0;
 
         int step = (int)(middle/small);
-        int hstep = (int)(large/small);;
+        int hstep = (int)(large/small);
 
         /*
-         * 在side*side的square中生成2n个点
-         * 对每个点生成相应的vertex，储存在hashmap中
+         * generate 2n points in a side*side square
+         * generate vertex for each point, and store them in a hashmap
          */
         ArrayList<Point> points = new ArrayList<>();
         HashMap<Point,Vertex> vertices = new HashMap<>();
@@ -65,12 +65,12 @@ public class EuclideanGen {
 
         }
 
-        //生成长度为bottleneck以下的edge
+        //generate edges < bottleneck
         {
             for(Point source:points){
                 HashSet<Vertex> edges = new HashSet<>();
                 for(Point target:points){
-                    //如果label相同，或者是source自身，则不计算距离
+                    //if labels are same, or two vertexes are same, not calculate distance
                     if(source == target || vertices.get(source).label == vertices.get(target).label){
                         continue;
                     }
@@ -91,17 +91,14 @@ public class EuclideanGen {
             }
         }
 
-
-
-
-
         HashSet<Vertex>[][] cells = new HashSet[hstep][hstep];
         /*
-         *把每个points插入到所属的cell中
+         * each cell is a small*small square
+         * insert each point to its cel
          */
         {
             for (Point point : points) {
-                //找到所属的格子
+                //find the cell
                 int x = search(point.x, small);
                 int y = search(point.y, small);
                 assert point.x >= x * small && point.x <= (x + 1) * small;
@@ -114,8 +111,8 @@ public class EuclideanGen {
         }
 
         /*
-         * 统计各行各列的vertex数量
-         * 分别储存在horizontal和vertical中
+         * calculate #vertex in each row and column
+         * store the result in "horizontal" and "vertical"
          */
         HashMap<Integer,Integer> horizontal = new HashMap<>();
         HashMap<Integer,Integer> vertical = new HashMap<>();
@@ -149,7 +146,7 @@ public class EuclideanGen {
 
 
 
-        //找到最少的boundary point的组合
+        //find the combination with the least number of boundary points
         Integer bestBCx = Integer.MAX_VALUE;
         Integer idxx = null;
         Integer bestBCy = Integer.MAX_VALUE;
@@ -158,13 +155,13 @@ public class EuclideanGen {
 
         {
             /*
-             *x轴
+             *x axis
              */
             for(int i = 0; i < middle/small; i++){
                 int currBC = 0;
 
                 /*
-                 * 判断最左最右是否超出边界
+                 * determine if leftmost or rightmost still in the boundary
                  */
 
                 if(i - (bottleneck/small/2 - 1) - 1 < 0){
@@ -190,7 +187,7 @@ public class EuclideanGen {
 
 
             /*
-             *y轴
+             *y axis
              */
             for(int i = 0; i < middle/small; i++){
                 int currBC = 0;
@@ -218,14 +215,14 @@ public class EuclideanGen {
         assert idxx != null;
         assert idxy != null;
 
-        //知道bestx,besty之后开始assign weights
+        //assign weights with bestx,besty
 
 
         Graph[][] pieces = new Graph[(int)Math.pow(large/middle + 1,2)][(int)Math.pow(large/middle + 1,2)];
         HashMap<Vertex,Graph> piecesTable = new HashMap<>();
         HashSet<Graph> piecesset = new HashSet<>();
         {
-            //遍历所有的cell，根据他们的坐标算出对应的pieces
+            //iterate all cell, and assign pieces for all vertex in cells
             for(int i = 0; i < large/small; i++){
                 for(int j = 0; j < large/small; j++){
                     if(cells[i][j] == null){
@@ -239,9 +236,7 @@ public class EuclideanGen {
                     int x = (int)Math.floor(Math.floor(i-idxx)/step) + 1;
                     int y = (int)Math.floor(Math.floor(j-idxy)/step) + 1;
 
-                    /*
-                     * 每次需要新建piece的时候，也把piece加到pieceset里面
-                     */
+
                     if(pieces[x][y] == null){
                         pieces[x][y] = new Graph();
                         piecesset.add(pieces[x][y]);
@@ -257,7 +252,7 @@ public class EuclideanGen {
         }
 
 
-        //test Graph是否valid
+        //test Graph if valid
         {
             int count = 0;
             for(Graph graph:piecesset){

@@ -45,21 +45,25 @@ public class Jocg {
             graph.resetExplore();
             /*
              * visitedE: store all visited edges in the current phase
+             * any edges in vistedE won't be explored in the current phase
              */
             visitedE = new HashMap<>();
             for(Vertex v:graph.freeV(Label.A)){
                 /*
-                 * tempE: store visited edges in dfs(v)
+                 * tempE: store visited edges in dfs(v) -> an adjacent list
                  * path: store the augmenting path returned by dfs(v)
                  */
                 tempE = new HashMap<>();
                 path = new LinkedList<>();
-                //newdfs(v,null);
+                //tempE, path will be updated in newdfs
                 if(newdfs(v,null)){
+                    //collect affected pieces from the path
                     HashSet<Graph> affectedP = new HashSet<>();
                     for(Vertex u:path){
                         affectedP.add(u.piece);
                     }
+
+                    //if an edge belongs to an affected piece, remove this edge from tempE
                     for(Vertex a:tempE.keySet()){
                         for(Vertex b:new HashSet<>(tempE.get(a))){
                             if(!(affectedP.contains(a.piece) && affectedP.contains(b.piece))){
@@ -68,6 +72,8 @@ public class Jocg {
                         }
                     }
                 }
+
+                //add all remaining edges in tempE to visitedE
                 for(Vertex a:tempE.keySet()){
                     if(!visitedE.containsKey(a)){
                         visitedE.put(a,tempE.get(a));
@@ -97,6 +103,7 @@ public class Jocg {
             Vertex v = queue.pop();
 
             if(dist.get(v) <= dist.get(null)){
+
                 if(v.label == Label.A){
                     for(Vertex u:v.edges){
                         if(dist.get(u) == INF){
@@ -137,6 +144,9 @@ public class Jocg {
             return true;
         }
 
+        //add v to tempE
+        //v (- A
+        //parent (- B
         if(!tempE.containsKey(v)){
             tempE.put(v,new HashSet<>());
         }
@@ -144,18 +154,22 @@ public class Jocg {
             tempE.get(v).add(parent);
         }
 
-
         v.explored = true;
 
         for(Vertex u:v.edges){
+
+            //if the edge (v,u) is already explored, then skip this
+            if(containE(visitedE,v,u) || containE(tempE,v,u)){
+                continue;
+            }
+            else{
+                tempE.get(v).add(u);
+            }
+
+            //if path from v to u.matching is valid, then continue
             if(dist.get(u.matching) - dist.get(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
 
-
-
-//                if(u.matching != null && u.matching.explored){
-//                    continue;
-//                }
-
+                //if the edge (u.matching,u) is already explored, then skip this
                 if(containE(visitedE,u.matching,u) || containE(tempE,u.matching,u)){
                     continue;
                 }

@@ -25,14 +25,14 @@ public class TestEuclidean {
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
-        for(int i = 80000; i <= 80000; i+=1000){
+        for(int i = 30000; i <= 30000; i+=1000){
             double timeElapsedHop = 0;
             double timeElapsedJocg = 0;
-            int times = 5;
+            int times = 20;
             for(int time = 0; time < times; time++){
                 System.out.println("|V| = " + 2*i);
                 EuclideanGen euclideanGen = new EuclideanGen(100);
-                Graph graph = euclideanGen.generate(i,80,20,0.01,0.1);
+                Graph graph = euclideanGen.generate(i,80,20,0.01,1);
                 //TestGraph.ifValid(graph);
 
 //                EuclideanGen euclideanGen = new EuclideanGen(100);
