@@ -1,1 +1,7 @@
-30000 1.2448830409356726
+|V| = 20000 bottleneck = 1.0 times = 5
+average Edge number: 12231.0
+average Matching number: 3763.4
+average Jocg: 52.6
+average Hop: 46.8
+average Jocg/Hop: 1.123931623931624
+----------------------------------------------------------

@@ -4,15 +4,15 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
-import javax.sound.sampled.Line;
-import javax.swing.*;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.SortedSet;
 
 public class Jocg extends Algo{
 
     private int INF;
+    private int currentBFS;
     Graph graph;
     HashMap<Vertex,Integer> dist;
     HashMap<Vertex,HashSet<Vertex>> visitedE;
@@ -53,6 +53,12 @@ public class Jocg extends Algo{
                 path = new LinkedList<>();
                 //tempE, path will be updated in newdfs
                 if(newdfs(v,null)){
+//                    System.out.println("current BFS returns: " + currentBFS);
+//                    System.out.println("DFS finds a path with weight: " + pathWeight(path));
+
+                    //assert currentBFS == pathWeight(path);
+
+
                     //collect affected pieces from the path
                     HashSet<Graph> affectedP = new HashSet<>();
                     for(Vertex u:path){
@@ -62,9 +68,12 @@ public class Jocg extends Algo{
                     //if an edge belongs to an affected piece, remove this edge from tempE
                     for(Vertex a:tempE.keySet()){
                         for(Vertex b:new HashSet<>(tempE.get(a))){
-                            if(!(affectedP.contains(a.piece) && affectedP.contains(b.piece))){
+                            if(a.piece == b.piece && affectedP.contains(a.piece)){
                                 tempE.get(a).remove(b);
                             }
+//                            if(!(affectedP.contains(a.piece) && affectedP.contains(b.piece))){
+//                                tempE.get(a).remove(b);
+//                            }
                         }
                     }
                 }
@@ -127,6 +136,7 @@ public class Jocg extends Algo{
             }
         }
         System.out.println("Jocg bfs returns: " + dist.get(null));
+        currentBFS = dist.get(null);
         return dist.get(null) != INF;
     }
 
@@ -183,6 +193,18 @@ public class Jocg extends Algo{
         //so no explored vertex will be explored twice
         //dist.put(v,INF);
         return false;
+    }
+
+    private int pathWeight(LinkedList<Vertex> path){
+        Vertex parent = null;
+        int result = 0;
+        for(Vertex v:path){
+            if(parent != null && parent.piece != v.piece){
+                result += 1;
+            }
+            parent = v;
+        }
+        return result;
     }
 
     private boolean containE(HashMap<Vertex,HashSet<Vertex>> visitedE, Vertex a, Vertex b){

@@ -265,10 +265,75 @@ public class EuclideanGen {
         Graph graph = new Graph();
         graph.vertices = new HashSet<>(vertices.values());
         graph.pieces = piecesset;
-
+        for(Vertex v:graph.vertices){
+            graph.edgeNum += v.edges.size();
+        }
+        assert graph.edgeNum%2 == 0;
+        graph.edgeNum = graph.edgeNum/2;
 
         return graph;
 
+    }
+
+
+    public Graph generateNoPiece(int num, double large, double bottleneck){
+        /*
+         * random seed
+         */
+        Random r = new Random(seed);
+        /*
+         * generate 2n points in a side*side square
+         * generate vertex for each point, and store them in a hashmap
+         */
+        ArrayList<Point> points = new ArrayList<>();
+        HashMap<Point,Vertex> vertices = new HashMap<>();
+        for(int i = 0; i < num; i++){
+            Point point = new Point(r.nextDouble()*large,r.nextDouble()*large);
+            points.add(point);
+            if(i < num/2){
+                vertices.put(point, new Vertex(i,Label.A));
+            }
+            else{
+                vertices.put(point, new Vertex(i,Label.B));
+            }
+
+        }
+
+        //generate edges < bottleneck
+        {
+            for(Point source:points){
+                HashSet<Vertex> edges = new HashSet<>();
+                for(Point target:points){
+                    //if labels are same, or two vertexes are same, not calculate distance
+                    if(source == target || vertices.get(source).label == vertices.get(target).label){
+                        continue;
+                    }
+                    double x = source.x - target.x;
+                    double y = source.y - target.y;
+                    double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                    if(d <= bottleneck){
+                        edges.add(vertices.get(target));
+                    }
+                }
+                vertices.get(source).edges = edges;
+            }
+            Graph g1 = new Graph();
+            Graph g2 = new Graph();
+            int count = 0;
+            for(Vertex v:vertices.values()){
+                if(count < vertices.values().size()/2){
+                    v.piece = g1;
+                }
+                else{
+                    v.piece = g2;
+                }
+            }
+        }
+
+        Graph graph = new Graph();
+        graph.vertices = new HashSet<>(vertices.values());
+        graph.pieces = new HashSet<>();
+        return graph;
     }
 
     public Graph generate(String fileName, double bottleneck, int numEachLabel){
