@@ -38,7 +38,6 @@ public class Jocg extends Algo{
         iterate = 0;
         while(newbfs()){
             iterate+=1;
-            graph.resetExplore();
             /*
              * visitedE: store all visited edges in the current phase
              * any edges in vistedE won't be explored in the current phase
@@ -55,14 +54,17 @@ public class Jocg extends Algo{
                 if(newdfs(v,null)){
 //                    System.out.println("current BFS returns: " + currentBFS);
 //                    System.out.println("DFS finds a path with weight: " + pathWeight(path));
-
-                    //assert currentBFS == pathWeight(path);
-
-
-                    //collect affected pieces from the path
+                    /*
+                     * iterate the path
+                     * if an path is in an affected piece, add this piece to affectedP
+                     */
                     HashSet<Graph> affectedP = new HashSet<>();
+                    Vertex parent = null;
                     for(Vertex u:path){
-                        affectedP.add(u.piece);
+                        if(parent!=null && parent.piece == u.piece){
+                            affectedP.add(u.piece);
+                        }
+                        parent = u;
                     }
 
                     //if an edge belongs to an affected piece, remove this edge from tempE
@@ -71,9 +73,6 @@ public class Jocg extends Algo{
                             if(a.piece == b.piece && affectedP.contains(a.piece)){
                                 tempE.get(a).remove(b);
                             }
-//                            if(!(affectedP.contains(a.piece) && affectedP.contains(b.piece))){
-//                                tempE.get(a).remove(b);
-//                            }
                         }
                     }
                 }
