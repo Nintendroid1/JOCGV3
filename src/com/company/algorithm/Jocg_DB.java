@@ -7,9 +7,11 @@ import com.company.element.Vertex;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.SortedSet;
 
-public class Jocg extends Algo{
+
+
+public class Jocg_DB extends Algo{
+
 
     private int INF;
     private int currentBFS;
@@ -21,7 +23,7 @@ public class Jocg extends Algo{
 
     public int iterate;
 
-    public Jocg(Graph graph){
+    public Jocg_DB(Graph graph){
         this.INF = Integer.MAX_VALUE;
         this.graph = graph;
         this.dist = new HashMap<>();
@@ -89,6 +91,8 @@ public class Jocg extends Algo{
             }
         }
     }
+
+
 
     private boolean newbfs(){
         LinkedList<Vertex> queue = new LinkedList<>();

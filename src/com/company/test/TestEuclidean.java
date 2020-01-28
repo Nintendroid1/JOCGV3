@@ -2,8 +2,7 @@ package com.company.test;
 
 import com.company.algorithm.Hop;
 import com.company.algorithm.Jocg;
-import com.company.algorithm.Jocg_ND;
-import com.company.algorithm.Jocg_OPT;
+import com.company.algorithm.Jocg_DB;
 import com.company.element.Graph;
 import com.company.generator.EuclideanGen;
 
@@ -25,78 +24,73 @@ public class TestEuclidean {
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
+        int[] numV = {5000};//,50000};
+        int times = 1;
+        double bottleneck = 5;
+        for(int i:numV){
+            double edgeNum = 0;
+            double matchNum = 0;
+            double timeElapsedHop = 0;
+            double timeElapsedJocg = 0;
 
+            for(int time = 1; time <= times; time++){
+                System.out.println("|V| = " + 2*i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
+//                System.out.println("|V| = " + 2*i);
+                EuclideanGen euclideanGen = new EuclideanGen(5);
+                Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
 
-        int tenK = 10000;
-        int[] numV = {1*tenK};//5*tenK,8*tenK
-        double[] bottlenecks = {1};
-        int times = 5;
+//                long starth = System.currentTimeMillis();
+//                Hop hop = new Hop(graph);
+//                hop.start();
+//                long finishh = System.currentTimeMillis();
+//                timeElapsedHop += finishh - starth;
+//                int hopMatchCount = graph.matchCount();
+//
+//                assert graph.matchValidCheck();
+//                graph.resetMatch();
+//                //matchingTable_Hop.printMatching();
+//                assert graph.matchCount() == 0;
 
-        double sizeLargeGrid = 80;
-        double sizeMiddleGrid = 20;
-        double sizeSmallGrid = 0.01;
+                long startj = System.currentTimeMillis();
+                Jocg jocg = new Jocg(graph);
+                jocg.start();
+                long finishj = System.currentTimeMillis();
+                timeElapsedJocg += finishj - startj;
+                int joMatchCount = graph.matchCount();
 
+                System.out.println(jocg.iterate);
+//                System.out.println(hop.iterate);
+//                assert joMatchCount == hopMatchCount;
+                assert graph.matchValidCheck();
 
+                //assert hop.iterate >= jocg.iterate;
 
-
-        for(int numv:numV){
-            for(double bottleneck:bottlenecks){
-                double edgeNum = 0;
-                double matchNum = 0;
-                double timeElapsedHop = 0;
-                double timeElapsedJocg = 0;
-
-                for(int time = 1; time <= times; time++){
-                    System.out.println("|V| = " + 2*numv + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
-                    EuclideanGen euclideanGen = new EuclideanGen(time);
-                    Graph graph = euclideanGen.generate(numv,sizeLargeGrid,sizeMiddleGrid,sizeSmallGrid,bottleneck);
-
-                    Hop hop = new Hop(graph);
-                    timeElapsedHop += Timer.start(hop);
-                    int hopMatchCount = graph.matchCount();
-
-                    graph.resetMatch();
-
-                    Jocg jocg = new Jocg(graph);
-                    timeElapsedJocg +=Timer.start(jocg);
-                    int joMatchCount = graph.matchCount();
-                    assert joMatchCount == hopMatchCount;
-
-                    System.out.println("Hop total ite num: " + hop.iterate);
-                    System.out.println("Jocg total ite num: " + jocg.iterate);
-
-                    System.out.println("Edge num: " + graph.edgeNum);
-                    System.out.println("Matching num: " + graph.matchCount());
-
-                    edgeNum += graph.edgeNum;
-                    matchNum += graph.matchCount();
-
-                }
-                timeElapsedHop /= times;
-                timeElapsedJocg /= times;
-                edgeNum /= times;
-                matchNum /= times;
-
-                double ratio = timeElapsedJocg/timeElapsedHop;
-                System.out.println("average Edge number: " + edgeNum);
-                System.out.println("average Matching number: " + matchNum);
-                System.out.println("average Jocg: " + timeElapsedJocg);
-                System.out.println("average Hop: " + timeElapsedHop);
-                System.out.println("average Jocg/Hop: " + ratio);
-                System.out.println("----------------------------------------------------------");
-
-
-                writer.append("|V| = " + 2*numv + " bottleneck = " + bottleneck + " times = " + times +'\n');
-                writer.append("average Edge number: " + edgeNum + "\n");
-                writer.append("average Matching number: " + matchNum + "\n");
-                writer.append("average Jocg: " + timeElapsedJocg + "\n");
-                writer.append("average Hop: " + timeElapsedHop + "\n");
-                writer.append("average Jocg/Hop: " + ratio + "\n");
-                //writer.append();
-                writer.append("----------------------------------------------------------\n");
-
+                edgeNum += graph.edgeNum;
+                matchNum += graph.matchCount();
 
             }
+            timeElapsedHop /= times;
+            timeElapsedJocg /= times;
+            edgeNum /= times;
+            matchNum /= times;
+
+            double ratio = timeElapsedJocg/timeElapsedHop;
+            System.out.println("average Edge number: " + edgeNum);
+            System.out.println("average Matching number: " + matchNum);
+            System.out.println("average Jocg: " + timeElapsedJocg);
+            System.out.println("average Hop: " + timeElapsedHop);
+            System.out.println("average Jocg/Hop: " + ratio);
+            System.out.println("----------------------------------------------------------");
+
+
+            writer.append("|V| = " + 2*i + " bottleneck = " + bottleneck + " times = " + times +'\n');
+            writer.append("average Edge number: " + edgeNum + "\n");
+            writer.append("average Matching number: " + matchNum + "\n");
+            writer.append("average Jocg: " + timeElapsedJocg + "\n");
+            writer.append("average Hop: " + timeElapsedHop + "\n");
+            writer.append("average Jocg/Hop: " + ratio + "\n");
+            //writer.append();
+            writer.append("----------------------------------------------------------\n");
         }
         writer.close();
     }
