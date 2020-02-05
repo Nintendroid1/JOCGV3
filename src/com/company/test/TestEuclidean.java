@@ -34,6 +34,8 @@ public class TestEuclidean {
             double wasVisited = 0;
             double notDelete = 0;
 
+            //fhdoahdua
+
 
             for(int time = 1; time <= times; time++){
                 System.out.println("|V| = " + 2*i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
