@@ -11,6 +11,7 @@ public class Vertex {
     public boolean explored;
     public HashSet<Vertex> visitedE;
     public HashSet<Vertex> tempE;
+    public int distance;
 
     public Vertex(int id, Label label){
         this.id = id;

@@ -1,7 +1,6 @@
 package com.company.test;
 
-import com.company.algorithm.Hop;
-import com.company.algorithm.Jocg;
+import com.company.algorithm.*;
 import com.company.element.Graph;
 import com.company.generator.EuclideanGen;
 
@@ -44,7 +43,7 @@ public class TestEuclidean {
                 Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
 
                 long starth = System.currentTimeMillis();
-                Hop hop = new Hop(graph);
+                Hop_NoHash hop = new Hop_NoHash(graph);
                 hop.start();
                 long finishh = System.currentTimeMillis();
                 timeElapsedHop += finishh - starth;
@@ -56,7 +55,7 @@ public class TestEuclidean {
 
                 long startj = System.currentTimeMillis();
                 //Jocg_DB jocg = new Jocg_DB(graph);
-                Jocg jocg = new Jocg(graph);
+                Jocg_NoHash jocg = new Jocg_NoHash(graph);
                 jocg.start();
                 long finishj = System.currentTimeMillis();
                 timeElapsedJocg += finishj - startj;
