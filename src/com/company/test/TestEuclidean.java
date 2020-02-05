@@ -41,8 +41,8 @@ public class TestEuclidean {
                 System.out.println("|V| = " + 2*i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
 //                System.out.println("|V| = " + 2*i);
                 EuclideanGen euclideanGen = new EuclideanGen(5);
-                //Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
-                Graph graph = euclideanGen.perfectGen(800,100,20,19,2.01);
+                Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
+                //Graph graph = euclideanGen.perfectGen(800,100,20,19,2.01);
 
                 long starth = System.currentTimeMillis();
                 Hop hop = new Hop(graph);

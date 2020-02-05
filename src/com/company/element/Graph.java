@@ -68,4 +68,34 @@ public class Graph {
         assert  freeV(null).size()%2 == 0;
         return (vertices.size() - freeV(null).size())/2;
     }
+
+    public boolean matchValidCheck(){
+        HashSet<Vertex> aused = new HashSet<>();
+        HashSet<Vertex> bused = new HashSet<>();
+        for(Vertex v:freeV(Label.A)){
+            if(v.isFree()){
+                continue;
+            }
+            if(bused.contains(v.matching)){
+                return false;
+            }
+            if(v.matching.matching != v){
+                return false;
+            }
+            bused.add(v.matching);
+        }
+        for(Vertex v:freeV(Label.B)){
+            if(v.isFree()){
+                continue;
+            }
+            if(aused.contains(v.matching)){
+                return false;
+            }
+            if(v.matching.matching != v){
+                return false;
+            }
+            aused.add(v.matching);
+        }
+        return true;
+    }
 }
