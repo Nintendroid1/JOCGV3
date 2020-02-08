@@ -1,14 +1,18 @@
 package com.company.element;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 
 public class Graph {
-    public HashSet<Vertex> vertices;
-    public HashSet<Graph> pieces;
+    public ArrayList<Vertex> vertices;
+    public ArrayList<Graph> pieces;
     public int edgeNum;
+    public int numV;
     public Graph(){
-        vertices = new HashSet<>();
-        pieces = new HashSet<>();
+        vertices = new ArrayList<>();
+        pieces = new ArrayList<>();
         edgeNum = 0;
     }
 
@@ -24,8 +28,8 @@ public class Graph {
         return 1;
     }
 
-    public HashSet<Vertex> freeV(Label label){
-        HashSet<Vertex> result = new HashSet<>();
+    public LinkedList<Vertex> freeV(Label label){
+        LinkedList<Vertex> result = new LinkedList<>();
         for(Vertex v:vertices){
             if(v.isFree() && (label == null|| (v.label == label))){
                 result.add(v);
@@ -40,8 +44,8 @@ public class Graph {
         }
     }
 
-    public HashSet<Vertex> V(Label label){
-        HashSet<Vertex> result = new HashSet<>();
+    public LinkedList<Vertex> V(Label label){
+        LinkedList<Vertex> result = new LinkedList<>();
         for(Vertex v:vertices){
             if(label == null|| (v.label == label)){
                 result.add(v);

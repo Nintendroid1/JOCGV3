@@ -1,9 +1,9 @@
-|V| = 20000 bottleneck = 1.0 times = 2
+|V| = 20000 bottleneck = 5.0 times = 2
 average Visted Edges: 0.0
 average not Delete Edges: 0.0
-average Edge number: 12404.0
-average Matching number: 3813.0
-average Jocg: 45.5
-average Hop: 42.5
-average Jocg/Hop: 1.0705882352941176
+average Edge number: 290931.0
+average Matching number: 5000.0
+average Jocg: 839.0
+average Hop: 7387.5
+average Jocg/Hop: 0.11357021996615906
 ----------------------------------------------------------

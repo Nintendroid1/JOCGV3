@@ -4,7 +4,6 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 
 public class Hop_NoHash extends Algo{

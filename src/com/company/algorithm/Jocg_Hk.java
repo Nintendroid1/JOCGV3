@@ -4,12 +4,11 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class Jocg_NoHash extends Algo{
+public class Jocg_Hk extends Algo{
 
     private int INF;
     private int currentBFS;
@@ -60,7 +59,7 @@ public class Jocg_NoHash extends Algo{
 
     public int iterate;
 
-    public Jocg_NoHash(Graph graph){
+    public Jocg_Hk(Graph graph){
         this.INF = Integer.MAX_VALUE;
         this.graph = graph;
     }
@@ -73,77 +72,9 @@ public class Jocg_NoHash extends Algo{
             hop.start();
         }
 
-        iterate = 0;
-        while(newbfs()){
-            iterate+=1;
-            /*
-             * visitedE: store all visited edges in the current phase
-             * any edges in vistedE won't be explored in the current phase
-             */
+        Hop_NoHash hop = new Hop_NoHash(graph);
+        hop.start();
 
-            visitedE = new AdjMatrix(graph.numV);
-            //visitedE = new HashMap<>();
-            for(Vertex v:graph.freeV(Label.A)){
-                /*
-                 * tempE: store visited edges in dfs(v) -> an adjacent list
-                 * path: store the augmenting path returned by dfs(v)
-                 */
-
-                tempE = new AdjMatrix(graph.numV);
-                //tempE = new HashMap<>();
-                path = new LinkedList<>();
-                //tempE, path will be updated in newdfs
-                if(newdfs(v,null)){
-//                    System.out.println("current BFS returns: " + currentBFS);
-//                    System.out.println("DFS finds a path with weight: " + pathWeight(path));
-                    /*
-                     * iterate the path
-                     * if an path is in an affected piece, add this piece to affectedP
-                     */
-                    HashSet<Graph> affectedP = new HashSet<>();
-                    Vertex parent = null;
-                    for(Vertex u:path){
-                        if(parent!=null && parent.piece == u.piece){
-                            affectedP.add(u.piece);
-                        }
-                        parent = u;
-                    }
-
-                    //if an edge belongs to an affected piece, remove this edge from tempE
-
-                    for(int a = 0; a < graph.numV; a++){
-                        if(tempE.matrix[a] != null){
-                            for(int b:tempE.indexes[a]){
-                                Vertex va = graph.vertices.get(a);
-                                Vertex vb = graph.vertices.get(graph.numV + b);
-
-                                if(!(va.piece == vb.piece && affectedP.contains(va.piece))){
-                                    visitedE.addEdge(a,b + graph.numV);
-                                }
-                            }
-                        }
-                    }
-
-//                    for(Vertex a:tempE.keySet()){
-//                        for(Vertex b:new HashSet<>(tempE.get(a))){
-//                            if(a.piece == b.piece && affectedP.contains(a.piece)){
-//                                tempE.get(a).remove(b);
-//                            }
-//                        }
-//                    }
-                }
-
-                //add all remaining edges in tempE to visitedE
-//                for(Vertex a:tempE.keySet()){
-//                    if(!visitedE.containsKey(a)){
-//                        visitedE.put(a,tempE.get(a));
-//                    }
-//                    else{
-//                        visitedE.get(a).addAll(tempE.get(a));
-//                    }
-//                }
-            }
-        }
     }
 
     private boolean newbfs(){
@@ -162,13 +93,13 @@ public class Jocg_NoHash extends Algo{
 
         while(!queue.isEmpty()){
             Vertex v = queue.pop();
-            ArrayList<Vertex> children;
+            HashSet<Vertex> children;
 
             if(v.distance > shortestD){
                 continue;
             }
             if(v.label == Label.A){
-                children = new ArrayList<>(v.edges);
+                children = new HashSet<>(v.edges);
                 children.remove(v.matching);
             }
             else{
@@ -178,7 +109,7 @@ public class Jocg_NoHash extends Algo{
                     //dist.put(null,dist.get(v));
                     continue;
                 }
-                children = new ArrayList<>();
+                children = new HashSet<>();
                 children.add(v.matching);
             }
 

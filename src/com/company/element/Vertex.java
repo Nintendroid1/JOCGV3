@@ -1,11 +1,12 @@
 package com.company.element;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Vertex {
     public int id;
     public Label label;
-    public HashSet<Vertex> edges;
+    public ArrayList<Vertex> edges;
     public Vertex matching;
     public Graph piece;
     public boolean explored;
@@ -16,7 +17,7 @@ public class Vertex {
     public Vertex(int id, Label label){
         this.id = id;
         this.label = label;
-        this.edges = new HashSet<>();
+        this.edges = new ArrayList<>();
         this.matching = null;
         this.piece = null;
         this.explored = false;

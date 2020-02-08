@@ -4,12 +4,11 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
-public class Jocg_NoHash extends Algo{
+public class Jocg_Pointer extends Algo{
 
     private int INF;
     private int currentBFS;
@@ -60,7 +59,7 @@ public class Jocg_NoHash extends Algo{
 
     public int iterate;
 
-    public Jocg_NoHash(Graph graph){
+    public Jocg_Pointer(Graph graph){
         this.INF = Integer.MAX_VALUE;
         this.graph = graph;
     }
@@ -162,13 +161,13 @@ public class Jocg_NoHash extends Algo{
 
         while(!queue.isEmpty()){
             Vertex v = queue.pop();
-            ArrayList<Vertex> children;
+            HashSet<Vertex> children;
 
             if(v.distance > shortestD){
                 continue;
             }
             if(v.label == Label.A){
-                children = new ArrayList<>(v.edges);
+                children = new HashSet<>(v.edges);
                 children.remove(v.matching);
             }
             else{
@@ -178,7 +177,7 @@ public class Jocg_NoHash extends Algo{
                     //dist.put(null,dist.get(v));
                     continue;
                 }
-                children = new ArrayList<>();
+                children = new HashSet<>();
                 children.add(v.matching);
             }
 

@@ -2,7 +2,7 @@ package com.company.test;
 
 import com.company.algorithm.*;
 import com.company.element.Graph;
-import com.company.generator.EuclideanGen;
+import com.company.generator.GraphGen;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -13,18 +13,18 @@ public class TestEuclidean {
 
     }
 
-    public static void testFileGen(){
-        EuclideanGen euclideanGen = new EuclideanGen(100);
-        Graph graph = euclideanGen.generate("C:\\Users\\yjc38\\CondaCode\\JOCG\\output.txt",1,5000);
-        int a = 0;
-    }
+//    public static void testFileGen(){
+//        EuclideanGen euclideanGen = new EuclideanGen(100);
+//        Graph graph = euclideanGen.generate("C:\\Users\\yjc38\\CondaCode\\JOCG\\output.txt",1,5000);
+//        int a = 0;
+//    }
 
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
         int[] numV = {10000};//,50000};
         int times = 2;
-        double bottleneck = 1;
+        double bottleneck = 5;
         for(int i:numV){
             double edgeNum = 0;
             double matchNum = 0;
@@ -37,9 +37,9 @@ public class TestEuclidean {
 
 
             for(int time = 1; time <= times; time++){
-                System.out.println("|V| = " + 2*i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
+                System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
 //                System.out.println("|V| = " + 2*i);
-                EuclideanGen euclideanGen = new EuclideanGen(5);
+                GraphGen euclideanGen = new GraphGen(5);
                 Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
 
                 long starth = System.currentTimeMillis();
@@ -51,11 +51,15 @@ public class TestEuclidean {
                 assert graph.matchValidCheck();
 
                 graph.resetMatch();
+                for(Graph piece:graph.pieces){
+                    piece.resetMatch();
+                }
                 assert graph.matchCount() == 0;
 
                 long startj = System.currentTimeMillis();
                 //Jocg_DB jocg = new Jocg_DB(graph);
                 Jocg_NoHash jocg = new Jocg_NoHash(graph);
+                //Jocg_Hk jocg = new Jocg_Hk(graph);
                 jocg.start();
                 long finishj = System.currentTimeMillis();
                 timeElapsedJocg += finishj - startj;
@@ -107,21 +111,21 @@ public class TestEuclidean {
 
 
 
-    public static void testGen(){
-        for(int i = 1000; i < 3000; i+=100){
-            EuclideanGen euclideanGen = new EuclideanGen(2131);
-            Graph graph = euclideanGen.generate(i,80,40,0.5,4);
-            int smallestSub = Integer.MAX_VALUE;
-            for(Graph sub:graph.pieces){
-                if(sub.vertices.size() < smallestSub){
-                    smallestSub = sub.vertices.size();
-                }
-            }
-            System.out.println(smallestSub + " " + graph.vertices.size());
-            System.out.println(i + ": "+(double) smallestSub/graph.vertices.size()*100 + "%");
-            int a = 0;
-        }
-    }
+//    public static void testGen(){
+//        for(int i = 1000; i < 3000; i+=100){
+//            EuclideanGen euclideanGen = new EuclideanGen(2131);
+//            Graph graph = euclideanGen.generate(i,80,40,0.5,4);
+//            int smallestSub = Integer.MAX_VALUE;
+//            for(Graph sub:graph.pieces){
+//                if(sub.vertices.size() < smallestSub){
+//                    smallestSub = sub.vertices.size();
+//                }
+//            }
+//            System.out.println(smallestSub + " " + graph.vertices.size());
+//            System.out.println(i + ": "+(double) smallestSub/graph.vertices.size()*100 + "%");
+//            int a = 0;
+//        }
+//    }
 }
 
 //Graph graph = euclideanGen.generateNoPiece(i,5,5);
