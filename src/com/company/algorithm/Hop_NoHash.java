@@ -12,6 +12,7 @@ public class Hop_NoHash extends Algo{
     public Integer iterate;
     public boolean print;
     public Integer mode;
+    public boolean checkGraph;
     int shortestD;
 
     public Hop_NoHash(Graph graph){
@@ -20,6 +21,7 @@ public class Hop_NoHash extends Algo{
         this.mode = 0;
         this.iterate = 0;
         this.print = true;
+        this.checkGraph = false;
     }
 
     public void start(){
@@ -66,7 +68,8 @@ public class Hop_NoHash extends Algo{
                      * So we check if u is in the Graph
                      * If it is, it's easy to see its matching must be in the current graph.
                      */
-                    if(graph.vertices.contains(u)){
+
+                    if(!checkGraph || u.piece == v.piece){
                         /*
                          * <dist(u.matching) == INF> means
                          * <u.matching> is free or <u.matching> has not been explored yet (in the current BFS)
@@ -103,7 +106,7 @@ public class Hop_NoHash extends Algo{
         }
 
         for(Vertex u:v.edges){
-            if(graph.vertices.contains(u)){
+            if(!checkGraph || u.piece == v.piece){
                 int nextDist;
                 if(u.matching == null){
                     nextDist = shortestD;
