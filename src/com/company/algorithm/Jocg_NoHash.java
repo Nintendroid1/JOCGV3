@@ -169,8 +169,7 @@ public class Jocg_NoHash extends Algo{
                 continue;
             }
             if(v.label == Label.A){
-                children = new ArrayList<>(v.edges);
-                children.remove(v.matching);
+                children = v.edges;
             }
             else{
                 //when we find free B
@@ -184,6 +183,9 @@ public class Jocg_NoHash extends Algo{
             }
 
             for(Vertex u:children){
+                if(v.label == Label.A && u == v.matching){
+                    continue;
+                }
                 //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
                 if(u.distance > v.distance + graph.getWeight(u,v)){
                     u.distance = v.distance + graph.getWeight(u,v);
@@ -242,21 +244,8 @@ public class Jocg_NoHash extends Algo{
                 continue;
             }
             else{
-
-//                if(u.id < graph.numV){
-//                    int a = 0;
-//                }
-
-
                 tempE.addEdge(v.id,u.id);
             }
-
-//            if(containE(visitedE,v,u) || containE(tempE,v,u)){
-//                continue;
-//            }
-//            else{
-//                tempE.get(v).add(u);
-//            }
 
             //if path from v to u.matching is valid, then continue
 

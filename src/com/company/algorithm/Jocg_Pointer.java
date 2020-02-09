@@ -4,6 +4,7 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -69,6 +70,7 @@ public class Jocg_Pointer extends Algo{
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
+            hop.checkGraph = true;
             hop.start();
         }
 
@@ -161,14 +163,13 @@ public class Jocg_Pointer extends Algo{
 
         while(!queue.isEmpty()){
             Vertex v = queue.pop();
-            HashSet<Vertex> children;
+            ArrayList<Vertex> children;
 
             if(v.distance > shortestD){
                 continue;
             }
             if(v.label == Label.A){
-                children = new HashSet<>(v.edges);
-                children.remove(v.matching);
+                children = v.edges;
             }
             else{
                 //when we find free B
@@ -177,11 +178,14 @@ public class Jocg_Pointer extends Algo{
                     //dist.put(null,dist.get(v));
                     continue;
                 }
-                children = new HashSet<>();
+                children = new ArrayList<>();
                 children.add(v.matching);
             }
 
             for(Vertex u:children){
+                if(v.label == Label.A && u == v.matching){
+                    continue;
+                }
                 //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
                 if(u.distance > v.distance + graph.getWeight(u,v)){
                     u.distance = v.distance + graph.getWeight(u,v);
@@ -240,21 +244,8 @@ public class Jocg_Pointer extends Algo{
                 continue;
             }
             else{
-
-//                if(u.id < graph.numV){
-//                    int a = 0;
-//                }
-
-
                 tempE.addEdge(v.id,u.id);
             }
-
-//            if(containE(visitedE,v,u) || containE(tempE,v,u)){
-//                continue;
-//            }
-//            else{
-//                tempE.get(v).add(u);
-//            }
 
             //if path from v to u.matching is valid, then continue
 

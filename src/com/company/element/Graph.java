@@ -1,9 +1,7 @@
 package com.company.element;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedList;
 
 public class Graph {
     public ArrayList<Vertex> vertices;
@@ -20,7 +18,7 @@ public class Graph {
         if(v == null || u == null){
             return 0;
         }
-        assert v.hasEdgewith(u);
+        //assert v.hasEdgewith(u);
 
         if(v.piece == u.piece){
             return 0;
@@ -28,8 +26,8 @@ public class Graph {
         return 1;
     }
 
-    public LinkedList<Vertex> freeV(Label label){
-        LinkedList<Vertex> result = new LinkedList<>();
+    public ArrayList<Vertex> freeV(Label label){
+        ArrayList<Vertex> result = new ArrayList<>();
         for(Vertex v:vertices){
             if(v.isFree() && (label == null|| (v.label == label))){
                 result.add(v);
@@ -44,8 +42,8 @@ public class Graph {
         }
     }
 
-    public LinkedList<Vertex> V(Label label){
-        LinkedList<Vertex> result = new LinkedList<>();
+    public ArrayList<Vertex> V(Label label){
+        ArrayList<Vertex> result = new ArrayList<>();
         for(Vertex v:vertices){
             if(label == null|| (v.label == label)){
                 result.add(v);
@@ -60,12 +58,6 @@ public class Graph {
         }
     }
 
-    public void resetVisit(){
-        for(Vertex v:vertices){
-            v.visitedE = new HashSet<>();
-            v.tempE = new HashSet<>();
-        }
-    }
 
     public int matchCount(){
         assert freeV(Label.A).size() == freeV(Label.B).size();

@@ -23,8 +23,8 @@ public class TestEuclidean {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
         int[] numV = {10000};//,50000};
-        int times = 2;
-        double bottleneck = 5;
+        int times = 1;
+        double bottleneck = 1;
         for(int i:numV){
             double edgeNum = 0;
             double matchNum = 0;

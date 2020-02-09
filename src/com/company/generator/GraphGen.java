@@ -4,10 +4,7 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 public class GraphGen {
     class Point{
@@ -235,6 +232,21 @@ public class GraphGen {
         }
         assert graph.edgeNum%2 == 0;
         graph.edgeNum = graph.edgeNum/2;
+
+        for(Vertex v: graph.vertices){
+            ArrayList<Vertex> ones = new ArrayList<>();
+            ArrayList<Vertex> zeros = new ArrayList<>();
+            for(Vertex u:v.edges){
+                if(u.piece == v.piece){
+                    zeros.add(u);
+                }
+                else{
+                    ones.add(u);
+                }
+            }
+            ones.addAll(zeros);
+            v.edges = ones;
+        }
 
         return graph;
 
