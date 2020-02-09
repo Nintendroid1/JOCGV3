@@ -70,6 +70,7 @@ public class Jocg_NoHash extends Algo{
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
+            hop.checkGraph = true;
             hop.start();
         }
 
