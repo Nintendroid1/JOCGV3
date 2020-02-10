@@ -22,8 +22,8 @@ public class TestEuclidean {
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
-        int[] numV = {10000};//,50000};
-        int times = 1;
+        int[] numV = {30000};//,50000};
+        int times = 5;
         double bottleneck = 1;
         for(int i:numV){
             double edgeNum = 0;
@@ -32,9 +32,6 @@ public class TestEuclidean {
             double timeElapsedJocg = 0;
             double wasVisited = 0;
             double notDelete = 0;
-
-            //fhdoahdua
-
 
             for(int time = 1; time <= times; time++){
                 System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
@@ -58,7 +55,7 @@ public class TestEuclidean {
 
                 long startj = System.currentTimeMillis();
                 //Jocg_DB jocg = new Jocg_DB(graph);
-                Jocg_NoHash jocg = new Jocg_NoHash(graph);
+                Jocg_Pointer jocg = new Jocg_Pointer(graph);
                 //Jocg_Hk jocg = new Jocg_Hk(graph);
                 jocg.start();
                 long finishj = System.currentTimeMillis();

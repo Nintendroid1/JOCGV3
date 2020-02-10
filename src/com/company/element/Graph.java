@@ -8,6 +8,7 @@ public class Graph {
     public ArrayList<Graph> pieces;
     public int edgeNum;
     public int numV;
+    public boolean affectedP;
     public Graph(){
         vertices = new ArrayList<>();
         pieces = new ArrayList<>();

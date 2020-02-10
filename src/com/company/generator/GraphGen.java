@@ -4,6 +4,7 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
+import java.sql.Time;
 import java.util.*;
 
 public class GraphGen {
@@ -18,7 +19,6 @@ public class GraphGen {
     Random r;
     public GraphGen(int seed){
         this.seed = seed;
-        this.r = new Random(seed);
     }
 
 
@@ -30,6 +30,7 @@ public class GraphGen {
          * Middle is divisible by small
          * Bottleneck is less than Middle
          */
+        this.r = new Random(seed + (int)(System.currentTimeMillis() * 1000));
         assert (int)(large%middle) == 0;
         assert (int)(middle%small) == 0;
         assert bottleneck < middle;
@@ -244,6 +245,7 @@ public class GraphGen {
                     ones.add(u);
                 }
             }
+            v.onezeroP = ones.size();
             ones.addAll(zeros);
             v.edges = ones;
         }
