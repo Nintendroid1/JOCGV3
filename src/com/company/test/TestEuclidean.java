@@ -22,16 +22,18 @@ public class TestEuclidean {
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
         writer.write("");
+        Hop_NoHash hop;
+        Jocg_Pointer jocg;
         int[] numV = {30000};//,50000};
-        int times = 5;
+        int times = 1;
         double bottleneck = 1;
         for(int i:numV){
             double edgeNum = 0;
             double matchNum = 0;
             double timeElapsedHop = 0;
             double timeElapsedJocg = 0;
-            double wasVisited = 0;
-            double notDelete = 0;
+            double HKve = 0;
+            double Jove = 0;
 
             for(int time = 1; time <= times; time++){
                 System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
@@ -40,7 +42,7 @@ public class TestEuclidean {
                 Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
 
                 long starth = System.currentTimeMillis();
-                Hop_NoHash hop = new Hop_NoHash(graph);
+                hop = new Hop_NoHash(graph);
                 hop.start();
                 long finishh = System.currentTimeMillis();
                 timeElapsedHop += finishh - starth;
@@ -55,7 +57,7 @@ public class TestEuclidean {
 
                 long startj = System.currentTimeMillis();
                 //Jocg_DB jocg = new Jocg_DB(graph);
-                Jocg_Pointer jocg = new Jocg_Pointer(graph);
+                jocg = new Jocg_Pointer(graph);
                 //Jocg_Hk jocg = new Jocg_Hk(graph);
                 jocg.start();
                 long finishj = System.currentTimeMillis();
@@ -70,20 +72,20 @@ public class TestEuclidean {
 
                 edgeNum += graph.edgeNum;
                 matchNum += graph.matchCount();
-//                wasVisited += jocg.wasVisited;
-//                notDelete += jocg.notDeleted;
+                HKve+=hop.ve;
+                Jove+=jocg.ve;
 
             }
             timeElapsedHop /= times;
             timeElapsedJocg /= times;
             edgeNum /= times;
             matchNum /= times;
-            wasVisited /= times;
-            notDelete /= times;
+            HKve/=times;
+            Jove/=times;
 
             double ratio = timeElapsedJocg/timeElapsedHop;
-            System.out.println("average Visted Edges: " + wasVisited);
-            System.out.println("average not Delete Edges: " + notDelete);
+            System.out.println("average HKve: " + HKve);
+            System.out.println("average Jove: " + Jove);
             System.out.println("average Edge number: " + edgeNum);
             System.out.println("average Matching number: " + matchNum);
             System.out.println("average Jocg: " + timeElapsedJocg);
@@ -93,8 +95,8 @@ public class TestEuclidean {
 
 
             writer.append("|V| = " + 2*i + " bottleneck = " + bottleneck + " times = " + times +'\n');
-            writer.append("average Visted Edges: " + wasVisited + "\n");
-            writer.append("average not Delete Edges: " + notDelete + "\n");
+            writer.append("average HK.ve: " + HKve + "\n");
+            writer.append("average Jocg.ve: " + Jove + "\n");
             writer.append("average Edge number: " + edgeNum + "\n");
             writer.append("average Matching number: " + matchNum + "\n");
             writer.append("average Jocg: " + timeElapsedJocg + "\n");

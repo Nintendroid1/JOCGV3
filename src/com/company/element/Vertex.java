@@ -38,7 +38,7 @@ public class Vertex {
         this.matching = x;
     }
 
-    public void deleteE(){
+    public void deleteE_clean(){
         if(label == Label.A){
             if(tempEP <= onezeroP){
                 visitedEP = tempEP;
@@ -53,7 +53,6 @@ public class Vertex {
                     visitedEP = tempEP;
                 }
             }
-
             if(this.matching != null){
                 this.matching.deleteE();
             }
@@ -71,6 +70,49 @@ public class Vertex {
 
             }
         }
+    }
+
+
+    public int[] deleteE(){
+        int deleted = 0;
+        int visted = tempEP - visitedEP;
+        assert tempEP >= visitedEP;
+        if(label == Label.A){
+            if(tempEP <= onezeroP){
+                deleted=(tempEP-visitedEP);
+                visitedEP = tempEP;
+            }
+            else{
+                //in this region, edges can only have weight of 0
+                if(this.piece.affectedP){
+                    deleted=Math.max(0,onezeroP-visitedEP);
+
+                    visitedEP = Math.max(visitedEP,onezeroP);
+                    tempEP = visitedEP;
+                }
+                else{
+                    deleted=(tempEP-visitedEP);
+                    visitedEP = tempEP;
+                }
+            }
+            if(this.matching != null){
+                this.matching.deleteE();
+            }
+        }
+        else{
+            if(tempEP > 0){
+                if(this.matching != null){
+                    if(this.piece == this.matching.piece && this.piece.affectedP){
+                        tempEP = 0;
+                    }
+                }
+                else{
+                    tempEP = 0;
+                }
+
+            }
+        }
+        return new int[]{visted,deleted};
     }
 
     public boolean hasNext(){

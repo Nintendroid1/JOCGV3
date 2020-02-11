@@ -13,6 +13,7 @@ public class Jocg_Pointer extends Algo{
 
     private int INF;
     private int currentBFS;
+    public int ve;
     int shortestD;
     Graph graph;
 
@@ -30,12 +31,13 @@ public class Jocg_Pointer extends Algo{
     }
 
     public void start(){
-
+        ve=0;
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
             hop.checkGraph = true;
             hop.start();
+            ve+=hop.ve;
         }
 
         iterate = 0;
@@ -79,8 +81,16 @@ public class Jocg_Pointer extends Algo{
                     }
 
                     //if an edge belongs to an affected piece, remove this edge from tempE
+//                    int[] theEdges = new int[2];
+//                    for(Vertex ev:exloredV){
+//                        int[] result = ev.deleteE();
+//                        theEdges[0]+=result[0];
+//                        theEdges[1]+=result[1];
+//                    }
+//                    System.out.println("    In this DFS,visited E: "+theEdges[0]+",deleted E: "+theEdges[1]);
+
                     for(Vertex ev:exloredV){
-                        ev.deleteE();
+                        ev.deleteE_clean();
                     }
                 }
 
@@ -113,6 +123,7 @@ public class Jocg_Pointer extends Algo{
             if(v.distance > shortestD){
                 continue;
             }
+
             if(v.label == Label.A){
                 children = v.edges;
             }
@@ -202,6 +213,7 @@ public class Jocg_Pointer extends Algo{
                 break;
             }
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
+                ve+=1;
                 if(u.matching != null){
                     if(!u.hasNext()){
                         continue;

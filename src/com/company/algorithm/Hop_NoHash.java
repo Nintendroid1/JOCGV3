@@ -13,6 +13,7 @@ public class Hop_NoHash extends Algo{
     public boolean print;
     public Integer mode;
     public boolean checkGraph;
+    public Integer ve;
     int shortestD;
 
     public Hop_NoHash(Graph graph){
@@ -26,6 +27,7 @@ public class Hop_NoHash extends Algo{
 
     public void start(){
         iterate = 0;
+        ve = 0;
         while(bfs()){
             iterate+=1;
             for(Vertex v:graph.freeV(Label.A)){
@@ -108,6 +110,7 @@ public class Hop_NoHash extends Algo{
         for(Vertex u:v.edges){
             if(!checkGraph || u.piece == v.piece){
                 int nextDist;
+                this.ve+=1;
                 if(u.matching == null){
                     nextDist = shortestD;
                 }
