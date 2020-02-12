@@ -25,7 +25,8 @@ public class TestEuclidean {
         Hop_NoHash hop;
         Jocg_Pointer jocg;
         int[] numV = {10000};//,50000};
-        int times = 5;
+        int[] middles = {8,16,32,64};
+        int times = 1;
         double bottleneck = 5;
         for(int i:numV){
             double edgeNum = 0;
@@ -35,46 +36,47 @@ public class TestEuclidean {
             double HKve = 0;
             double Jove = 0;
 
-            for(int time = 1; time <= times; time++){
-                System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
+            for(int middle:middles){
+                for(int time = 1; time <= times; time++){
+                    System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " " + "time: " + time + "/" + times);
 //                System.out.println("|V| = " + 2*i);
-                GraphGen euclideanGen = new GraphGen(5);
-                Graph graph = euclideanGen.generate(i,80,20,0.01,bottleneck);
+                    GraphGen euclideanGen = new GraphGen(5);
+                    Graph graph = euclideanGen.generate(i,128,middle,0.01,bottleneck);
 
-                long starth = System.currentTimeMillis();
-                hop = new Hop_NoHash(graph);
-                hop.start();
-                long finishh = System.currentTimeMillis();
-                timeElapsedHop += finishh - starth;
-                int hopMatchCount = graph.matchCount();
-                assert graph.matchValidCheck();
+                    long starth = System.currentTimeMillis();
+                    hop = new Hop_NoHash(graph);
+                    hop.start();
+                    long finishh = System.currentTimeMillis();
+                    timeElapsedHop += finishh - starth;
+                    int hopMatchCount = graph.matchCount();
+                    assert graph.matchValidCheck();
 
-                graph.resetMatch();
-                for(Graph piece:graph.pieces){
-                    piece.resetMatch();
+                    graph.resetMatch();
+                    for(Graph piece:graph.pieces){
+                        piece.resetMatch();
+                    }
+                    assert graph.matchCount() == 0;
+
+                    long startj = System.currentTimeMillis();
+                    //Jocg_DB jocg = new Jocg_DB(graph);
+                    jocg = new Jocg_Pointer(graph);
+                    //Jocg_Hk jocg = new Jocg_Hk(graph);
+                    jocg.start();
+                    long finishj = System.currentTimeMillis();
+                    timeElapsedJocg += finishj - startj;
+                    int joMatchCount = graph.matchCount();
+                    assert joMatchCount == hopMatchCount;
+                    assert graph.matchValidCheck();
+
+                    System.out.println(hop.iterate);
+                    System.out.println(jocg.iterate);
+
+
+                    edgeNum += graph.edgeNum;
+                    matchNum += graph.matchCount();
+                    HKve+=hop.ve;
+                    Jove+=jocg.ve;
                 }
-                assert graph.matchCount() == 0;
-
-                long startj = System.currentTimeMillis();
-                //Jocg_DB jocg = new Jocg_DB(graph);
-                jocg = new Jocg_Pointer(graph);
-                //Jocg_Hk jocg = new Jocg_Hk(graph);
-                jocg.start();
-                long finishj = System.currentTimeMillis();
-                timeElapsedJocg += finishj - startj;
-                int joMatchCount = graph.matchCount();
-                assert joMatchCount == hopMatchCount;
-                assert graph.matchValidCheck();
-
-                System.out.println(hop.iterate);
-                System.out.println(jocg.iterate);
-
-
-                edgeNum += graph.edgeNum;
-                matchNum += graph.matchCount();
-                HKve+=hop.ve;
-                Jove+=jocg.ve;
-
             }
             timeElapsedHop /= times;
             timeElapsedJocg /= times;

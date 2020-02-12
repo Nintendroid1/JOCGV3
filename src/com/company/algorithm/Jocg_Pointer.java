@@ -97,8 +97,6 @@ public class Jocg_Pointer extends Algo{
         int[] marker = new int[graph.vertices.size()];
         LinkedList<Vertex> queue = new LinkedList<>();
 
-        
-
         shortestD = INF;
         for(Vertex v:graph.vertices){
             if(v.label == Label.A && v.isFree()){
