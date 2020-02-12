@@ -97,6 +97,8 @@ public class Jocg_Pointer extends Algo{
         int[] marker = new int[graph.vertices.size()];
         LinkedList<Vertex> queue = new LinkedList<>();
 
+        
+
         shortestD = INF;
         for(Vertex v:graph.vertices){
             if(v.label == Label.A && v.isFree()){
@@ -201,12 +203,19 @@ public class Jocg_Pointer extends Algo{
             exloredVtable[v.id] = 1;
             exloredV.add(v);
         }
+        else{
+            return false;
+        }
 
         while(true){
             Vertex u = v.next();
             if(u == null){
                 break;
             }
+            if(u.matching != null && exloredVtable[u.matching.id] == 1){
+                continue;
+            }
+
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
                 ve+=1;
                 if(u.matching != null){
