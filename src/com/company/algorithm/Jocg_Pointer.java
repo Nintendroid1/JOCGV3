@@ -41,6 +41,8 @@ public class Jocg_Pointer extends Algo{
         }
 
         iterate = 0;
+        exloredVtable = new int[graph.vertices.size()/2];
+        exloredV = new ArrayList<>();
         while(newbfs()){
             iterate+=1;
             /*
@@ -50,8 +52,6 @@ public class Jocg_Pointer extends Algo{
 
             //visitedE = new AdjMatrix(graph.numV);
             //visitedE = new HashMap<>();
-            exloredV = new ArrayList<>();
-            exloredVtable = new int[graph.vertices.size()/2];
             for(Vertex v:graph.freeV(Label.A)){
                 /*
                  * tempE: store visited edges in dfs(v) -> an adjacent list
@@ -79,20 +79,15 @@ public class Jocg_Pointer extends Algo{
                         }
                         parent = u;
                     }
-
-                    //if an edge belongs to an affected piece, remove this edge from tempE
-//                    int[] theEdges = new int[2];
-//                    for(Vertex ev:exloredV){
-//                        int[] result = ev.deleteE();
-//                        theEdges[0]+=result[0];
-//                        theEdges[1]+=result[1];
-//                    }
-//                    System.out.println("    In this DFS,visited E: "+theEdges[0]+",deleted E: "+theEdges[1]);
-
+                }
+                if(!exloredV.isEmpty()){
                     for(Vertex ev:exloredV){
                         ev.deleteE_clean();
+                        exloredVtable[ev.id] = 0;
                     }
+                    exloredV = new ArrayList<>();
                 }
+
 
             }
         }

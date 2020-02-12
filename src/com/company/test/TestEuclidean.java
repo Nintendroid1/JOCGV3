@@ -24,9 +24,9 @@ public class TestEuclidean {
         writer.write("");
         Hop_NoHash hop;
         Jocg_Pointer jocg;
-        int[] numV = {30000};//,50000};
-        int times = 1;
-        double bottleneck = 1;
+        int[] numV = {10000};//,50000};
+        int times = 5;
+        double bottleneck = 5;
         for(int i:numV){
             double edgeNum = 0;
             double matchNum = 0;
