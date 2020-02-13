@@ -20,7 +20,7 @@ public class Jocg_Pointer extends Algo{
 //    HashMap<Vertex,HashSet<Vertex>> visitedE;
 //    HashMap<Vertex,HashSet<Vertex>> tempE;
     ArrayList<Vertex> exloredV;
-    int[] exloredVtable;
+    //int[] exloredVtable;
     LinkedList<Vertex> path;
 
     public int iterate;
@@ -41,7 +41,7 @@ public class Jocg_Pointer extends Algo{
         }
 
         iterate = 0;
-        exloredVtable = new int[graph.vertices.size()/2];
+        //exloredVtable = new int[graph.vertices.size()/2];
         exloredV = new ArrayList<>();
         while(newbfs()){
             iterate+=1;
@@ -83,12 +83,10 @@ public class Jocg_Pointer extends Algo{
                 if(!exloredV.isEmpty()){
                     for(Vertex ev:exloredV){
                         ev.deleteE_clean();
-                        exloredVtable[ev.id] = 0;
+                        ev.explored = false;
                     }
                     exloredV = new ArrayList<>();
                 }
-
-
             }
         }
     }
@@ -179,38 +177,33 @@ public class Jocg_Pointer extends Algo{
         //v (- A
         //parent (- B
 
-//        if(parent != null){
-//            if(!tempE.containE(v.id,parent.id)){
-//                tempE.addEdge(v.id,parent.id);
-//            }
+//        if(exloredVtable[v.id] == 0){
+//            exloredVtable[v.id] = 1;
+//            exloredV.add(v);
+//        }
+//        else{
+//            return false;
 //        }
 
-
-//        if(!tempE.containsKey(v)){
-//            tempE.put(v,new HashSet<>());
-//        }
-//        if(parent != null){
-//            tempE.get(v).add(parent);
-//        }
-
-//        v.explored = true;
-//        if(parent != null){
-//            parent.explored = true;
-//        }
-        if(exloredVtable[v.id] == 0){
-            exloredVtable[v.id] = 1;
-            exloredV.add(v);
+        if(v.explored){
+            return false;
         }
         else{
-            return false;
+            v.explored = true;
+            exloredV.add(v);
         }
 
         while(true){
             Vertex u = v.next();
+
             if(u == null){
                 break;
             }
-            if(u.matching != null && exloredVtable[u.matching.id] == 1){
+//            if(u.matching != null && exloredVtable[u.matching.id] == 1){
+//                continue;
+//            }
+
+            if(u.matching != null && u.matching.explored){
                 continue;
             }
 
@@ -230,42 +223,6 @@ public class Jocg_Pointer extends Algo{
             }
         }
 
-//        for(Vertex u:v.edges){
-//
-//            //if the edge (v,u) is already explored, then skip this
-//
-//            if(visitedE.containE(v.id,u.id) || tempE.containE(v.id,u.id)){
-//                continue;
-//            }
-//            else{
-//                tempE.addEdge(v.id,u.id);
-//            }
-//
-//            //if path from v to u.matching is valid, then continue
-//
-//            if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
-//
-//                //if the edge (u.matching,u) is already explored, then skip this
-//
-//                if(u.matching != null){
-//                    if(visitedE.containE(u.matching.id,u.id) || tempE.containE(u.matching.id, u.id)){
-//                        continue;
-//                    }
-//                }
-//
-////                if(containE(visitedE,u.matching,u) || containE(tempE,u.matching,u)){
-////                    continue;
-////                }
-//
-//                if(newdfs(u.matching,u)){
-//                    u.match(v);
-//                    path.addFirst(u);
-//                    path.addFirst(v);
-//                    return true;
-//                }
-//            }
-//
-//        }
         //set the distance to the explored vertex to INF
         //so no explored vertex will be explored twice
         //dist.put(v,INF);

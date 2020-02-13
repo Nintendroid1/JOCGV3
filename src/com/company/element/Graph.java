@@ -56,6 +56,7 @@ public class Graph {
     public void resetMatch(){
         for(Vertex v:vertices){
             v.matching = null;
+            v.explored = false;
         }
     }
 
