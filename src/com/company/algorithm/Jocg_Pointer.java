@@ -1,5 +1,6 @@
 package com.company.algorithm;
 
+import com.company.element.DataStructure;
 import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
@@ -13,14 +14,15 @@ public class Jocg_Pointer extends Algo{
 
     private int INF;
     private int currentBFS;
-    public int ve;
+    public int dve;
+    public int bve;
+    public long preprocess;
+    private long start;
+    private long end;
     int shortestD;
     Graph graph;
 
-//    HashMap<Vertex,HashSet<Vertex>> visitedE;
-//    HashMap<Vertex,HashSet<Vertex>> tempE;
     ArrayList<Vertex> exloredV;
-    //int[] exloredVtable;
     LinkedList<Vertex> path;
 
     public int iterate;
@@ -31,15 +33,19 @@ public class Jocg_Pointer extends Algo{
     }
 
     public void start(){
-        ve=0;
+        dve=0;
+        bve=0;
+        start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
             hop.checkGraph = true;
             hop.start();
-            ve+=hop.ve;
+            this.dve+=hop.dve;
+            this.bve+=hop.bve;
         }
-
+        end = System.currentTimeMillis();
+        preprocess = end - start;
         iterate = 0;
         //exloredVtable = new int[graph.vertices.size()/2];
         exloredV = new ArrayList<>();
@@ -93,12 +99,13 @@ public class Jocg_Pointer extends Algo{
 
     private boolean newbfs(){
         int[] marker = new int[graph.vertices.size()];
-        LinkedList<Vertex> queue = new LinkedList<>();
-
+        DataStructure.CycleArray cycleArray = new DataStructure.CycleArray(graph.vertices.size());
         shortestD = INF;
         for(Vertex v:graph.vertices){
             if(v.label == Label.A && v.isFree()){
-                queue.addLast(v);
+                //queue.addLast(v);
+                //zeros.add(v);
+                cycleArray.addLast(v);
                 marker[v.id] = 1;
                 v.distance = 0;
             }
@@ -107,18 +114,45 @@ public class Jocg_Pointer extends Algo{
             }
         }
 
-        while(!queue.isEmpty()){
-            Vertex v = queue.pop();
+        while(!cycleArray.isEmpty()){
+
+            Vertex v;
+            v = cycleArray.pop();
             marker[v.id] = 0;
             v.reset();
-
-            ArrayList<Vertex> children;
+            //ArrayList<Vertex> children;
             if(v.distance > shortestD){
                 continue;
             }
 
+            this.bve+=1;
             if(v.label == Label.A){
-                children = v.edges;
+                //children = v.edges;
+
+                for(Vertex u:v.edges){
+                    if(v.label == Label.A && u == v.matching){
+                        continue;
+                    }
+                    //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
+                    if(u.distance > v.distance + graph.getWeight(u,v)){
+
+                        u.distance = v.distance + graph.getWeight(u,v);
+                        //dist.put(u,dist.get(v) + graph.getWeight(u,v));
+                        if(marker[u.id] != 0){
+                            continue;
+                        }
+                        if(graph.getWeight(u,v) == 0){
+                            cycleArray.addFirst(u);
+                            marker[u.id] = 1;
+
+                        }
+                        else{
+                            cycleArray.addLast(u);
+                            marker[u.id] = 1;
+                        }
+                    }
+                }
+
             }
             else{
                 //when we find free B
@@ -127,31 +161,24 @@ public class Jocg_Pointer extends Algo{
                     //dist.put(null,dist.get(v));
                     continue;
                 }
-                children = new ArrayList<>();
-                children.add(v.matching);
-            }
 
-            for(Vertex u:children){
-                if(v.label == Label.A && u == v.matching){
-                    continue;
-                }
+                Vertex u = v.matching;
+
                 //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
                 if(u.distance > v.distance + graph.getWeight(u,v)){
                     u.distance = v.distance + graph.getWeight(u,v);
                     //dist.put(u,dist.get(v) + graph.getWeight(u,v));
+                    if(marker[u.id] != 0){
+                        continue;
+                    }
                     if(graph.getWeight(u,v) == 0){
-                        if(marker[u.id] == 0){
-                            queue.addFirst(u);
-                            marker[u.id] = 1;
-                        }
+                        cycleArray.addFirst(u);
+                        marker[u.id] = 1;
 
                     }
                     else{
-                        if(marker[u.id] == 0){
-                            queue.addLast(u);
-                            marker[u.id] = 1;
-                        }
-
+                        cycleArray.addLast(u);
+                        marker[u.id] = 1;
                     }
                 }
             }
@@ -177,14 +204,6 @@ public class Jocg_Pointer extends Algo{
         //v (- A
         //parent (- B
 
-//        if(exloredVtable[v.id] == 0){
-//            exloredVtable[v.id] = 1;
-//            exloredV.add(v);
-//        }
-//        else{
-//            return false;
-//        }
-
         if(v.explored){
             return false;
         }
@@ -193,27 +212,25 @@ public class Jocg_Pointer extends Algo{
             exloredV.add(v);
         }
 
+        dve+=1;
+
         while(true){
             Vertex u = v.next();
 
             if(u == null){
                 break;
             }
-//            if(u.matching != null && exloredVtable[u.matching.id] == 1){
-//                continue;
-//            }
-
             if(u.matching != null && u.matching.explored){
                 continue;
             }
 
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
-                ve+=1;
                 if(u.matching != null){
                     if(!u.hasNext()){
                         continue;
                     }
                 }
+
                 if(newdfs(u.next())){
                     u.match(v);
                     path.addFirst(u);
@@ -227,22 +244,6 @@ public class Jocg_Pointer extends Algo{
         //so no explored vertex will be explored twice
         //dist.put(v,INF);
         return false;
-    }
-
-    private int pathWeight(LinkedList<Vertex> path){
-        Vertex parent = null;
-        int result = 0;
-        for(Vertex v:path){
-            if(parent != null && parent.piece != v.piece){
-                result += 1;
-            }
-            parent = v;
-        }
-        return result;
-    }
-
-    private boolean containE(HashMap<Vertex,HashSet<Vertex>> visitedE, Vertex a, Vertex b){
-        return (visitedE.containsKey(a) && visitedE.get(a).contains(b));
     }
 
     private int dist(Vertex v){

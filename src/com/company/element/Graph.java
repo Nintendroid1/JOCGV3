@@ -62,9 +62,10 @@ public class Graph {
 
 
     public int matchCount(){
-        assert freeV(Label.A).size() == freeV(Label.B).size();
-        assert  freeV(null).size()%2 == 0;
-        return (vertices.size() - freeV(null).size())/2;
+        ArrayList<Vertex> freeA = freeV(Label.A);
+        ArrayList<Vertex> freeB = freeV(Label.B);
+        assert freeA.size() == freeB.size();
+        return this.vertices.size()/2 - freeA.size();
     }
 
     public boolean matchValidCheck(){

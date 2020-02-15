@@ -25,18 +25,22 @@ public class TestEuclidean {
         Hop_NoHash hop;
         Jocg_Pointer jocg;
         int[] numV = {10000};//,50000};
-        int[] middles = {32};//{2,4,8,16,32,64};
-        int times = 1;
-        double bottleneck = 1;
+        int[] middles = {8,16,32,64};
+        int times = 20;
+        double bottleneck = 5;
         for(int i:numV){
-            double edgeNum = 0;
-            double matchNum = 0;
-            double timeElapsedHop = 0;
-            double timeElapsedJocg = 0;
-            double HKve = 0;
-            double Jove = 0;
-
             for(int middle:middles){
+
+                double edgeNum = 0;
+                double matchNum = 0;
+                double timeElapsedHop = 0;
+                double timeElapsedJocg = 0;
+                double timePreprocess = 0;
+                double HKdve = 0;
+                double HKbve = 0;
+                double Jodve = 0;
+                double Jobve = 0;
+
                 for(int time = 1; time <= times; time++){
                     System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " middle = " + middle + " time: " + time + "/" + times);
 //                System.out.println("|V| = " + 2*i);
@@ -74,34 +78,54 @@ public class TestEuclidean {
 
                     edgeNum += graph.edgeNum;
                     matchNum += graph.matchCount();
-                    HKve+=hop.ve;
-                    Jove+=jocg.ve;
+                    if(graph.matchCount() > i/2){
+                        int a = 0;
+                    }
+                    HKdve+=hop.dve;
+                    Jodve+=jocg.dve;
+
+                    HKbve+=hop.bve;
+                    Jobve+=jocg.bve;
+
+                    timePreprocess+=jocg.preprocess;
                 }
 
                 timeElapsedHop /= times;
                 timeElapsedJocg /= times;
                 edgeNum /= times;
                 matchNum /= times;
-                HKve/=times;
-                Jove/=times;
+
+                timePreprocess/=times;
+                HKdve/=times;
+                Jodve/=times;
+                HKbve/=times;
+                Jobve/=times;
 
                 double ratio = timeElapsedJocg/timeElapsedHop;
-                System.out.println("average HKve: " + HKve);
-                System.out.println("average Jove: " + Jove);
+                System.out.println("average HKbve: " + HKbve);
+                System.out.println("average HKdve: " + HKdve);
+                System.out.println("average Jobve: " + Jobve);
+                System.out.println("average Jodve: " + Jodve);
+
+
                 System.out.println("average Edge number: " + edgeNum);
                 System.out.println("average Matching number: " + matchNum);
                 System.out.println("average Jocg: " + timeElapsedJocg);
+                System.out.println("average Jocg Preprocess: " + timePreprocess);
                 System.out.println("average Hop: " + timeElapsedHop);
                 System.out.println("average Jocg/Hop: " + ratio);
                 System.out.println("----------------------------------------------------------");
 
 
                 writer.append("|V| = " + i + " bottleneck = " + bottleneck + " middle = " + middle + " times = " + times +'\n');
-                writer.append("* average HK.ve: " + HKve + "\n");
-                writer.append("* average Jocg.ve: " + Jove + "\n");
+                writer.append("* average HK.bve: " + HKbve + "\n");
+                writer.append("* average HK.dve: " + HKdve + "\n");
+                writer.append("* average Jocg.bve: " + Jobve + "\n");
+                writer.append("* average Jocg.dve: " + Jodve + "\n");
                 writer.append("average Edge number: " + edgeNum + "\n");
                 writer.append("average Matching number: " + matchNum + "\n");
                 writer.append("average Jocg: " + timeElapsedJocg + "\n");
+                writer.append("average Jocg Preprocess: " + timePreprocess + "\n");
                 writer.append("average Hop: " + timeElapsedHop + "\n");
                 writer.append("average Jocg/Hop: " + ratio + "\n");
                 //writer.append();

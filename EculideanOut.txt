@@ -1,9 +1,48 @@
-|V| = 60000 bottleneck = 1.0 times = 5
-average Visted Edges: 0.0
-average not Delete Edges: 0.0
-average Edge number: 109064.0
-average Matching number: 14152.2
-average Jocg: 81.2
-average Hop: 85.4
-average Jocg/Hop: 0.9508196721311475
+|V| = 10000 bottleneck = 5.0 middle = 8 times = 20
+* average HK.bve: 104525.85
+* average HK.dve: 90339.45
+* average Jocg.bve: 193491.4
+* average Jocg.dve: 84643.25
+average Edge number: 116000.1
+average Matching number: 4984.45
+average Jocg: 68.3
+average Jocg Preprocess: 3.1
+average Hop: 66.0
+average Jocg/Hop: 1.034848484848485
+----------------------------------------------------------
+|V| = 10000 bottleneck = 5.0 middle = 16 times = 20
+* average HK.bve: 110023.7
+* average HK.dve: 93580.75
+* average Jocg.bve: 138809.35
+* average Jocg.dve: 77890.35
+average Edge number: 115913.25
+average Matching number: 4985.7
+average Jocg: 38.65
+average Jocg Preprocess: 4.0
+average Hop: 49.85
+average Jocg/Hop: 0.7753259779338013
+----------------------------------------------------------
+|V| = 10000 bottleneck = 5.0 middle = 32 times = 20
+* average HK.bve: 127005.5
+* average HK.dve: 108044.65
+* average Jocg.bve: 110977.6
+* average Jocg.dve: 99753.9
+average Edge number: 115919.55
+average Matching number: 4991.0
+average Jocg: 31.2
+average Jocg Preprocess: 6.15
+average Hop: 48.3
+average Jocg/Hop: 0.6459627329192547
+----------------------------------------------------------
+|V| = 10000 bottleneck = 5.0 middle = 64 times = 20
+* average HK.bve: 118475.1
+* average HK.dve: 100602.05
+* average Jocg.bve: 81720.35
+* average Jocg.dve: 124456.1
+average Edge number: 115989.3
+average Matching number: 4990.15
+average Jocg: 30.75
+average Jocg Preprocess: 11.65
+average Hop: 47.6
+average Jocg/Hop: 0.6460084033613445
 ----------------------------------------------------------

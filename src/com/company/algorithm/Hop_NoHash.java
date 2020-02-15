@@ -1,5 +1,6 @@
 package com.company.algorithm;
 
+import com.company.element.DataStructure;
 import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
@@ -13,7 +14,8 @@ public class Hop_NoHash extends Algo{
     public boolean print;
     public Integer mode;
     public boolean checkGraph;
-    public Integer ve;
+    public int dve;
+    public int bve;
     int shortestD;
 
     public Hop_NoHash(Graph graph){
@@ -27,11 +29,12 @@ public class Hop_NoHash extends Algo{
 
     public void start(){
         iterate = 0;
-        ve = 0;
+        dve = 0;
+        bve = 0;
         while(bfs()){
             iterate+=1;
             for(Vertex v:graph.freeV(Label.A)){
-                assert v.matching == null;
+                //assert v.matching == null;
                 dfs(v);
             }
         }
@@ -40,6 +43,7 @@ public class Hop_NoHash extends Algo{
     private boolean bfs(){
         //generate an empty queue
         LinkedList<Vertex> queue = new LinkedList<>();
+        //DataStructure.CycleArray queue = new DataStructure.CycleArray(graph.vertices.size()/2);
         shortestD = INF;
 
         //set all free As' distance to 0, and push them to the queue
@@ -64,13 +68,13 @@ public class Hop_NoHash extends Algo{
             Vertex v = queue.pop();
 
             if(v.distance < shortestD){
+                this.bve+=1;
                 for(Vertex u:v.edges){
                     /*
                      * Because we only apply HK on the current Graph
                      * So we check if u is in the Graph
                      * If it is, it's easy to see its matching must be in the current graph.
                      */
-
                     if(!checkGraph || u.piece == v.piece){
                         /*
                          * <dist(u.matching) == INF> means
@@ -78,6 +82,7 @@ public class Hop_NoHash extends Algo{
                          * In either case, we update the dist of <u.matching>
                          */
                         //dist.get(u.matching) == INF
+
                         if(u.matching == null){
                             shortestD = v.distance + 1;
                         }
@@ -107,10 +112,10 @@ public class Hop_NoHash extends Algo{
             return true;
         }
 
+        this.dve+=1;
         for(Vertex u:v.edges){
             if(!checkGraph || u.piece == v.piece){
                 int nextDist;
-                this.ve+=1;
                 if(u.matching == null){
                     nextDist = shortestD;
                 }
