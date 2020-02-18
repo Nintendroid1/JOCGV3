@@ -26,7 +26,7 @@ public class TestEuclidean {
         Jocg_Pointer jocg;
         int[] numV = {10000};//,50000};
         int[] middles = {8,16,32,64};
-        int times = 20;
+        int times = 5;
         double bottleneck = 5;
         for(int i:numV){
             for(int middle:middles){
@@ -78,9 +78,7 @@ public class TestEuclidean {
 
                     edgeNum += graph.edgeNum;
                     matchNum += graph.matchCount();
-                    if(graph.matchCount() > i/2){
-                        int a = 0;
-                    }
+                    
                     HKdve+=hop.dve;
                     Jodve+=jocg.dve;
 
