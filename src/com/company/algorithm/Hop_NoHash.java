@@ -42,7 +42,8 @@ public class Hop_NoHash extends Algo{
 
     private boolean bfs(){
         //generate an empty queue
-        LinkedList<Vertex> queue = new LinkedList<>();
+        //LinkedList<Vertex> queue = new LinkedList<>();
+        DataStructure.CycleArray<Vertex> queue = new DataStructure.CycleArray<>(graph.vertices.size());
         //DataStructure.CycleArray queue = new DataStructure.CycleArray(graph.vertices.size()/2);
         shortestD = INF;
 

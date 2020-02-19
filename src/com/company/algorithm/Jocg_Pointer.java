@@ -16,6 +16,10 @@ public class Jocg_Pointer extends Algo{
     private int currentBFS;
     public int dve;
     public int bve;
+
+    public int pre_dve;
+    public int pre_bve;
+    public int pre_ite;
     public long preprocess;
     private long start;
     private long end;
@@ -35,15 +39,19 @@ public class Jocg_Pointer extends Algo{
     public void start(){
         dve=0;
         bve=0;
+        pre_bve=0;
+        pre_dve=0;
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
             hop.checkGraph = true;
             hop.start();
-//            this.dve+=hop.dve;
-//            this.bve+=hop.bve;
+            this.pre_dve+=hop.dve;
+            this.pre_bve+=hop.bve;
+            this.pre_ite+=hop.iterate;
         }
+        this.pre_ite/=graph.pieces.size();
         end = System.currentTimeMillis();
         preprocess = end - start;
         iterate = 0;

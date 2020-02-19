@@ -1,48 +1,92 @@
-|V| = 10000 bottleneck = 5.0 middle = 8 times = 20
-* average HK.bve: 104525.85
-* average HK.dve: 90339.45
-* average Jocg.bve: 193491.4
-* average Jocg.dve: 84643.25
-average Edge number: 116000.1
-average Matching number: 4984.45
-average Jocg: 68.3
+|V| = 10000 bottleneck = 5.0 middle = 8 times = 10
+* average HK.bve: 116536.1
+* average HK.dve: 98615.5
+average JoPrebve: 8944.2
+average JoPredve: 6296.2
+* average Jocg.bve: 207347.7
+* average Jocg.dve: 88956.1
+average HKite: 28.7
+average Joite: 23.3
+average JoPreite: 1.0
+average HK.BFS/ite: 4060.4912891986064
+average HK.DFS/ite: 3436.0801393728225
+average Jo.Pre.BFS/ite: 8944.2
+average Jo.Pre.DFS/ite: 6296.2
+average Jo.BFS/ite: 8899.042918454936
+average Jo.DFS/ite: 3817.8583690987125
+average Edge number: 115804.4
+average Matching number: 4982.9
+average Jocg: 68.0
+average Jocg Preprocess: 2.5
+average Hop: 61.5
+average Jocg/Hop: 1.1056910569105691
+----------------------------------------------------------
+|V| = 10000 bottleneck = 5.0 middle = 16 times = 10
+* average HK.bve: 100915.6
+* average HK.dve: 87797.7
+average JoPrebve: 13161.3
+average JoPredve: 11070.6
+* average Jocg.bve: 106996.0
+* average Jocg.dve: 59573.6
+average HKite: 25.7
+average Joite: 11.3
+average JoPreite: 2.0
+average HK.BFS/ite: 3926.6770428015566
+average HK.DFS/ite: 3416.2529182879375
+average Jo.Pre.BFS/ite: 6580.65
+average Jo.Pre.DFS/ite: 5535.3
+average Jo.BFS/ite: 9468.67256637168
+average Jo.DFS/ite: 5271.999999999999
+average Edge number: 115932.9
+average Matching number: 4986.4
+average Jocg: 32.8
 average Jocg Preprocess: 3.1
-average Hop: 66.0
-average Jocg/Hop: 1.034848484848485
+average Hop: 40.4
+average Jocg/Hop: 0.8118811881188118
 ----------------------------------------------------------
-|V| = 10000 bottleneck = 5.0 middle = 16 times = 20
-* average HK.bve: 110023.7
-* average HK.dve: 93580.75
-* average Jocg.bve: 138809.35
-* average Jocg.dve: 77890.35
-average Edge number: 115913.25
-average Matching number: 4985.7
-average Jocg: 38.65
-average Jocg Preprocess: 4.0
-average Hop: 49.85
-average Jocg/Hop: 0.7753259779338013
+|V| = 10000 bottleneck = 5.0 middle = 32 times = 10
+* average HK.bve: 127744.1
+* average HK.dve: 107823.3
+average JoPrebve: 21323.7
+average JoPredve: 18904.7
+* average Jocg.bve: 80443.4
+* average Jocg.dve: 74622.8
+average HKite: 31.4
+average Joite: 8.0
+average JoPreite: 3.8
+average HK.BFS/ite: 4068.283439490446
+average HK.DFS/ite: 3433.863057324841
+average Jo.Pre.BFS/ite: 5611.5
+average Jo.Pre.DFS/ite: 4974.921052631579
+average Jo.BFS/ite: 10055.425
+average Jo.DFS/ite: 9327.85
+average Edge number: 115900.5
+average Matching number: 4987.4
+average Jocg: 30.7
+average Jocg Preprocess: 6.9
+average Hop: 44.7
+average Jocg/Hop: 0.6868008948545861
 ----------------------------------------------------------
-|V| = 10000 bottleneck = 5.0 middle = 32 times = 20
-* average HK.bve: 127005.5
-* average HK.dve: 108044.65
-* average Jocg.bve: 110977.6
-* average Jocg.dve: 99753.9
-average Edge number: 115919.55
-average Matching number: 4991.0
-average Jocg: 31.2
-average Jocg Preprocess: 6.15
-average Hop: 48.3
-average Jocg/Hop: 0.6459627329192547
-----------------------------------------------------------
-|V| = 10000 bottleneck = 5.0 middle = 64 times = 20
-* average HK.bve: 118475.1
-* average HK.dve: 100602.05
-* average Jocg.bve: 81720.35
-* average Jocg.dve: 124456.1
-average Edge number: 115989.3
-average Matching number: 4990.15
-average Jocg: 30.75
-average Jocg Preprocess: 11.65
-average Hop: 47.6
-average Jocg/Hop: 0.6460084033613445
+|V| = 10000 bottleneck = 5.0 middle = 64 times = 10
+* average HK.bve: 128597.5
+* average HK.dve: 109887.6
+average JoPrebve: 34689.9
+average JoPredve: 30096.0
+* average Jocg.bve: 44951.3
+* average Jocg.dve: 112509.5
+average HKite: 31.7
+average Joite: 4.3
+average JoPreite: 6.1
+average HK.BFS/ite: 4056.7034700315457
+average HK.DFS/ite: 3466.485804416404
+average Jo.Pre.BFS/ite: 5686.868852459017
+average Jo.Pre.DFS/ite: 4933.770491803279
+average Jo.BFS/ite: 10453.79069767442
+average Jo.DFS/ite: 26165.0
+average Edge number: 115731.1
+average Matching number: 4986.5
+average Jocg: 35.3
+average Jocg Preprocess: 10.5
+average Hop: 48.5
+average Jocg/Hop: 0.7278350515463917
 ----------------------------------------------------------
