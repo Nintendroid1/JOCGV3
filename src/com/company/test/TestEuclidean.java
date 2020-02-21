@@ -21,8 +21,8 @@ public class TestEuclidean {
         Hop_NoHash hop;
         Jocg_Pointer jocg;
         int[] numV = {10000};//,50000};
-        int[] middles = {8,16,32,64};
-        int times = 10;
+        int[] middles = {64};//{8,16,32,64};
+        int times = 5;
         double bottleneck = 5;
         for(int i:numV){
             for(int middle:middles){
@@ -60,7 +60,7 @@ public class TestEuclidean {
                     for(Graph piece:graph.pieces){
                         piece.resetMatch();
                     }
-                    //changeGraph(graph);
+                    changeGraph(graph);
                     assert graph.matchCount() == 0;
 
                     long startj = System.currentTimeMillis();

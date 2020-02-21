@@ -31,9 +31,18 @@ public class Jocg_Pointer extends Algo{
 
     public int iterate;
 
+    DataStructure.CycleArray<DataStructure.DisV> zeros;
+    DataStructure.CycleArray<DataStructure.DisV> ones;
+    DataStructure.CycleArray<DataStructure.DisV> twos;
+    DataStructure.CycleArray<DataStructure.DisV> temp;
+
     public Jocg_Pointer(Graph graph){
         this.INF = Integer.MAX_VALUE;
         this.graph = graph;
+
+        zeros = new DataStructure.CycleArray<>(graph.vertices.size()/2+4);
+        ones = new DataStructure.CycleArray<>(graph.vertices.size()/2+4);
+        twos = new DataStructure.CycleArray<>(graph.vertices.size()/2+4);
     }
 
     public void start(){
@@ -108,17 +117,9 @@ public class Jocg_Pointer extends Algo{
     }
 
     private boolean newbfs(){
-        //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
-        DataStructure.CycleArray<DataStructure.DisV> zeros
-                = new DataStructure.CycleArray<>(graph.vertices.size()/3+ 10);
-        DataStructure.CycleArray<DataStructure.DisV> ones
-                = new DataStructure.CycleArray<>(graph.vertices.size()/3+ 10);
-        DataStructure.CycleArray<DataStructure.DisV> twos
-                = new DataStructure.CycleArray<>(graph.vertices.size()/3+ 10);
-        DataStructure.CycleArray<DataStructure.DisV> temp;
         shortestD = INF;
-        for(Vertex v:graph.vertices){
-            if(v.label == Label.A && v.isFree()){
+        for(Vertex v:graph.V(Label.A)){
+            if(v.isFree()){
                 zeros.addLast(new DataStructure.DisV(v,0));
                 v.distance = 0;
             }
