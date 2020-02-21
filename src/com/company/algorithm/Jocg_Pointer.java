@@ -51,7 +51,9 @@ public class Jocg_Pointer extends Algo{
             this.pre_bve+=hop.bve;
             this.pre_ite+=hop.iterate;
         }
-        this.pre_ite/=graph.pieces.size();
+        if(!graph.pieces.isEmpty()){
+            this.pre_ite/=graph.pieces.size();
+        }
         end = System.currentTimeMillis();
         preprocess = end - start;
         iterate = 0;
@@ -105,52 +107,67 @@ public class Jocg_Pointer extends Algo{
         }
     }
 
-//    private boolean newbfs(){
-//        DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
-//        shortestD = INF;
-//        for(Vertex v:graph.vertices){
-//            if(v.label == Label.A && v.isFree()){
-//                cycleArray.addLast(new DataStructure.DisV(v,0));
-//                //marker[v.id] = 1;
-//                v.distance = 0;
-//            }
-//            else{
-//                v.distance = INF;
-//            }
-//        }
-//
-//        while(!cycleArray.isEmpty()){
-//
-//            Vertex v;
-//            DataStructure.DisV dv;
-//            dv = cycleArray.pop();
-//            v = dv.v;
-//            //marker[v.id] = 0;
-//            v.reset();
-//            //ArrayList<Vertex> children;
-//            if(v.distance > shortestD){
-//                continue;
-//            }
-//            if(dv.d >= v.distance){
-//                continue;
-//            }
-//
-//            this.bve+=1;
-//            if(v.label == Label.A){
-//                //children = v.edges;
-//
-//                for(Vertex u:v.edges){
-//                    if(v.label == Label.A && u == v.matching){
-//                        continue;
-//                    }
-//                    //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
-//                    if(u.distance > v.distance + graph.getWeight(u,v)){
-//
-//                        u.distance = v.distance + graph.getWeight(u,v);
-//                        //dist.put(u,dist.get(v) + graph.getWeight(u,v));
-////                        if(marker[u.id] != 0){
-////                            continue;
-////                        }
+    private boolean newbfs(){
+        //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
+        DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
+        shortestD = INF;
+        for(Vertex v:graph.vertices){
+            if(v.label == Label.A && v.isFree()){
+                cycleArray.addLast(new DataStructure.DisV(v,0));
+                //marker[v.id] = 1;
+                v.distance = 0;
+            }
+            else{
+                v.distance = INF;
+            }
+        }
+
+        while(!cycleArray.isEmpty()){
+
+            Vertex v;
+            DataStructure.DisV dv;
+            dv = cycleArray.pop();
+            v = dv.v;
+            if(dv.d > v.distance){
+                continue;
+            }
+            //marker[v.id] = 0;
+            if(v.distance > shortestD){
+                continue;
+            }
+            v.reset();
+
+            this.bve+=1;
+            if(v.label == Label.A){
+                //children = v.edges;
+
+                for(Vertex u:v.edges){
+                    if(u == v.matching){
+                        continue;
+                    }
+                    //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
+                    if(u.distance > v.distance + graph.getWeight(u,v)){
+                        u.distance = v.distance + graph.getWeight(u,v);
+                        if(graph.getWeight(u,v) == 0){
+                            if(u.matching == null){
+                                shortestD = v.distance;
+                            }
+                            else if(graph.getWeight(u,u.matching) == 0
+                                    && u.matching.distance > v.distance){
+                                u.matching.distance = v.distance;
+                                u.reset();
+                                cycleArray.addFirst(new DataStructure.DisV(u.matching,u.matching.distance));
+                            }
+                            else {
+                                cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
+                            }
+                        }
+                        else{
+                            cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
+                        }
+
+                    }
+
 //                        if(graph.getWeight(u,v) == 0){
 //                            cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
 //                            //marker[u.id] = 1;
@@ -159,48 +176,38 @@ public class Jocg_Pointer extends Algo{
 //                            cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
 //                            //marker[u.id] = 1;
 //                        }
-//                    }
-//                }
-//
-//            }
-//            else{
-//                //when we find free B
-//                if(v.matching == null){
-//                    shortestD = v.distance;
-//                    //dist.put(null,dist.get(v));
-//                    continue;
-//                }
-//
-//                Vertex u = v.matching;
-//
-//                //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
-//                if(u.distance > v.distance + graph.getWeight(u,v)){
-//                    u.distance = v.distance + graph.getWeight(u,v);
-//                    //dist.put(u,dist.get(v) + graph.getWeight(u,v));
-////                    if(marker[u.id] != 0){
-////                        continue;
-////                    }
-//                    if(graph.getWeight(u,v) == 0){
-//                        cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-//                        //marker[u.id] = 1;
-//
-//                    }
-//                    else{
-//                        cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-//                        //marker[u.id] = 1;
-//                    }
-//                }
-//            }
-//        }
-//
-//        System.out.println("Jocg bfs returns: " + shortestD);
-//        currentBFS = shortestD;
-//        //currentBFS = dist.get(null);
-//        return shortestD != INF;
-//    }
+                    }
+            }
+            else{
+                //when we find free B
+                if(v.matching == null){
+                    shortestD = v.distance;
+                    continue;
+                }
 
-    private boolean newbfs(){
-//        int[] marker = new int[graph.vertices.size()];
+                Vertex u = v.matching;
+                if(u.distance > v.distance + graph.getWeight(u,v)){
+                    u.distance = v.distance + graph.getWeight(u,v);
+
+                    if(graph.getWeight(u,v) == 0){
+                        cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
+                    }
+                    else{
+                        cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
+                    }
+                }
+            }
+        }
+
+        System.out.println("Jocg bfs returns: " + shortestD);
+        currentBFS = shortestD;
+        //currentBFS = dist.get(null);
+        return shortestD != INF;
+    }
+
+
+    private boolean newbfs_b(){
+        //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
         DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
         shortestD = INF;
         for(Vertex v:graph.vertices){
@@ -229,10 +236,7 @@ public class Jocg_Pointer extends Algo{
             }
 
             v.reset();
-//            marker[v.id] += 1;
-//            if(marker[v.id] >= 3){
-//                int a = 0;
-//            }
+
             this.bve+=1;
             if(v.label == Label.A){
                 //children = v.edges;
@@ -243,12 +247,8 @@ public class Jocg_Pointer extends Algo{
                     }
                     //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
                     if(u.distance > v.distance + graph.getWeight(u,v)){
-
                         u.distance = v.distance + graph.getWeight(u,v);
-                        //dist.put(u,dist.get(v) + graph.getWeight(u,v));
-//                        if(marker[u.id] != 0){
-//                            continue;
-//                        }
+
                         if(graph.getWeight(u,v) == 0){
                             cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
                             //marker[u.id] = 1;
@@ -265,26 +265,18 @@ public class Jocg_Pointer extends Algo{
                 //when we find free B
                 if(v.matching == null){
                     shortestD = v.distance;
-                    //dist.put(null,dist.get(v));
                     continue;
                 }
 
                 Vertex u = v.matching;
-
-                //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
                 if(u.distance > v.distance + graph.getWeight(u,v)){
                     u.distance = v.distance + graph.getWeight(u,v);
-                    //dist.put(u,dist.get(v) + graph.getWeight(u,v));
-//                    if(marker[u.id] != 0){
-//                        continue;
-//                    }
+
                     if(graph.getWeight(u,v) == 0){
                         cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-                        //marker[u.id] = 1;
                     }
                     else{
                         cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-                        //marker[u.id] = 1;
                     }
                 }
             }

@@ -2,22 +2,18 @@ package com.company.test;
 
 import com.company.algorithm.*;
 import com.company.element.Graph;
+import com.company.element.Vertex;
 import com.company.generator.GraphGen;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class TestEuclidean {
     public TestEuclidean(){
 
     }
-
-//    public static void testFileGen(){
-//        EuclideanGen euclideanGen = new EuclideanGen(100);
-//        Graph graph = euclideanGen.generate("C:\\Users\\yjc38\\CondaCode\\JOCG\\output.txt",1,5000);
-//        int a = 0;
-//    }
 
     public static void test() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("EculideanOut.txt"));
@@ -25,7 +21,7 @@ public class TestEuclidean {
         Hop_NoHash hop;
         Jocg_Pointer jocg;
         int[] numV = {10000};//,50000};
-        int[] middles = {8,16,32,64};
+        int[] middles = {32};//{8,16,32,64};
         int times = 10;
         double bottleneck = 5;
         for(int i:numV){
@@ -64,6 +60,7 @@ public class TestEuclidean {
                     for(Graph piece:graph.pieces){
                         piece.resetMatch();
                     }
+                    //changeGraph(graph);
                     assert graph.matchCount() == 0;
 
                     long startj = System.currentTimeMillis();
@@ -185,26 +182,10 @@ public class TestEuclidean {
     }
 
 
-
-//    public static void testGen(){
-//        for(int i = 1000; i < 3000; i+=100){
-//            EuclideanGen euclideanGen = new EuclideanGen(2131);
-//            Graph graph = euclideanGen.generate(i,80,40,0.5,4);
-//            int smallestSub = Integer.MAX_VALUE;
-//            for(Graph sub:graph.pieces){
-//                if(sub.vertices.size() < smallestSub){
-//                    smallestSub = sub.vertices.size();
-//                }
-//            }
-//            System.out.println(smallestSub + " " + graph.vertices.size());
-//            System.out.println(i + ": "+(double) smallestSub/graph.vertices.size()*100 + "%");
-//            int a = 0;
-//        }
-//    }
+    private static void changeGraph(Graph g){
+        for(Vertex v: g.vertices){
+            v.piece = new Graph();
+        }
+        g.pieces = new ArrayList<>();
+    }
 }
-
-//Graph graph = euclideanGen.generateNoPiece(i,5,5);
-//TestGraph.ifValid(graph);
-
-//                EuclideanGen euclideanGen = new EuclideanGen(100);
-//                Graph graph = euclideanGen.generate("C:\\Users\\yjc38\\CondaCode\\JOCG\\output_" + i + ".txt",5,i);
