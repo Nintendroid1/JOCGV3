@@ -109,6 +109,144 @@ public class Jocg_Pointer extends Algo{
 
     private boolean newbfs(){
         //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
+        DataStructure.CycleArray<DataStructure.DisV> zeros
+                = new DataStructure.CycleArray<>(graph.vertices.size()/3+ 10);
+        DataStructure.CycleArray<DataStructure.DisV> ones
+                = new DataStructure.CycleArray<>(graph.vertices.size()/3+ 10);
+        DataStructure.CycleArray<DataStructure.DisV> twos
+                = new DataStructure.CycleArray<>(graph.vertices.size()/3+ 10);
+        DataStructure.CycleArray<DataStructure.DisV> temp;
+        shortestD = INF;
+        for(Vertex v:graph.vertices){
+            if(v.label == Label.A && v.isFree()){
+                zeros.addLast(new DataStructure.DisV(v,0));
+                v.distance = 0;
+            }
+            else{
+                v.distance = INF;
+            }
+        }
+
+        while(!(zeros.isEmpty()&&ones.isEmpty()&&twos.isEmpty())){
+            if(zeros.isEmpty()){
+                while (zeros.isEmpty()){
+                    temp = zeros;
+                    zeros = ones;
+                    ones = twos;
+                    twos = temp;
+                }
+            }
+
+            Vertex v;
+            DataStructure.DisV dv;
+            dv = zeros.pop();
+            v = dv.v;
+            if(dv.d > shortestD){
+                continue;
+            }
+
+            if(v == null){
+                shortestD = dv.d;
+                continue;
+            }
+            v.reset();
+            if(dv.d > v.distance || v.distance > shortestD){
+                continue;
+            }
+            this.bve+=1;
+            for(Vertex u:v.edges){
+                if(u == v.matching){
+                    continue;
+                }
+                u.reset();
+                int distance;
+                if(u.matching != null){
+                    distance =  graph.getWeight(v,u) + graph.getWeight(u,u.matching);
+                }
+                else{
+                    distance = graph.getWeight(v,u);
+                }
+
+                if(v.distance + distance > shortestD){
+                    continue;
+                }
+                if(u.matching == null || u.matching.distance > v.distance + distance){
+                    if(u.matching != null){
+                        u.matching.distance = v.distance + distance;
+                    }
+                    if(distance == 0){
+                        zeros.addLast(new DataStructure.DisV(u.matching,v.distance));
+                    }
+                    else if(distance == 1){
+                        ones.addLast(new DataStructure.DisV(u.matching,v.distance+distance));
+                    }
+                    else{
+                        twos.addLast(new DataStructure.DisV(u.matching,v.distance+distance));
+                    }
+                }
+            }
+
+
+        }
+        System.out.println("Jocg bfs returns: " + shortestD);
+        currentBFS = shortestD;
+        //currentBFS = dist.get(null);
+        return shortestD != INF;
+    }
+
+    private boolean newdfs(Vertex v){
+        /*
+         * v = u.matching for some u
+         * if v == null, we know u is free, so we find an augmenting path
+         */
+
+        if(v == null){
+            return true;
+        }
+
+        if(v.explored){
+            return false;
+        }
+        else{
+            v.explored = true;
+            exloredV.add(v);
+        }
+
+        dve+=1;
+
+        while(true){
+            Vertex u = v.next();
+            if(u == null){
+                break;
+            }
+            if(u.matching != null && u.matching.explored){
+                continue;
+            }
+
+            if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
+                if(u.matching != null){
+                    if(!u.hasNext()){
+                        continue;
+                    }
+                }
+
+                if(newdfs(u.next())){
+                    u.match(v);
+                    path.addFirst(u);
+                    path.addFirst(v);
+                    return true;
+                }
+            }
+        }
+
+        //set the distance to the explored vertex to INF
+        //so no explored vertex will be explored twice
+        //dist.put(v,INF);
+        return false;
+    }
+
+    private boolean newbfs_temp(){
+        //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
         DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
         shortestD = INF;
         for(Vertex v:graph.vertices){
@@ -206,7 +344,7 @@ public class Jocg_Pointer extends Algo{
     }
 
 
-    private boolean newbfs_b(){
+    private boolean newbfs_backup(){
         //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
         DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
         shortestD = INF;
@@ -290,7 +428,7 @@ public class Jocg_Pointer extends Algo{
 
 
 
-    private boolean newdfs(Vertex v){
+    private boolean newdfs_back(Vertex v){
         /*
          * v = u.matching for some u
          * if v == null, we know u is free, so we find an augmenting path

@@ -21,7 +21,7 @@ public class TestEuclidean {
         Hop_NoHash hop;
         Jocg_Pointer jocg;
         int[] numV = {10000};//,50000};
-        int[] middles = {32};//{8,16,32,64};
+        int[] middles = {8,16,32,64};
         int times = 10;
         double bottleneck = 5;
         for(int i:numV){
