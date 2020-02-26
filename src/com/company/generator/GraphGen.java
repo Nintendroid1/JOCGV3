@@ -21,7 +21,6 @@ public class GraphGen {
         this.seed = seed;
     }
 
-
     public Graph generate(int num, double large, double middle, double small, double bottleneck){
 
         /*
@@ -254,7 +253,119 @@ public class GraphGen {
 
     }
 
-    private int search(double coord,double small) {
-        return (int)(coord/small);
+
+    public Graph generate_approx(int num, double large, int sp, double bottleneck){
+
+        /*
+         * Assumption:
+         * large * large bounding box
+         * each side is divided to sp parts
+         */
+        this.r = new Random(seed + (int)(System.currentTimeMillis() * 1000));
+        double middle = large/sp;
+        assert bottleneck < middle;
+
+        Graph[][] pieceGrid = new Graph[sp][sp];
+        /*
+         * generate points and vertices
+         */
+        ArrayList<Point> points = new ArrayList<>(num);
+        ArrayList<Vertex> vertices = new ArrayList<Vertex>(num);
+        for(int i = 0; i < num; i++){
+            Point point = new Point(r.nextDouble()*large,r.nextDouble()*large);
+            points.add(point);
+            if(i < num/2){
+                vertices.add(new Vertex(i, Label.A));
+            }
+            else{
+                vertices.add(new Vertex(i, Label.B));
+            }
+            int px = search(point.x,middle);
+            int py = search(point.y,middle);
+            Graph g = pieceGrid[px][py];
+            Vertex v = vertices.get(i);
+            if(g == null){
+                pieceGrid[px][py] = new Graph();
+                g = pieceGrid[px][py];
+            }
+
+            g.vertices.add(v);
+            v.piece = g;
+
+        }
+
+        //generate edges < bottleneck
+        {
+            for(int i = 0; i < num; i++){
+                ArrayList<Vertex> edges = new ArrayList<>();
+                for(int j = 0; j < num; j++){
+                    Point source = points.get(i);
+                    Point target = points.get(j);
+                    //if labels are same, or two vertexes are same, not calculate distance
+                    if(source == target || vertices.get(i).label == vertices.get(j).label){
+                        continue;
+                    }
+                    double x = source.x - target.x;
+                    double y = source.y - target.y;
+                    double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                    if(d <= bottleneck){
+                        edges.add(vertices.get(j));
+                    }
+                }
+                vertices.get(i).edges = edges;
+            }
+        }
+
+        ArrayList<Graph> piecesset = new ArrayList<>();
+        for(int i = 0; i < sp; i++){
+            for(int j = 0; j < sp;j++){
+                if(pieceGrid[i][j] != null){
+                    piecesset.add(pieceGrid[i][j]);
+                }
+            }
+        }
+        //test Graph if valid
+        {
+            int count = 0;
+            for(Graph graph:piecesset){
+                count += graph.vertices.size();
+            }
+            assert count == vertices.size();
+        }
+
+        Graph graph = new Graph();
+
+        graph.vertices = vertices;
+        graph.pieces = piecesset;
+        assert vertices.size()%2 == 0;
+        graph.numV = vertices.size()/2;
+        for(Vertex v:graph.vertices){
+            graph.edgeNum += v.edges.size();
+        }
+        assert graph.edgeNum%2 == 0;
+        graph.edgeNum = graph.edgeNum/2;
+
+        for(Vertex v: graph.vertices){
+            ArrayList<Vertex> ones = new ArrayList<>();
+            ArrayList<Vertex> zeros = new ArrayList<>();
+            for(Vertex u:v.edges){
+                if(u.piece == v.piece){
+                    zeros.add(u);
+                }
+                else{
+                    ones.add(u);
+                }
+            }
+            v.onezeroP = ones.size();
+            ones.addAll(zeros);
+            v.edges = ones;
+        }
+
+        return graph;
+
+    }
+
+    private int search(double coord,double step) {
+        return (int)(coord/step);
     }
 }

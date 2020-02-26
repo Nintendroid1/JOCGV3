@@ -64,6 +64,22 @@ public class DataStructure {
         }
     }
 
+    public static class Stage{
+        public int bfs;
+        public int dfs;
+        public Stage(int bfs,int dfs){
+            this.bfs = bfs;
+            this.dfs = dfs;
+        }
+        public boolean equal(Stage s){
+            return s.bfs == bfs && s.dfs == dfs;
+        }
+
+        public boolean equal(int b, int d){
+            return b == bfs && d == dfs;
+        }
+    }
+
     public static class DisV{
         public int d;
         public Vertex v;

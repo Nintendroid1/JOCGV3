@@ -8,11 +8,12 @@ public class Graph {
     public ArrayList<Graph> pieces;
     public int edgeNum;
     public int numV;
-    public boolean affectedP;
+    public DataStructure.Stage affectedP;
     public Graph(){
         vertices = new ArrayList<>();
         pieces = new ArrayList<>();
         edgeNum = 0;
+        affectedP = new DataStructure.Stage(0,0);
     }
 
     public int getWeight(Vertex v, Vertex u){
@@ -58,6 +59,7 @@ public class Graph {
             v.matching = null;
             v.explored = false;
         }
+        affectedP = new DataStructure.Stage(0,0);
     }
 
 

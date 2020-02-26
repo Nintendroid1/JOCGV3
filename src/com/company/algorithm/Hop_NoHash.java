@@ -16,6 +16,8 @@ public class Hop_NoHash extends Algo{
     public boolean checkGraph;
     public int dve;
     public int bve;
+    public int dve2;
+    public int bve2;
     int shortestD;
 
     public Hop_NoHash(Graph graph){
@@ -31,6 +33,8 @@ public class Hop_NoHash extends Algo{
         iterate = 0;
         dve = 0;
         bve = 0;
+        dve2 = 0;
+        bve2 = 0;
         while(bfs()){
             iterate+=1;
             for(Vertex v:graph.freeV(Label.A)){
@@ -67,7 +71,6 @@ public class Hop_NoHash extends Algo{
              * u (- B
              */
             Vertex v = queue.pop();
-
             if(v.distance < shortestD){
                 this.bve+=1;
                 for(Vertex u:v.edges){
@@ -76,6 +79,7 @@ public class Hop_NoHash extends Algo{
                      * So we check if u is in the Graph
                      * If it is, it's easy to see its matching must be in the current graph.
                      */
+                    bve2+=1;
                     if(!checkGraph || u.piece == v.piece){
                         /*
                          * <dist(u.matching) == INF> means
@@ -115,6 +119,7 @@ public class Hop_NoHash extends Algo{
 
         this.dve+=1;
         for(Vertex u:v.edges){
+            dve2+=1;
             if(!checkGraph || u.piece == v.piece){
                 int nextDist;
                 if(u.matching == null){

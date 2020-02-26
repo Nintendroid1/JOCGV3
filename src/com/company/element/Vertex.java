@@ -1,9 +1,6 @@
 package com.company.element;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.Set;
 
 public class Vertex {
     public int id;
@@ -38,14 +35,18 @@ public class Vertex {
         this.matching = x;
     }
 
-    public void deleteE_clean(){
+    public void deleteE_clean(int cb, int cd){
         if(label == Label.A){
             if(tempEP <= onezeroP){
                 visitedEP = tempEP;
             }
             else{
                 //in this region, edges can only have weight of 0
-                if(this.piece.affectedP){
+                if(this.piece.affectedP.equal(cb,cd)){
+                    //the piece is affected piece
+                    //if this v can be connected to aug path by edges of weight 0,
+                    //then all edges can be saved
+                    //otherwise, delete all edges
                     visitedEP = Math.max(visitedEP,onezeroP);
                     tempEP = visitedEP;
                 }
@@ -54,13 +55,13 @@ public class Vertex {
                 }
             }
             if(this.matching != null){
-                this.matching.deleteE();
+                this.matching.deleteE_clean(cb,cd);
             }
         }
         else{
             if(tempEP > 0){
                 if(this.matching != null){
-                    if(this.piece == this.matching.piece && this.piece.affectedP){
+                    if(this.piece == this.matching.piece && this.piece.affectedP.equal(cb,cd)){
                         tempEP = 0;
                     }
                 }
@@ -72,48 +73,70 @@ public class Vertex {
         }
     }
 
+    public void allDelte(){
+        visitedEP = tempEP;
+    }
 
-    public int[] deleteE(){
-        int deleted = 0;
-        int visted = tempEP - visitedEP;
-        assert tempEP >= visitedEP;
+    public void reserve(int off){
         if(label == Label.A){
-            if(tempEP <= onezeroP){
-                deleted=(tempEP-visitedEP);
-                visitedEP = tempEP;
-            }
-            else{
-                //in this region, edges can only have weight of 0
-                if(this.piece.affectedP){
-                    deleted=Math.max(0,onezeroP-visitedEP);
-
-                    visitedEP = Math.max(visitedEP,onezeroP);
-                    tempEP = visitedEP;
+            explored = false;
+            for(int i = visitedEP; i < tempEP - off;i++){
+                if(edges.get(i) != this.matching){
+                    edges.get(i).reserve(0);
                 }
-                else{
-                    deleted=(tempEP-visitedEP);
-                    visitedEP = tempEP;
-                }
-            }
-            if(this.matching != null){
-                this.matching.deleteE();
             }
         }
         else{
-            if(tempEP > 0){
-                if(this.matching != null){
-                    if(this.piece == this.matching.piece && this.piece.affectedP){
-                        tempEP = 0;
-                    }
-                }
-                else{
-                    tempEP = 0;
-                }
-
+            if(this.matching != null
+                    && this.piece == this.matching.piece
+                    && this.matching.explored){
+                this.matching.reserve(0);
             }
         }
-        return new int[]{visted,deleted};
     }
+
+
+//    public int[] deleteE(int code){
+//        int deleted = 0;
+//        int visted = tempEP - visitedEP;
+//        assert tempEP >= visitedEP;
+//        if(label == Label.A){
+//            if(tempEP <= onezeroP){
+//                deleted=(tempEP-visitedEP);
+//                visitedEP = tempEP;
+//            }
+//            else{
+//                //in this region, edges can only have weight of 0
+//                if(this.piece.affectedP == code){
+//                    deleted=Math.max(0,onezeroP-visitedEP);
+//
+//                    visitedEP = Math.max(visitedEP,onezeroP);
+//                    tempEP = visitedEP;
+//                }
+//                else{
+//                    deleted=(tempEP-visitedEP);
+//                    visitedEP = tempEP;
+//                }
+//            }
+//            if(this.matching != null){
+//                this.matching.deleteE(code);
+//            }
+//        }
+//        else{
+//            if(tempEP > 0){
+//                if(this.matching != null){
+//                    if(this.piece == this.matching.piece && this.piece.affectedP == code){
+//                        tempEP = 0;
+//                    }
+//                }
+//                else{
+//                    tempEP = 0;
+//                }
+//
+//            }
+//        }
+//        return new int[]{visted,deleted};
+//    }
 
     public boolean hasNext(){
         if(label == Label.A){
@@ -137,7 +160,6 @@ public class Vertex {
             }
             return null;
         }
-
         //if label == B
         if(hasNext()){
             tempEP+=1;

@@ -15,9 +15,16 @@ public class Jocg_Pointer extends Algo{
     private int INF;
     private int currentBFS;
     public int dve;
+    public int dve2;
     public int bve;
+    public int bve2;
+    public int del;
+    public long delTime;
+    public int iterate;
 
     public int pre_dve;
+    public int pre_dve2;
+    public int pre_bve2;
     public int pre_bve;
     public int pre_ite;
     public long preprocess;
@@ -27,9 +34,10 @@ public class Jocg_Pointer extends Algo{
     Graph graph;
 
     ArrayList<Vertex> exloredV;
-    LinkedList<Vertex> path;
 
-    public int iterate;
+    ArrayList<Vertex> path;
+
+
 
     DataStructure.CycleArray<DataStructure.DisV> zeros;
     DataStructure.CycleArray<DataStructure.DisV> ones;
@@ -47,9 +55,14 @@ public class Jocg_Pointer extends Algo{
 
     public void start(){
         dve=0;
+        dve2=0;
+        bve2=0;
         bve=0;
         pre_bve=0;
         pre_dve=0;
+        pre_ite=0;
+        del=0;
+        delTime=0;
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
@@ -58,6 +71,8 @@ public class Jocg_Pointer extends Algo{
             hop.start();
             this.pre_dve+=hop.dve;
             this.pre_bve+=hop.bve;
+            this.pre_dve2+=hop.dve2;
+            this.pre_bve2+=hop.bve2;
             this.pre_ite+=hop.iterate;
         }
         if(!graph.pieces.isEmpty()){
@@ -85,33 +100,42 @@ public class Jocg_Pointer extends Algo{
 
                 //tempE = new AdjMatrix(graph.numV);
                 //tempE = new HashMap<>();
-                path = new LinkedList<>();
+                path = new ArrayList<>();
                 //tempE, path will be updated in newdfs
+                int count = 0;
                 if(newdfs(v)){
+                    count += 1;
                     /*
                      * iterate the path
                      * if an path is in an affected piece, add this piece to affectedP
                      */
 
-                    for(Graph piece:graph.pieces){
-                        piece.affectedP = false;
-                    }
-
+//                    for(Graph piece:graph.pieces){
+//                        piece.affectedP = false;
+//                    }
                     Vertex parent = null;
                     for(Vertex u:path){
                         if(parent!=null && parent.piece == u.piece){
-                            u.piece.affectedP = true;
+                            //u.piece.affectedP = true;
+                            u.piece.affectedP.bfs = currentBFS;
+                            u.piece.affectedP.dfs = count;
                         }
                         parent = u;
                     }
                 }
+
+                start = System.currentTimeMillis();
                 if(!exloredV.isEmpty()){
+                    del+=exloredV.size();
                     for(Vertex ev:exloredV){
-                        ev.deleteE_clean();
+                        ev.deleteE_clean(currentBFS,count);
                         ev.explored = false;
                     }
                     exloredV = new ArrayList<>();
                 }
+                end = System.currentTimeMillis();
+
+                delTime+=(end-start);
             }
         }
     }
@@ -141,11 +165,11 @@ public class Jocg_Pointer extends Algo{
             Vertex v;
             DataStructure.DisV dv;
             dv = zeros.pop();
+
             v = dv.v;
             if(dv.d > shortestD){
                 continue;
             }
-
             if(v == null){
                 shortestD = dv.d;
                 continue;
@@ -156,6 +180,7 @@ public class Jocg_Pointer extends Algo{
             }
             this.bve+=1;
             for(Vertex u:v.edges){
+                this.bve2+=1;
                 if(u == v.matching){
                     continue;
                 }
@@ -204,7 +229,6 @@ public class Jocg_Pointer extends Algo{
         if(v == null){
             return true;
         }
-
         if(v.explored){
             return false;
         }
@@ -212,14 +236,14 @@ public class Jocg_Pointer extends Algo{
             v.explored = true;
             exloredV.add(v);
         }
-
         dve+=1;
-
         while(true){
             Vertex u = v.next();
             if(u == null){
                 break;
             }
+
+            dve2+=1;
             if(u.matching != null && u.matching.explored){
                 continue;
             }
@@ -230,11 +254,11 @@ public class Jocg_Pointer extends Algo{
                         continue;
                     }
                 }
-
                 if(newdfs(u.next())){
                     u.match(v);
-                    path.addFirst(u);
-                    path.addFirst(v);
+                    path.add(u);
+                    path.add(v);
+                    //v.reserve(0);
                     return true;
                 }
             }
@@ -472,8 +496,8 @@ public class Jocg_Pointer extends Algo{
 
                 if(newdfs(u.next())){
                     u.match(v);
-                    path.addFirst(u);
-                    path.addFirst(v);
+                    path.add(u);
+                    path.add(v);
                     return true;
                 }
             }
