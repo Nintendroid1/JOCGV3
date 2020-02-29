@@ -8,8 +8,8 @@ import java.sql.Time;
 import java.util.*;
 
 public class GraphGen {
-    class Point{
-        double x; double y;
+    public class Point{
+        public double x; public double y;
         Point(double x,double y){
             this.x = x;this.y = y;
         }
@@ -253,26 +253,29 @@ public class GraphGen {
 
     }
 
-
-    public Graph generate_approx(int num, double large, int sp, double bottleneck){
+    public Graph generate2(int num, double side, int part, double small, double bottleneck, boolean savePoints){
 
         /*
          * Assumption:
-         * large * large bounding box
-         * each side is divided to sp parts
+         * Large is divisible by middle
+         * Middle is divisible by small
+         * Bottleneck is less than Middle
          */
         this.r = new Random(seed + (int)(System.currentTimeMillis() * 1000));
-        double middle = large/sp;
+        double middle = side/part;
         assert bottleneck < middle;
+        assert (int)(side%small) == 0;
+        assert (int)(bottleneck%(2*small)) == 0;
 
-        Graph[][] pieceGrid = new Graph[sp][sp];
+        int small_grid_num_one_row = (int)(side/small);
+        int small_grid_num_one_middle = (int)(middle/small);
         /*
          * generate points and vertices
          */
         ArrayList<Point> points = new ArrayList<>(num);
         ArrayList<Vertex> vertices = new ArrayList<Vertex>(num);
         for(int i = 0; i < num; i++){
-            Point point = new Point(r.nextDouble()*large,r.nextDouble()*large);
+            Point point = new Point(r.nextDouble()*side,r.nextDouble()*side);
             points.add(point);
             if(i < num/2){
                 vertices.add(new Vertex(i, Label.A));
@@ -280,19 +283,10 @@ public class GraphGen {
             else{
                 vertices.add(new Vertex(i, Label.B));
             }
-            int px = search(point.x,middle);
-            int py = search(point.y,middle);
-            Graph g = pieceGrid[px][py];
-            Vertex v = vertices.get(i);
-            if(g == null){
-                pieceGrid[px][py] = new Graph();
-                g = pieceGrid[px][py];
-            }
-
-            g.vertices.add(v);
-            v.piece = g;
-
         }
+
+        int[] horizontal = new int[small_grid_num_one_row];
+        int[] vertical = new int[small_grid_num_one_row];
 
         //generate edges < bottleneck
         {
@@ -310,20 +304,106 @@ public class GraphGen {
                     double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
                     if(d <= bottleneck){
                         edges.add(vertices.get(j));
+
+                        double smallx = Math.min(source.x, target.x);
+                        double bigx = Math.max(source.x, target.x);
+                        double smally = Math.min(source.y, target.y);
+                        double bigy = Math.min(source.y, target.y);
+
+                        for(int k = search(smallx,small) + 1; k <= search(bigx,small);k++){
+                            if(k*small - smallx < bottleneck/2 && bigx - k*small < bottleneck/2){
+                                horizontal[k]+=1;
+                            }
+
+                        }
+                        for(int k = search(smally,small) + 1; k <= search(bigy,small);k++){
+                            if(k*small - smally < bottleneck/2 && bigy - k*small < bottleneck/2){
+                                vertical[k]+=1;
+                            }
+
+                        }
                     }
                 }
                 vertices.get(i).edges = edges;
             }
         }
 
-        ArrayList<Graph> piecesset = new ArrayList<>();
-        for(int i = 0; i < sp; i++){
-            for(int j = 0; j < sp;j++){
-                if(pieceGrid[i][j] != null){
-                    piecesset.add(pieceGrid[i][j]);
+        //find the combination with the least number of boundary points
+        Integer bestBCx = Integer.MAX_VALUE;
+        Integer idxx = null;
+        Integer bestBCy = Integer.MAX_VALUE;
+        Integer idxy = null;
+
+        {
+            int lowbound = (int)(bottleneck/small/2);
+            int highbound = (int)(middle/small - 1) - (int)(bottleneck/small/2 + 1);
+
+            for(int i = lowbound; i <= highbound; i++){
+                int currBC = 0;
+
+                for(int j = 0; j < side/middle; j++){
+//                    for(int k = 0; k < bottleneck/small/2; k++){
+//                        int position1 = (i+j*(small_grid_num_one_middle) - k);
+//                        int position2 = (i+j*(small_grid_num_one_middle)) + k + 1;
+//                        currBC+=horizontal[position1];
+//                        currBC+=horizontal[position2];
+//                    }
+                    currBC+=horizontal[i+j*(small_grid_num_one_middle)];
+                }
+                if(currBC < bestBCx){
+                    bestBCx = currBC;
+                    idxx = i;
                 }
             }
         }
+
+        {
+            for(int i = 0; i < small_grid_num_one_middle; i++){
+                int currBC = 0;
+
+                if(i - (bottleneck/small/2 - 1) - 1 < 0){
+                    continue;
+                }
+                if(i + (side/middle - 1) * (middle/small) + (bottleneck/small/2 - 1) >= side/small){
+                    continue;
+                }
+
+                for(int j = 0; j < side/middle; j++){
+//                    for(int k = 0; k < bottleneck/small/2; k++){
+//                        int position1 = (int)(i+j*(small_grid_num_one_middle) - k - 1);
+//                        int position2 = (int)(i+j*(small_grid_num_one_middle)) + k;
+//                        currBC+=vertical[position1];
+//                        currBC+=vertical[position2];
+//                    }
+                    currBC+=vertical[i+j*(small_grid_num_one_middle)];
+                }
+                if(currBC < bestBCy){
+                    bestBCy = currBC;
+                    idxy = i;
+                }
+            }
+        }
+
+        assert idxx != null;
+        assert idxy != null;
+
+        Graph[][] pieces = new Graph[part+1][part+1];
+        ArrayList<Graph> piecesset = new ArrayList<>();
+
+        for(int i = 0; i < points.size(); i++){
+            Point p = points.get(i);
+            Vertex v = vertices.get(i);
+            int x = (int)((p.x - idxx*small)/middle + 1);
+            int y = (int)((p.y - idxy*small)/middle + 1);
+            if(pieces[x][y] == null){
+                pieces[x][y] = new Graph();
+                piecesset.add(pieces[x][y]);
+            }
+            pieces[x][y].vertices.add(v);
+            v.piece = pieces[x][y];
+        }
+
+
         //test Graph if valid
         {
             int count = 0;
@@ -361,9 +441,14 @@ public class GraphGen {
             v.edges = ones;
         }
 
+        if(savePoints){
+            graph.points = points;
+        }
+
         return graph;
 
     }
+
 
     private int search(double coord,double step) {
         return (int)(coord/step);

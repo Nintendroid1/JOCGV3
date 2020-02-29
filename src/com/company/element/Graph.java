@@ -1,5 +1,8 @@
 package com.company.element;
 
+import com.company.generator.GraphGen;
+import com.company.test.TestEuclidean;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -9,6 +12,7 @@ public class Graph {
     public int edgeNum;
     public int numV;
     public DataStructure.Stage affectedP;
+    public ArrayList<GraphGen.Point> points;
     public Graph(){
         vertices = new ArrayList<>();
         pieces = new ArrayList<>();
@@ -98,5 +102,29 @@ public class Graph {
             aused.add(v.matching);
         }
         return true;
+    }
+
+    public void reEdges(double bottleneck){
+        edgeNum = 0;
+        for(int i = 0; i < vertices.size(); i++){
+            ArrayList<Vertex> edges = new ArrayList<>();
+            for(int j = 0; j < vertices.size(); j++){
+                GraphGen.Point source = points.get(i);
+                GraphGen.Point target = points.get(j);
+                //if labels are same, or two vertexes are same, not calculate distance
+                if(source == target || vertices.get(i).label == vertices.get(j).label){
+                    continue;
+                }
+                double x = source.x - target.x;
+                double y = source.y - target.y;
+                double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                if(d <= bottleneck){
+                    edges.add(vertices.get(j));
+                }
+            }
+            vertices.get(i).edges = edges;
+            edgeNum+=edges.size();
+        }
+        edgeNum/=2;
     }
 }

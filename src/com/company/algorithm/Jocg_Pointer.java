@@ -167,6 +167,9 @@ public class Jocg_Pointer extends Algo{
             dv = zeros.pop();
 
             v = dv.v;
+
+
+
             if(dv.d > shortestD){
                 continue;
             }
@@ -174,10 +177,13 @@ public class Jocg_Pointer extends Algo{
                 shortestD = dv.d;
                 continue;
             }
-            v.reset();
-            if(dv.d > v.distance || v.distance > shortestD){
+            if(v.distance > shortestD){
                 continue;
             }
+            if(dv.d > v.distance){
+                continue;
+            }
+            v.reset();
             this.bve+=1;
             for(Vertex u:v.edges){
                 this.bve2+=1;

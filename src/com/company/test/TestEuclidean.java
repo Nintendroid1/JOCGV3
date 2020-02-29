@@ -23,14 +23,18 @@ public class TestEuclidean {
         int[] numV = {10000};//,50000};
         int[] middles = {8,16,32,64};
 
+        //int[] parts = {14,16,18,20,22};//{1,2,3,4,5,6,8,10,12,14,16,18,20,22};
+
+        int[] parts = {1,2,3,4,5,6,8,10,12,14,16,18,20,22};
+
 //        ArrayList<Integer> middles = new ArrayList<>();
 //        for(int i = 2; i < 20; i++){
 //            middles.add(i);
 //        }
-        int times = 20;
+        int times = 10;
         double bottleneck = 5;
         for(int i:numV){
-            for(int middle:middles){
+            for(int middle:parts){
 
                 double edgeNum = 0;
                 double matchNum = 0;
@@ -56,10 +60,10 @@ public class TestEuclidean {
                 double delTime=0;
                 
                 for(int time = 1; time <= times; time++){
-                    System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " middle = " + middle + " time: " + time + "/" + times);
+                    System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " part = " + middle + " time: " + time + "/" + times);
 //                System.out.println("|V| = " + 2*i);
                     GraphGen euclideanGen = new GraphGen(5);
-                    Graph graph = euclideanGen.generate(i,128,middle,0.01,bottleneck);
+                    Graph graph = euclideanGen.generate2(i,128,middle,0.01,bottleneck,false);
 
                     //Graph graph = euclideanGen.generate_approx(i,100,middle,bottleneck);
 
