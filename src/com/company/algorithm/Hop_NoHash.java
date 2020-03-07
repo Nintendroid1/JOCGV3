@@ -8,7 +8,7 @@ import com.company.element.Vertex;
 import java.util.LinkedList;
 
 public class Hop_NoHash extends Algo{
-    private Graph graph;
+    public Graph graph;
     private Integer INF;
     public Integer iterate;
     public boolean print;

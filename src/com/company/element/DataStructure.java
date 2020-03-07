@@ -1,5 +1,9 @@
 package com.company.element;
 
+import com.company.generator.GraphGen;
+
+import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 
 public class DataStructure {
@@ -88,4 +92,5 @@ public class DataStructure {
             this.d = d;
         }
     }
+
 }

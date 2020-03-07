@@ -1,5 +1,7 @@
 package com.company.element;
 
+import com.company.generator.GraphGen;
+
 import java.util.ArrayList;
 
 public class Vertex {
@@ -20,6 +22,8 @@ public class Vertex {
 
     public boolean explored;
     public int distance;
+
+    public Point point;
 
     public Vertex(int id, Label label){
         this.id = id;

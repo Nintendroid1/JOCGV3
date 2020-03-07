@@ -31,7 +31,7 @@ public class Jocg_Pointer extends Algo{
     private long start;
     private long end;
     int shortestD;
-    Graph graph;
+    public Graph graph;
 
     ArrayList<Vertex> exloredV;
 
