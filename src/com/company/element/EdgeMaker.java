@@ -6,20 +6,31 @@ import java.util.List;
 public class EdgeMaker {
 
     public ArrayList<Point> points;
+    public Graph graph;
+    public int edgeCount;
     public EdgeMaker(ArrayList<Point> ps){
         points = ps;
+        graph = null;
+        edgeCount = 0;
     }
 
     public void reEdges(double bottleneck){
-        double approx_bottleneck = bottleneck;
+//        double bo = bottleneck;
         Box box = new Box(partition(points,bottleneck),bottleneck);
         while(true){
             List<Point> source = box.getNext();
             if(source == null){
                 break;
             }
+            if(source.contains(graph.vertices.get(3402).point)){
+                int a = 0;
+            }
+            if(source.contains(graph.vertices.get(8916).point)){
+                int a = 0;
+            }
 
             List<List<Point>> targets = box.getNeighbor();
+            targets.add(source);
             for(List<Point> target: targets){
                 makeEdge(source,target,bottleneck);
             }
@@ -71,24 +82,35 @@ public class EdgeMaker {
         List<List<Point>> result = new ArrayList<>();
         int level = getLevel(list.get(0),bottleneck,c); int head = 0;
         for(int i = 1; i < list.size(); i++){
-            int next_level = getLevel(list.get(i),bottleneck,c);
+            Point point = list.get(i);
+            int next_level = getLevel(point,bottleneck,c);
             if(next_level > level){
                 result.add(list.subList(head,i));
                 head = i;
                 level = next_level;
             }
         }
+        if(head < list.size()){
+            result.add(list.subList(head,list.size()));
+        }
         return result;
     }
 
 
     private int getLevel(Point p,double b, Character c){
+        double result;
         if(c == 'x'){
-            return (int)(p.x/b);
+            result = p.x/b;
+            return  (int)result;
+        }
+        else if(c == 'y'){
+            result = p.y/b;
+            return  (int)result;
         }
         else{
-            return (int)(p.y);
+            assert false;
         }
+        return -1;
     }
 
     class Box {
@@ -98,12 +120,12 @@ public class EdgeMaker {
 
         Box(List<List<List<Point>>> pa, double b){
             partition = pa;
-            currX = 0; currY = 0; rightY = 0;
+            currX = 0; currY = -1; rightY = 0;
             bottleneck = b;
         }
 
         public void init(){
-            currX = 0; currY = 0;
+            currX = 0; currY = -1;
         }
 
 
@@ -126,37 +148,39 @@ public class EdgeMaker {
              * get neighbor from bottom
              */
             List<List<Point>> result = new ArrayList<>();
-            if(currY + 1 < partition.get(currX).size()
-                    && closeTo(partition.get(currX).get(currY),partition.get(currX).get(currY+1))){
-                result.add(partition.get(currX).get(currY+1));
+            List<Point> currBox = partition.get(currX).get(currY);
+
+//            if(currBox.contains(graph.vertices.get(3402).point)){
+//                int a = 0;
+//            }
+
+            if(currY + 1 < partition.get(currX).size()){
+                List<Point> botBox = partition.get(currX).get(currY+1);
+                if(getLevel(botBox.get(0),bottleneck,'y') == getLevel(currBox.get(0),bottleneck,'y') + 1){
+                    result.add(partition.get(currX).get(currY+1));
+                }
             }
 
             /*
              * get neighbor from right hand side
              */
-            int offset = -2;
-            if(rightY + offset < 0){
-                offset = 0;
-            }
-            Integer temp = null;
-            while(true){
-                if(currX+1 >= partition.size()){
-                    break;
-                }
-                if(rightY + offset >= partition.get(currX + 1).size()){
-                    break;
-                }
+            if(currX + 1 < partition.size()){
+                int tempRightY = rightY;
+                while(rightY < partition.get(currX+1).size()){
+                    List<Point> rightBox = partition.get(currX+1).get(rightY);
+                    if(getLevel(rightBox.get(0),bottleneck,'y') > getLevel(currBox.get(0),bottleneck,'y') + 1){
+                        break;
+                    }
+                    if(getLevel(rightBox.get(0),bottleneck,'y') >= getLevel(currBox.get(0),bottleneck,'y') - 1){
+                        result.add(rightBox);
+                    }
+                    if(getLevel(rightBox.get(0),bottleneck,'y') < getLevel(currBox.get(0),bottleneck,'y')){
+                        tempRightY+=1;
+                    }
+                    rightY+=1;
 
-                List<Point> currBox = partition.get(currX).get(currX);
-                List<Point> rightBox = partition.get(currX + 1).get(rightY + offset);
-                if(getLevel(rightBox.get(0),bottleneck,'y') > getLevel(currBox.get(0),bottleneck,'y') + 1){
-                    break;
                 }
-                else if(getLevel(rightBox.get(0),bottleneck,'y') <= getLevel(currBox.get(0),bottleneck,'y') + 1
-                && getLevel(rightBox.get(0),bottleneck,'y') >= getLevel(currBox.get(0),bottleneck,'y') - 1){
-                    result.add(rightBox);
-                }
-                offset+=1;
+                rightY = tempRightY;
             }
 
             return result;
