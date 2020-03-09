@@ -11,9 +11,9 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 	    // write your code here
-        TestEuclidean.test();
+        //TestEuclidean.test();
         //TestPerformance.test1();
-        //FindBottle.find();
+        FindBottle.find();
 
         //TestEdgeMaker.test();
     }

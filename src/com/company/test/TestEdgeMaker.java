@@ -10,11 +10,24 @@ import java.util.Random;
 public class TestEdgeMaker {
 
     public static void test(){
+        long start, end;
+
         Graph graph = new GraphGen(5321312).generate(1000000,128);
-        EdgeMaker em = new EdgeMaker(graph.points);
+        EdgeMaker em = new EdgeMaker(graph);
         em.graph = graph;
         double bottleneck = 1;
+        start = System.currentTimeMillis();
+        em.reEdgesWeights(bottleneck,4,128,0.1);
+        end = System.currentTimeMillis();
+
+        System.out.println("weighted version takes: " + (end-start));
+
+        start = System.currentTimeMillis();
         em.reEdges(bottleneck);
+        end = System.currentTimeMillis();
+
+        System.out.println("unweighted version takes: " + (end-start));
+
         randomeSample(graph,bottleneck,100000);
         //completeTest(graph,bottleneck);
         System.out.println("done");

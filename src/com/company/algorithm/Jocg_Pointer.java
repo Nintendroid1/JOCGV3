@@ -225,7 +225,7 @@ public class Jocg_Pointer extends Algo{
         //currentBFS = dist.get(null);
         return shortestD != INF;
     }
-
+    
     private boolean newdfs(Vertex v){
         /*
          * v = u.matching for some u

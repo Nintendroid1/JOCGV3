@@ -8,25 +8,26 @@ public class EdgeMaker {
     public ArrayList<Point> points;
     public Graph graph;
     public int edgeCount;
-    public EdgeMaker(ArrayList<Point> ps){
-        points = ps;
-        graph = null;
+    public EdgeMaker(Graph g){
+        graph = g;
+        points = g.points;
         edgeCount = 0;
     }
 
+    private void cleanEdges(){
+        for(Vertex v:graph.vertices){
+            v.edges = new ArrayList<>();
+            v.matching = null;
+        }
+    }
+
     public void reEdges(double bottleneck){
-//        double bo = bottleneck;
+        cleanEdges();
         Box box = new Box(partition(points,bottleneck),bottleneck);
         while(true){
             List<Point> source = box.getNext();
             if(source == null){
                 break;
-            }
-            if(source.contains(graph.vertices.get(3402).point)){
-                int a = 0;
-            }
-            if(source.contains(graph.vertices.get(8916).point)){
-                int a = 0;
             }
 
             List<List<Point>> targets = box.getNeighbor();
@@ -34,7 +35,6 @@ public class EdgeMaker {
             for(List<Point> target: targets){
                 makeEdge(source,target,bottleneck);
             }
-
         }
     }
 
@@ -50,6 +50,99 @@ public class EdgeMaker {
                 if(d <= bottleneck){
                     s.v.edges.add(t.v);
                     t.v.edges.add(s.v);
+                }
+            }
+        }
+    }
+
+    public void reEdgesWeights(double bottleneck, int partN, double largeG, double smallG){
+
+        double middleG = largeG/partN;
+        assert bottleneck < middleG;
+        assert (int)(largeG%smallG) == 0;
+
+        cleanEdges();
+
+        int[][] space = new int[2][(int)(largeG/smallG)];
+
+        Box box = new Box(partition(points,bottleneck),bottleneck);
+        while(true){
+            List<Point> source = box.getNext();
+            if(source == null){
+                break;
+            }
+            List<List<Point>> targets = box.getNeighbor();
+            targets.add(source);
+            for(List<Point> target: targets){
+                makeEdgeWeights(source,target,bottleneck,space,smallG);
+            }
+        }
+        int shiftN = (int)Math.floor(middleG/smallG);
+        int[] horizontal = new int[shiftN];
+        int[] vertical = new int[shiftN];
+
+        int hCount = 0; int vCount = 0;
+        int bestXshift = -1; int bestXcount = Integer.MAX_VALUE;
+        int bestYshift = -1; int bestYcount = Integer.MAX_VALUE;
+        for(int i = 0; i < (int)(largeG/smallG); i++){
+            hCount+=space[0][i];
+            vCount+=space[1][i];
+            horizontal[i%shiftN]+=hCount;
+            vertical[i%shiftN]+=vCount;
+        }
+        for(int i = 0; i < shiftN; i++){
+            if(horizontal[i] < bestXcount){
+                bestXcount = horizontal[i];
+                bestXshift = i;
+            }
+            if(vertical[i] < bestYcount){
+                bestYcount = vertical[i];
+                bestYshift = i;
+            }
+        }
+
+        ArrayList<Graph> piecesset = new ArrayList<>();
+        Graph[][] pieces = new Graph[partN+1][partN+1];
+        for(Point p:points){
+            int x = (int)((p.x - bestXshift*smallG)/middleG + 1);
+            int y = (int)((p.y - bestYshift*smallG)/middleG + 1);
+            if(pieces[x][y] == null){
+                pieces[x][y] = new Graph();
+                piecesset.add(pieces[x][y]);
+            }
+            pieces[x][y].vertices.add(p.v);
+            p.v.piece = pieces[x][y];
+        }
+
+        graph.pieces = piecesset;
+    }
+
+    private void makeEdgeWeights(List<Point> source,List<Point> target,double bottleneck,int[][] space,double smallG){
+        for(Point s:source){
+            for(Point t:target){
+                if(s.v.label == t.v.label){
+                    continue;
+                }
+                double x = s.x - t.x;
+                double y = s.y - t.y;
+                double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                if(d <= bottleneck){
+                    s.v.edges.add(t.v);
+                    t.v.edges.add(s.v);
+                    int[] horizontal = space[0];
+                    int[] vertical = space[1];
+                    double temp_xhead = Math.min(s.x,t.x);
+                    double temp_xtail = Math.max(s.x,t.x);
+                    double temp_yhead = Math.min(s.y,t.y);
+                    double temp_ytail = Math.max(s.y,t.y);
+                    int xhead = (int)(Math.max(temp_xhead,temp_xtail-bottleneck/2)/smallG);
+                    int xtail = (int)(Math.min(temp_xtail,temp_xhead+bottleneck/2)/smallG);
+                    int yhead = (int)(Math.max(temp_yhead,temp_ytail-bottleneck/2)/smallG);
+                    int ytail = (int)(Math.min(temp_ytail,temp_yhead+bottleneck/2)/smallG);
+                    horizontal[xhead]+=1;
+                    horizontal[xtail]-=1;
+                    vertical[yhead]+=1;
+                    vertical[ytail]-=1;
                 }
             }
         }
