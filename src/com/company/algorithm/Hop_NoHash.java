@@ -112,11 +112,9 @@ public class Hop_NoHash extends Algo{
          * v = u.matching for some u
          * if v == null, we know u is free, so we find an augmenting path
          */
-
         if(v == null){
             return true;
         }
-
         this.dve+=1;
         for(Vertex u:v.edges){
             dve2+=1;

@@ -2,6 +2,7 @@ package com.company.element;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class EdgeMaker {
 
@@ -136,10 +137,10 @@ public class EdgeMaker {
                     double temp_xtail = Math.max(s.x,t.x);
                     double temp_yhead = Math.min(s.y,t.y);
                     double temp_ytail = Math.max(s.y,t.y);
-                    int xhead = (int)(Math.max(temp_xhead,temp_xtail-bottleneck/2)/smallG);
-                    int xtail = (int)(Math.min(temp_xtail,temp_xhead+bottleneck/2)/smallG);
-                    int yhead = (int)(Math.max(temp_yhead,temp_ytail-bottleneck/2)/smallG);
-                    int ytail = (int)(Math.min(temp_ytail,temp_yhead+bottleneck/2)/smallG);
+                    int xhead = (int)(Math.max(temp_xhead,temp_xtail-bottleneck)/smallG);
+                    int xtail = (int)(Math.min(temp_xtail,temp_xhead+bottleneck)/smallG);
+                    int yhead = (int)(Math.max(temp_yhead,temp_ytail-bottleneck)/smallG);
+                    int ytail = (int)(Math.min(temp_ytail,temp_yhead+bottleneck)/smallG);
                     horizontal[xhead]+=1;
                     horizontal[xtail]-=1;
                     vertical[yhead]+=1;
@@ -148,6 +149,47 @@ public class EdgeMaker {
             }
         }
     }
+
+    public void reEdgesFixShift(double bottleneck, int partN, double largeG, double smallG){
+        double middleG = largeG/partN;
+        assert bottleneck < middleG;
+        assert (int)(largeG%smallG) == 0;
+
+        cleanEdges();
+
+        Box box = new Box(partition(points,bottleneck),bottleneck);
+        while(true){
+            List<Point> source = box.getNext();
+            if(source == null){
+                break;
+            }
+            List<List<Point>> targets = box.getNeighbor();
+            targets.add(source);
+            for(List<Point> target: targets){
+                makeEdge(source,target,bottleneck);
+            }
+        }
+
+        int bestXshift = new Random().nextInt((int)(middleG/smallG));
+        int bestYshift = new Random().nextInt((int)(middleG/smallG));
+
+        ArrayList<Graph> piecesset = new ArrayList<>();
+        Graph[][] pieces = new Graph[partN+1][partN+1];
+        for(Point p:points){
+            int x = (int)((p.x - bestXshift*smallG)/middleG + 1);
+            int y = (int)((p.y - bestYshift*smallG)/middleG + 1);
+            if(pieces[x][y] == null){
+                pieces[x][y] = new Graph();
+                piecesset.add(pieces[x][y]);
+            }
+            pieces[x][y].vertices.add(p.v);
+            p.v.piece = pieces[x][y];
+        }
+
+        graph.pieces = piecesset;
+    }
+
+    private  void makeEdgeFixShift(List<Point> source,List<Point> target,double bottleneck){}
 
     private List<List<List<Point>>> partition(List<Point> list, double bottleneck){
         List<List<Point>> xp = partition_(points,bottleneck,'x');

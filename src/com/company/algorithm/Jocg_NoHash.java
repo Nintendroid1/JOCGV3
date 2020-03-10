@@ -124,25 +124,7 @@ public class Jocg_NoHash extends Algo{
                             }
                         }
                     }
-
-//                    for(Vertex a:tempE.keySet()){
-//                        for(Vertex b:new HashSet<>(tempE.get(a))){
-//                            if(a.piece == b.piece && affectedP.contains(a.piece)){
-//                                tempE.get(a).remove(b);
-//                            }
-//                        }
-//                    }
                 }
-
-                //add all remaining edges in tempE to visitedE
-//                for(Vertex a:tempE.keySet()){
-//                    if(!visitedE.containsKey(a)){
-//                        visitedE.put(a,tempE.get(a));
-//                    }
-//                    else{
-//                        visitedE.get(a).addAll(tempE.get(a));
-//                    }
-//                }
             }
         }
     }
