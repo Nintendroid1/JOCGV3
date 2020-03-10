@@ -22,9 +22,9 @@ public class FindBottle {
         largeG = 128;
         smallG = 0.01;
         head = 0;
-        tail = 5;
+        tail = 6;
         bottleneck = 0;
-        lambda = 0.01;
+        lambda = 0.001;
     }
 
     public static void find(){
@@ -47,9 +47,6 @@ public class FindBottle {
         hTime = end - start;
 
 
-
-
-
         System.out.println("HK search bottleneck takes: " + hTime);
         System.out.println("Jocg search bottleneck takes: " + jTime);
 
@@ -57,14 +54,6 @@ public class FindBottle {
 
 
     public static void find_Hk(Graph graph){
-//        int numV = 100000;
-//        int part = 4;
-//        double head = 0;
-//        double tail = 5;
-//        double bottleneck = 0;
-//        double lambda = 0.01;
-//        GraphGen graphGen = new GraphGen(5);
-//        Graph graph = graphGen.generate(numV,largeG);
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         while(tail-head > lambda*head){
             bottleneck = (tail + head)/2;
@@ -82,16 +71,6 @@ public class FindBottle {
     }
 
     public static void find_Jocg(Graph graph){
-//        int numV = 10000;
-//        int partN = 4;
-//        double largeG = 128;
-//        double smallG = 0.01;
-//        double head = 0;
-//        double tail = 8;
-//        double bottleneck = 0;
-//        double lambda = 0.01;
-//        GraphGen graphGen = new GraphGen(5);
-//        Graph graph = graphGen.generate(numV,largeG);
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         while(tail-head > lambda*head){
             bottleneck = (tail + head)/2;

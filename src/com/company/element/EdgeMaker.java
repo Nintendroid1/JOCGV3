@@ -19,6 +19,7 @@ public class EdgeMaker {
             v.edges = new ArrayList<>();
             v.matching = null;
         }
+        graph.resetMatch();
     }
 
     public void reEdges(double bottleneck){

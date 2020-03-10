@@ -109,18 +109,16 @@ public class Jocg_Pointer extends Algo{
                      * iterate the path
                      * if an path is in an affected piece, add this piece to affectedP
                      */
-
-//                    for(Graph piece:graph.pieces){
-//                        piece.affectedP = false;
-//                    }
                     Vertex parent = null;
-                    for(Vertex u:path){
-                        if(parent!=null && parent.piece == u.piece){
-                            //u.piece.affectedP = true;
-                            u.piece.affectedP.bfs = currentBFS;
-                            u.piece.affectedP.dfs = count;
+                    for(Vertex uu:path){
+                        for(Vertex u:new Vertex[]{uu, uu.matching}){
+                            if(parent!=null && parent.piece == u.piece){
+                                //u.piece.affectedP = true;
+                                u.piece.affectedP.bfs = currentBFS;
+                                u.piece.affectedP.dfs = count;
+                            }
+                            parent = u;
                         }
-                        parent = u;
                     }
                 }
 
@@ -225,8 +223,60 @@ public class Jocg_Pointer extends Algo{
         //currentBFS = dist.get(null);
         return shortestD != INF;
     }
-    
-    private boolean newdfs(Vertex v){
+
+    private boolean newdfs(Vertex startV){
+        ArrayList<Vertex> tempPath = new ArrayList<>();
+        tempPath.add(startV);
+        startV.explored = true;
+        exloredV.add(startV);
+        while(!tempPath.isEmpty()){
+            Vertex v = tempPath.get(tempPath.size()-1);
+            if(v == null){
+                //augment path
+                Vertex head = null;
+                for(Vertex tail:tempPath){
+                    if(head != null && head.label == Label.A){
+                        head.match(tail);
+                        path.add(head);
+                        path.add(tail);
+                    }
+                    head = tail;
+                }
+                return true;
+            }
+
+            Vertex u = v.next();
+            if(u == null){
+                tempPath.remove(tempPath.size()-1);
+                if(!tempPath.isEmpty()){
+                    tempPath.remove(tempPath.size()-1);
+                }
+                continue;
+            }
+            if(u.matching != null && u.matching.explored){
+                continue;
+            }
+
+            if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
+                if(u.matching != null){
+                    if(!u.hasNext()){
+                        continue;
+                    }
+                }
+                Vertex next = u.next();
+                if(next != null){
+                    next.explored = true;
+                    exloredV.add(next);
+                }
+                tempPath.add(u);
+                tempPath.add(next);
+            }
+        }
+        return false;
+    }
+
+
+    private boolean newdfs_recur(Vertex v){
         /*
          * v = u.matching for some u
          * if v == null, we know u is free, so we find an augmenting path
