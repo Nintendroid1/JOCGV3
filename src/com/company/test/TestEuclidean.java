@@ -21,7 +21,7 @@ public class TestEuclidean {
         writer.write("");
         Hop_NoHash hop;
         Jocg_Pointer jocg;
-        int[] numV = {1000000};//,50000};
+        int[] numV = {100000};//,50000};
         int[] middles = {8, 16, 32, 64};
 
         //int[] parts = {14,16,18,20,22};//{1,2,3,4,5,6,8,10,12,14,16,18,20,22};
@@ -33,8 +33,8 @@ public class TestEuclidean {
 //        for(int i = 2; i < 20; i++){
 //            middles.add(i);
 //        }
-            int times = 1;
-            double[] bottlenecks = {0.5};//{1,2,3,4,5,6,7,8,9};
+            int times = 5;
+            double[] bottlenecks = {4};//{1,2,3,4,5,6,7,8,9};
             for (int i : numV) {
                 for (double bottleneck : bottlenecks) {
                     for (int middle : parts) {
@@ -74,7 +74,7 @@ public class TestEuclidean {
 
                             long starth = System.currentTimeMillis();
                             hop = new Hop_NoHash(graph);
-                            hop.start();
+                            //hop.start();
                             long finishh = System.currentTimeMillis();
                             timeElapsedHop += finishh - starth;
                             int hopMatchCount = graph.matchCount();
@@ -95,7 +95,7 @@ public class TestEuclidean {
                             long finishj = System.currentTimeMillis();
                             timeElapsedJocg += finishj - startj;
                             int joMatchCount = graph.matchCount();
-                            assert joMatchCount == hopMatchCount;
+                            //assert joMatchCount == hopMatchCount;
                             assert graph.matchValidCheck();
 
                             System.out.println(hop.iterate);

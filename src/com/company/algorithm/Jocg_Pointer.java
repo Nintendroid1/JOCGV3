@@ -10,7 +10,19 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 
+
+
 public class Jocg_Pointer extends Algo{
+    private class CycleRegion{
+        public int top,bot;
+        public Vertex backToPathNode;
+        public CycleRegion(){
+            top = -1; bot = -1; backToPathNode = null;
+        }
+        public void init(){
+            top = -1; bot = -1; backToPathNode = null;
+        }
+    }
 
     private int INF;
     private int currentBFS;
@@ -124,10 +136,31 @@ public class Jocg_Pointer extends Algo{
 
                 start = System.currentTimeMillis();
                 if(!exloredV.isEmpty()){
-                    del+=exloredV.size();
+
                     for(Vertex ev:exloredV){
-                        ev.deleteE_clean(currentBFS,count);
+                        if(ev.indexInPath >= 0
+                                || (ev.endInPath != null && ev.endInPath.indexInPath >= 0)){
+                            ev.deleteE_clean(currentBFS,count);
+                        }
+                        else{
+                            if(ev.endInPath != null){
+                                int a = 0;
+                            }
+                            del+=1;
+                            ev.deleteE_clean(-1,-1);
+                        }
+//                        if(!ev.piece.affectedP.equal(currentBFS,count)){
+//                            del+=1;
+//                        }
+//                        ev.deleteE_clean(currentBFS,count);
+                        if(ev.indexInPath == -1){
+                            ev.endInPath = null;
+                        }
                         ev.explored = false;
+                    }
+                    for(Vertex pv:path){
+                        pv.indexInPath = -1;
+                        pv.endInPath = null;
                     }
                     exloredV = new ArrayList<>();
                 }
@@ -224,8 +257,20 @@ public class Jocg_Pointer extends Algo{
         return shortestD != INF;
     }
 
+    private void removeTopV(ArrayList<Vertex> tempPath, CycleRegion cycleRegion){
+        Vertex remove = tempPath.remove(tempPath.size() - 1);
+        if(remove.indexInPath == cycleRegion.top && cycleRegion.top >= cycleRegion.bot){
+            cycleRegion.top-=1;
+            remove.endInPath = cycleRegion.backToPathNode;
+        }
+        remove.indexInPath = -1;
+    }
+
     private boolean newdfs(Vertex startV){
         ArrayList<Vertex> tempPath = new ArrayList<>();
+        CycleRegion cycleRegion = new CycleRegion();
+
+        startV.indexInPath = tempPath.size();
         tempPath.add(startV);
         startV.explored = true;
         exloredV.add(startV);
@@ -247,28 +292,54 @@ public class Jocg_Pointer extends Algo{
 
             Vertex u = v.next();
             if(u == null){
-                tempPath.remove(tempPath.size()-1);
+                removeTopV(tempPath,cycleRegion);
                 if(!tempPath.isEmpty()){
-                    tempPath.remove(tempPath.size()-1);
+                    removeTopV(tempPath,cycleRegion);
                 }
                 continue;
             }
-            if(u.matching != null && u.matching.explored){
-                continue;
-            }
+//            if(u.matching != null && u.matching.explored){
+//                continue;
+//            }
 
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
                 if(u.matching != null){
+                    if(u.matching.explored){
+                        if(dist(u.matching) == dist(v) && graph.getWeight(u,u.matching) == 0){
+                            if(u.matching.indexInPath >= 0){
+                                cycleRegion.top = v.indexInPath;
+                                if(cycleRegion.backToPathNode == null
+                                        || cycleRegion.backToPathNode.indexInPath == -1
+                                        || cycleRegion.backToPathNode.indexInPath > u.matching.indexInPath){
+                                    cycleRegion.backToPathNode = u.matching;
+                                    cycleRegion.bot = u.matching.indexInPath;
+                                }
+                            }
+                            else if(u.matching.endInPath != null && u.matching.endInPath.indexInPath >= 0){
+                                cycleRegion.backToPathNode = u.matching.endInPath;
+                                cycleRegion.top = v.indexInPath;
+                                cycleRegion.bot = u.matching.endInPath.indexInPath;
+                            }
+                        }
+                        else{
+                            int a = 1;
+                        }
+
+                        continue;
+                    }
                     if(!u.hasNext()){
                         continue;
                     }
                 }
+                u.indexInPath = tempPath.size();
+                tempPath.add(u);
+
                 Vertex next = u.next();
                 if(next != null){
                     next.explored = true;
                     exloredV.add(next);
+                    next.indexInPath = tempPath.size();
                 }
-                tempPath.add(u);
                 tempPath.add(next);
             }
         }

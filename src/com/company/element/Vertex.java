@@ -23,6 +23,9 @@ public class Vertex {
     public boolean explored;
     public int distance;
 
+    public int indexInPath;
+    public Vertex endInPath;
+
     public Point point;
 
     public Vertex(int id, Label label){
@@ -32,6 +35,8 @@ public class Vertex {
         this.matching = null;
         this.piece = null;
         this.explored = false;
+        this.indexInPath = -1;
+        this.endInPath = null;
     }
 
     public void match(Vertex x){
