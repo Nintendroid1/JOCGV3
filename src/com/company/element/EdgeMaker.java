@@ -15,16 +15,17 @@ public class EdgeMaker {
         edgeCount = 0;
     }
 
-    private void cleanEdges(){
+    private void cleanEdges(boolean resetMatching){
         for(Vertex v:graph.vertices){
             v.edges = new ArrayList<>();
             v.matching = null;
         }
-        graph.resetMatch();
+        graph.reset(resetMatching);
+
     }
 
-    public void reEdges(double bottleneck){
-        cleanEdges();
+    public void reEdges(double bottleneck,boolean resetMatching){
+        cleanEdges(resetMatching);
         Box box = new Box(partition(points,bottleneck),bottleneck);
         while(true){
             List<Point> source = box.getNext();
@@ -40,7 +41,8 @@ public class EdgeMaker {
         }
     }
 
-    private void makeEdge(List<Point> source,List<Point> target,double bottleneck){
+    private int makeEdge(List<Point> source,List<Point> target,double bottleneck){
+        int count = 0;
         for(Point s:source){
             for(Point t:target){
                 if(s.v.label == t.v.label){
@@ -50,20 +52,22 @@ public class EdgeMaker {
                 double y = s.y - t.y;
                 double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
                 if(d <= bottleneck){
+                    count+=1;
                     s.v.edges.add(t.v);
                     t.v.edges.add(s.v);
                 }
             }
         }
+        return count;
     }
 
-    public void reEdgesWeights(double bottleneck, int partN, double largeG, double smallG){
+    public void reEdgesWeights(double bottleneck, int partN, double largeG, double smallG,boolean resetMatching){
 
         double middleG = largeG/partN;
         assert bottleneck < middleG;
         assert (int)(largeG%smallG) == 0;
 
-        cleanEdges();
+        cleanEdges(resetMatching);
 
         int[][] space = new int[2][(int)(largeG/smallG)];
 
@@ -150,12 +154,12 @@ public class EdgeMaker {
         }
     }
 
-    public void reEdgesFixShift(double bottleneck, int partN, double largeG, double smallG){
+    public void reEdgesFixShift(double bottleneck, int partN, double largeG, double smallG, boolean resetMatching){
         double middleG = largeG/partN;
         assert bottleneck < middleG;
         assert (int)(largeG%smallG) == 0;
 
-        cleanEdges();
+        cleanEdges(resetMatching);
 
         Box box = new Box(partition(points,bottleneck),bottleneck);
         while(true){

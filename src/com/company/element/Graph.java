@@ -59,9 +59,11 @@ public class Graph {
         return result;
     }
 
-    public void resetMatch(){
+    public void reset(boolean resetMatching){
         for(Vertex v:vertices){
-            v.matching = null;
+            if(resetMatching){
+                v.matching = null;
+            }
             v.explored = false;
         }
         affectedP = new DataStructure.Stage(0,0);

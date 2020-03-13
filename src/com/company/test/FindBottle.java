@@ -85,7 +85,7 @@ public class FindBottle {
         double bottleneck = initGuess(graph);
         do{
             bottleneck*=2;
-            edgeMaker.reEdges(bottleneck);
+            edgeMaker.reEdges(bottleneck,false);
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
@@ -99,7 +99,7 @@ public class FindBottle {
         double bottleneck = initGuess(graph);
         do{
             bottleneck*=2;
-            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG);
+            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,false);
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             jocg.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
@@ -112,8 +112,9 @@ public class FindBottle {
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
         while(tail-head > lambda*head){
+            boolean resetMatching = (bottleneck > (tail+head)/2);
             bottleneck = (tail + head)/2;
-            edgeMaker.reEdges(bottleneck);
+            edgeMaker.reEdges(bottleneck,resetMatching);
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
             if(graph.matchCount() < graph.vertices.size()/2){
@@ -130,8 +131,9 @@ public class FindBottle {
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
         while(tail-head > lambda*head){
+            boolean resetMatching = (bottleneck > (tail+head)/2);
             bottleneck = (tail + head)/2;
-            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG);
+            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             jocg.start();
             if(graph.matchCount() < graph.vertices.size()/2){
@@ -150,26 +152,27 @@ public class FindBottle {
      * graph needs to preserve points so that edge can be generated
      */
     public static Double[] find(Algo algo, double head, double tail, double approx){
-        while (tail - head > approx*tail){
-            double bottleneck = (tail + head)/2;
-            algo.graph.resetMatch();
-            algo.graph.reEdges(bottleneck);
-            algo.start();
-
-            if(algo.graph.perfectMatch()){
-                tail = bottleneck;
-            }
-            else{
-                head = bottleneck;
-            }
-        }
-
-        if(!algo.graph.perfectMatch()){
-            return null;
-        }
-        else{
-            return new Double[]{head,tail};
-        }
+//        while (tail - head > approx*tail){
+//            double bottleneck = (tail + head)/2;
+//            algo.graph.resetMatch();
+//            algo.graph.reEdges(bottleneck);
+//            algo.start();
+//
+//            if(algo.graph.perfectMatch()){
+//                tail = bottleneck;
+//            }
+//            else{
+//                head = bottleneck;
+//            }
+//        }
+//
+//        if(!algo.graph.perfectMatch()){
+//            return null;
+//        }
+//        else{
+//            return new Double[]{head,tail};
+//        }
+        return null;
 
     }
 }

@@ -17,13 +17,13 @@ public class TestEdgeMaker {
         em.graph = graph;
         double bottleneck = 1;
         start = System.currentTimeMillis();
-        em.reEdgesWeights(bottleneck,4,128,0.1);
+        em.reEdgesWeights(bottleneck,4,128,0.1,true);
         end = System.currentTimeMillis();
 
         System.out.println("weighted version takes: " + (end-start));
 
         start = System.currentTimeMillis();
-        em.reEdges(bottleneck);
+        em.reEdges(bottleneck,true);
         end = System.currentTimeMillis();
 
         System.out.println("unweighted version takes: " + (end-start));

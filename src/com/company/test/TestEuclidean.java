@@ -68,7 +68,7 @@ public class TestEuclidean {
                             GraphGen euclideanGen = new GraphGen(5);
                             Graph graph = euclideanGen.generate(i, 128);
                             EdgeMaker edgeMaker = new EdgeMaker(graph);
-                            edgeMaker.reEdgesWeights(bottleneck, middle, 128, 0.01);
+                            edgeMaker.reEdgesWeights(bottleneck, middle, 128, 0.01,true);
 
                             //Graph graph = euclideanGen.generate_approx(i,100,middle,bottleneck);
 
@@ -80,9 +80,9 @@ public class TestEuclidean {
                             int hopMatchCount = graph.matchCount();
                             assert graph.matchValidCheck();
 
-                            graph.resetMatch();
+                            graph.reset(true);
                             for (Graph piece : graph.pieces) {
-                                piece.resetMatch();
+                                piece.reset(true);
                             }
                             //changeGraph(graph);
                             assert graph.matchCount() == 0;
