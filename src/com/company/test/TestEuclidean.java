@@ -21,12 +21,12 @@ public class TestEuclidean {
         writer.write("");
         Hop_NoHash hop;
         Jocg_Pointer jocg;
-        int[] numV = {100000};//,50000};
+        int[] numV = {10000};//,50000};
         int[] middles = {8, 16, 32, 64};
 
         //int[] parts = {14,16,18,20,22};//{1,2,3,4,5,6,8,10,12,14,16,18,20,22};
 
-        int[] parts = {4};
+        int[] parts = {5};
         {//1,2,3,4,5,6,7,8,9,10,11,12,13};//14,16,18,20,22};
 
 //        ArrayList<Integer> middles = new ArrayList<>();
@@ -34,7 +34,7 @@ public class TestEuclidean {
 //            middles.add(i);
 //        }
             int times = 5;
-            double[] bottlenecks = {4};//{1,2,3,4,5,6,7,8,9};
+            double[] bottlenecks = {8};//{1,2,3,4,5,6,7,8,9};
             for (int i : numV) {
                 for (double bottleneck : bottlenecks) {
                     for (int middle : parts) {
@@ -59,7 +59,7 @@ public class TestEuclidean {
                         double HK_BVE2 = 0;
                         double Jo_DVE2 = 0;
                         double Jo_BVE2 = 0;
-                        double JDL = 0;
+                        double JDLP = 0;
                         double delTime = 0;
 
                         for (int time = 1; time <= times; time++) {
@@ -126,7 +126,7 @@ public class TestEuclidean {
                             JoPrebve2 += jocg.pre_bve2;
                             JoPredve2 += jocg.pre_dve2;
 
-                            JDL = jocg.del;
+                            JDLP = jocg.delP;
 
 
                             timePreprocess += jocg.preprocess;
@@ -158,7 +158,7 @@ public class TestEuclidean {
                         Jo_DVE2 /= times;
                         JoPrebve2 /= times;
                         JoPredve2 /= times;
-                        JDL /= times;
+                        JDLP /= times;
 
                         double ratio = timeElapsedJocg / timeElapsedHop;
                         System.out.println("average HB: " + HKbve);
@@ -174,7 +174,7 @@ public class TestEuclidean {
                         System.out.println("average JD: " + Jodve);
                         System.out.println("average JB2: " + Jo_BVE2);
                         System.out.println("average JD2: " + Jo_DVE2);
-                        System.out.println("average JDL: " + JDL);
+                        System.out.println("average JDLP: " + JDLP);
 
                         System.out.println("average HI: " + HKite);
                         System.out.println("average JI: " + Joite);
@@ -213,7 +213,7 @@ public class TestEuclidean {
                         writer.append("average JD: " + Jodve + "\n");
                         writer.append("average JB2: " + Jo_BVE2 + "\n");
                         writer.append("average JD2: " + Jo_DVE2 + "\n");
-                        writer.append("average JDL: " + JDL + "\n");
+                        writer.append("average JDLP: " + JDLP + "\n");
 
 
                         writer.append("average HI: " + HKite + "\n");

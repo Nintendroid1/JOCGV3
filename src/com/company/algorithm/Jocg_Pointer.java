@@ -15,12 +15,141 @@ import java.util.LinkedList;
 public class Jocg_Pointer extends Algo{
     private class CycleRegion{
         public int top,bot;
-        public Vertex backToPathNode;
+        public Vertex root;
         public CycleRegion(){
-            top = -1; bot = -1; backToPathNode = null;
+            top = -1; bot = -1; root = null;
         }
         public void init(){
-            top = -1; bot = -1; backToPathNode = null;
+            top = -1; bot = -1; root = null;
+        }
+    }
+
+    private class TempPath{
+        public ArrayList<Vertex> path;
+        public ArrayList<CycleRegion> cycleTracker;
+        public TempPath(){
+            path = new ArrayList<>();
+            cycleTracker = new ArrayList<>();
+        }
+
+        public Vertex get(int index){
+            return path.get(index);
+        }
+
+        public int size(){
+            return path.size();
+        }
+
+        public void addC(CycleRegion c){
+            if(c.root.id == 5550){
+                int a = 0;
+            }
+            if(addTop(c)){
+                addBot(c);
+            }
+        }
+
+        private boolean addTop(CycleRegion c){
+            if(c.bot <= c.top){
+                CycleRegion topHost = cycleTracker.get(c.top);
+                if(topHost == null){
+                    cycleTracker.set(c.top,c);
+                    return true;
+                }
+                else {
+                    if(topHost.bot < c.bot){
+                        return false;
+                    }
+                    else{
+                        destroyC(topHost);
+                        cycleTracker.set(c.top,c);
+                        return true;
+                    }
+                }
+
+            }
+            else {
+                return false;
+            }
+        }
+
+        private void addBot(CycleRegion c){
+            if(c.bot <= c.top){
+                if(cycleTracker.get(c.bot) == null){
+                    cycleTracker.set(c.bot,c);
+                }
+                else{
+                    CycleRegion botHost = cycleTracker.get(c.bot);
+                    if(botHost.bot < c.bot){
+                        c.bot+=1;
+                        addBot(c);
+                    }
+                    else{
+                        destroyC(botHost);
+                        cycleTracker.set(c.bot,c);
+                    }
+                }
+            }
+            else {
+                destroyC(c);
+            }
+
+        }
+
+        public void addV(Vertex v){
+            if(v != null){
+                v.indexInPath = path.size();
+            }
+            path.add(v);
+            cycleTracker.add(null);
+        }
+
+        public boolean isEmpty(){
+            return path.isEmpty();
+        }
+
+        private void destroyC(CycleRegion c){
+            if(c != null && cycleTracker != null){
+                if(cycleTracker.get(c.top) == c){
+                    cycleTracker.set(c.top,null);
+                }
+                if(cycleTracker.get(c.bot) == c){
+                    cycleTracker.set(c.bot,null);
+                }
+            }
+        }
+
+        public void removeTopV(){
+            Vertex remove = path.remove(path.size() - 1);
+            CycleRegion cycleRegion = cycleTracker.remove(cycleTracker.size()-1);
+            if(cycleRegion != null){
+//                if(remove.endInPath != null
+//                        && remove.endInPath.indexInPath != -1
+//                        && remove.endInPath.indexInPath < cycleRegion.root.indexInPath){
+//
+//                }
+
+                remove.endInPath = cycleRegion.root;
+                cycleRegion.top = cycleTracker.size()-1;
+                if(cycleRegion.top >= cycleRegion.bot){
+                    if(!cycleTracker.isEmpty()){
+                        CycleRegion nextC = cycleTracker.get(cycleTracker.size() - 1);
+                        if(nextC == null){
+                            cycleTracker.set(cycleTracker.size()-1,cycleRegion);
+                        }
+                        else{
+                            if(nextC.bot < cycleRegion.bot){
+                                destroyC(cycleRegion);
+                            }
+                            else{
+                                destroyC(nextC);
+                                cycleTracker.set(cycleTracker.size()-1,cycleRegion);
+                            }
+                        }
+                    }
+                }
+            }
+            remove.indexInPath = -1;
         }
     }
 
@@ -30,7 +159,9 @@ public class Jocg_Pointer extends Algo{
     public int dve2;
     public int bve;
     public int bve2;
-    public int del;
+    public double delP;
+    private double totalExplored;
+    private double totalCompleteDel;
     public long delTime;
     public int iterate;
 
@@ -73,7 +204,7 @@ public class Jocg_Pointer extends Algo{
         pre_bve=0;
         pre_dve=0;
         pre_ite=0;
-        del=0;
+        delP=0;
         delTime=0;
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
@@ -135,40 +266,48 @@ public class Jocg_Pointer extends Algo{
                 }
 
                 start = System.currentTimeMillis();
+                totalExplored += exloredV.size();
                 if(!exloredV.isEmpty()){
 
                     for(Vertex ev:exloredV){
-                        if(ev.indexInPath >= 0
-                                || (ev.endInPath != null && ev.endInPath.indexInPath >= 0)){
+                        if((ev.endInPath != null) || ev.indexInPath != -1){
                             ev.deleteE_clean(currentBFS,count);
-                        }
-                        else{
-                            if(ev.endInPath != null){
-                                int a = 0;
+
+                            if(!ev.piece.affectedP.equal(currentBFS,count)){
+                                totalCompleteDel+=1;
                             }
-                            del+=1;
+                        }
+                        else {
+                            totalCompleteDel+=1;
                             ev.deleteE_clean(-1,-1);
                         }
-//                        if(!ev.piece.affectedP.equal(currentBFS,count)){
-//                            del+=1;
-//                        }
+
 //                        ev.deleteE_clean(currentBFS,count);
-                        if(ev.indexInPath == -1){
-                            ev.endInPath = null;
-                        }
+//                        if(!ev.piece.affectedP.equal(currentBFS,count)){
+//                            totalCompleteDel+=1;
+//                        }
+
+//                        if(ev.indexInPath == -1 && (ev.endInPath == null || ev.endInPath.indexInPath == -1)){
+//                            totalCompleteDel+=1;
+//                        }
+
+
+
+                        ev.endInPath = null;
                         ev.explored = false;
                     }
                     for(Vertex pv:path){
                         pv.indexInPath = -1;
-                        pv.endInPath = null;
                     }
                     exloredV = new ArrayList<>();
                 }
                 end = System.currentTimeMillis();
 
                 delTime+=(end-start);
+
             }
         }
+        delP = totalCompleteDel/totalExplored;
     }
 
     private boolean newbfs(){
@@ -248,8 +387,6 @@ public class Jocg_Pointer extends Algo{
                     }
                 }
             }
-
-
         }
         System.out.println("Jocg bfs returns: " + shortestD);
         currentBFS = shortestD;
@@ -257,29 +394,27 @@ public class Jocg_Pointer extends Algo{
         return shortestD != INF;
     }
 
-    private void removeTopV(ArrayList<Vertex> tempPath, CycleRegion cycleRegion){
-        Vertex remove = tempPath.remove(tempPath.size() - 1);
-        if(remove.indexInPath == cycleRegion.top && cycleRegion.top >= cycleRegion.bot){
-            cycleRegion.top-=1;
-            remove.endInPath = cycleRegion.backToPathNode;
-        }
-        remove.indexInPath = -1;
-    }
+
+//    public void removeTopV(ArrayList<Vertex> tempPath){
+//        Vertex remove = tempPath.remove(path.size() - 1);
+//        remove.indexInPath = -1;
+//    }
 
     private boolean newdfs(Vertex startV){
-        ArrayList<Vertex> tempPath = new ArrayList<>();
-        CycleRegion cycleRegion = new CycleRegion();
+        TempPath tempPath = new TempPath();
 
-        startV.indexInPath = tempPath.size();
-        tempPath.add(startV);
+        tempPath.addV(startV);
         startV.explored = true;
         exloredV.add(startV);
         while(!tempPath.isEmpty()){
+
             Vertex v = tempPath.get(tempPath.size()-1);
+
+
             if(v == null){
                 //augment path
                 Vertex head = null;
-                for(Vertex tail:tempPath){
+                for(Vertex tail:tempPath.path){
                     if(head != null && head.label == Label.A){
                         head.match(tail);
                         path.add(head);
@@ -290,57 +425,49 @@ public class Jocg_Pointer extends Algo{
                 return true;
             }
 
+            //assert tempPath.get(v.indexInPath) == v;
             Vertex u = v.next();
             if(u == null){
-                removeTopV(tempPath,cycleRegion);
+                tempPath.removeTopV();
                 if(!tempPath.isEmpty()){
-                    removeTopV(tempPath,cycleRegion);
+                    tempPath.removeTopV();
                 }
                 continue;
             }
-//            if(u.matching != null && u.matching.explored){
-//                continue;
-//            }
+
 
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
+                CycleRegion cycleRegion = null;
                 if(u.matching != null){
                     if(u.matching.explored){
-                        if(dist(u.matching) == dist(v) && graph.getWeight(u,u.matching) == 0){
-                            if(u.matching.indexInPath >= 0){
-                                cycleRegion.top = v.indexInPath;
-                                if(cycleRegion.backToPathNode == null
-                                        || cycleRegion.backToPathNode.indexInPath == -1
-                                        || cycleRegion.backToPathNode.indexInPath > u.matching.indexInPath){
-                                    cycleRegion.backToPathNode = u.matching;
-                                    cycleRegion.bot = u.matching.indexInPath;
-                                }
-                            }
-                            else if(u.matching.endInPath != null && u.matching.endInPath.indexInPath >= 0){
-                                cycleRegion.backToPathNode = u.matching.endInPath;
-                                cycleRegion.top = v.indexInPath;
-                                cycleRegion.bot = u.matching.endInPath.indexInPath;
-                            }
-                        }
-                        else{
-                            int a = 1;
-                        }
+                        if(u.indexInPath != -1){
+                            //assert u.piece == v.piece;
+                            cycleRegion = new CycleRegion();
+                            cycleRegion.top = v.indexInPath; cycleRegion.bot = u.indexInPath; cycleRegion.root = u;
+                            tempPath.addC(cycleRegion);
 
+                        }
+                        else if(u.endInPath != null
+                                && u.endInPath.indexInPath != -1
+                                && dist(v) == dist(u.endInPath.matching) - graph.getWeight(u.endInPath,u.endInPath.matching)){
+                            cycleRegion = new CycleRegion();
+                            cycleRegion.top = v.indexInPath; cycleRegion.bot = u.endInPath.indexInPath; cycleRegion.root = u.endInPath;
+                            tempPath.addC(cycleRegion);
+                        }
                         continue;
                     }
                     if(!u.hasNext()){
                         continue;
                     }
                 }
-                u.indexInPath = tempPath.size();
-                tempPath.add(u);
+                tempPath.addV(u);
 
                 Vertex next = u.next();
                 if(next != null){
                     next.explored = true;
                     exloredV.add(next);
-                    next.indexInPath = tempPath.size();
                 }
-                tempPath.add(next);
+                tempPath.addV(next);
             }
         }
         return false;
