@@ -21,7 +21,7 @@ public class TestEuclidean {
         writer.write("");
         Hop_NoHash hop;
         Jocg_Pointer jocg;
-        int[] numV = {10000};//,50000};
+        int[] numV = {20000};//,50000};
         int[] middles = {8, 16, 32, 64};
 
         //int[] parts = {14,16,18,20,22};//{1,2,3,4,5,6,8,10,12,14,16,18,20,22};
@@ -33,8 +33,8 @@ public class TestEuclidean {
 //        for(int i = 2; i < 20; i++){
 //            middles.add(i);
 //        }
-            int times = 5;
-            double[] bottlenecks = {8};//{1,2,3,4,5,6,7,8,9};
+            int times = 10;
+            double[] bottlenecks = {5};//{1,2,3,4,5,6,7,8,9};
             for (int i : numV) {
                 for (double bottleneck : bottlenecks) {
                     for (int middle : parts) {
@@ -65,7 +65,9 @@ public class TestEuclidean {
                         for (int time = 1; time <= times; time++) {
                             System.out.println("|V| = " + i + " bottleneck = " + bottleneck + " part = " + middle + " time: " + time + "/" + times);
 //                System.out.println("|V| = " + 2*i);
-                            GraphGen euclideanGen = new GraphGen(5);
+                            long timeSeed = System.currentTimeMillis();
+                            System.out.println("Time = " + timeSeed);
+                            GraphGen euclideanGen = new GraphGen(timeSeed);
                             Graph graph = euclideanGen.generate(i, 128);
                             EdgeMaker edgeMaker = new EdgeMaker(graph);
                             edgeMaker.reEdgesWeights(bottleneck, middle, 128, 0.01,true);

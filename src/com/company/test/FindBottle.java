@@ -40,7 +40,7 @@ public class FindBottle {
     }
 
     public static void init(){
-        numV = 100000;
+        numV = 10000;
         partN = 4;
         largeG = 128;
         smallG = 0.01;
@@ -51,10 +51,12 @@ public class FindBottle {
         long start,end;
         double hTime = 0;
         double jTime = 0;
-        int time = 5;
-        for(int i = 0; i < 5; i++){
+        int time = 10;
+        for(int i = 0; i < time; i++){
             init();
-            GraphGen graphGen = new GraphGen(5);
+            Long timeSeed = System.currentTimeMillis();
+            System.out.println("timeSeed = " + timeSeed);
+            GraphGen graphGen = new GraphGen(timeSeed);
             Graph graph = graphGen.generate(numV,largeG);
 
             start = System.currentTimeMillis();

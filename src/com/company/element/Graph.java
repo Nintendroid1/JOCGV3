@@ -18,7 +18,7 @@ public class Graph {
         vertices = new ArrayList<>();
         pieces = new ArrayList<>();
         edgeNum = 0;
-        affectedP = new DataStructure.Stage(0,0);
+        affectedP = new DataStructure.Stage(-1,-1);
     }
 
     public int getWeight(Vertex v, Vertex u){

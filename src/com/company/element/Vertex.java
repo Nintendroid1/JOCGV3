@@ -44,6 +44,59 @@ public class Vertex {
         this.matching = x;
     }
 
+    public Vertex deepRoot(){
+        if(endInPath == null){
+            return null;
+        }
+        if(endInPath.indexInPath != -1){
+            return endInPath;
+        }
+        return endInPath.deepRoot();
+    }
+
+    public int deleteE_clean_return(int cb, int cd){
+        int result = 0;
+        if(label == Label.A){
+            if(tempEP <= onezeroP){
+                result+=(tempEP - visitedEP);
+                visitedEP = tempEP;
+            }
+            else{
+                //in this region, edges can only have weight of 0
+                if(this.piece.affectedP.equal(cb,cd)){
+                    //the piece is affected piece
+                    //if this v can be connected to aug path by edges of weight 0,
+                    //then all edges can be saved
+                    //otherwise, delete all edges
+                    result+=Math.max(visitedEP,onezeroP)-visitedEP;
+                    visitedEP = Math.max(visitedEP,onezeroP);
+                    tempEP = visitedEP;
+                }
+                else{
+                    result+=tempEP-visitedEP;
+                    visitedEP = tempEP;
+                }
+            }
+            if(this.matching != null){
+                result+=this.matching.deleteE_clean_return(cb,cd);
+            }
+        }
+        else{
+            if(tempEP > 0){
+                if(this.matching != null){
+                    if(this.piece == this.matching.piece && this.piece.affectedP.equal(cb,cd)){
+                        tempEP = 0;
+                    }
+                    result+=1;
+                }
+                else{
+                    tempEP = 0;
+                }
+            }
+        }
+        return result;
+    }
+
     public void deleteE_clean(int cb, int cd){
         if(label == Label.A){
             if(tempEP <= onezeroP){

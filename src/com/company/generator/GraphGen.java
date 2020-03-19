@@ -5,9 +5,9 @@ import com.company.element.*;
 import java.util.*;
 
 public class GraphGen {
-    int seed;
+    long seed;
     Random r;
-    public GraphGen(int seed){
+    public GraphGen(long seed){
         this.seed = seed;
     }
 
@@ -15,7 +15,7 @@ public class GraphGen {
         /*
          * generate points and vertices
          */
-        this.r = new Random(seed+System.currentTimeMillis());
+        this.r = new Random(seed);
         ArrayList<Vertex> vertices = new ArrayList<Vertex>(num);
         ArrayList<Point> points = new ArrayList<>();
         for(int i = 0; i < num; i++){
