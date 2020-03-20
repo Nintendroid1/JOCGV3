@@ -258,22 +258,16 @@ public class Jocg_Pointer extends Algo{
                 if(!exloredV.isEmpty()){
 
                     for(Vertex ev:exloredV){
-                        if(ev.deepRoot() != null || ev.indexInPath != -1){
-                            totalCompleteDel+=ev.deleteE_clean_return(currentBFS,count);
-
-                        }
-                        else {
-                            totalCompleteDel+=ev.deleteE_clean_return(-1,-1);
-                        }
-
-//                       totalCompleteDel+= ev.deleteE_clean_return(currentBFS,count);
-//                        if(!ev.piece.affectedP.equal(currentBFS,count)){
-//                            totalCompleteDel+=1;
-//                        }
+//                        if(ev.deepRoot() != null || ev.indexInPath != -1){
+//                            totalCompleteDel+=ev.deleteE_clean_return(currentBFS,count);
 //
-//                        if(ev.indexInPath == -1 && (ev.endInPath == null || ev.endInPath.indexInPath == -1)){
-//                            totalCompleteDel+=1;
 //                        }
+//                        else {
+//                            totalCompleteDel+=ev.deleteE_clean_return(-1,-1);
+//                        }
+
+                       totalCompleteDel+= ev.deleteE_clean_return(currentBFS,count);
+
 
                         ev.endInPath = null;
                         ev.explored = false;
@@ -289,7 +283,7 @@ public class Jocg_Pointer extends Algo{
 
             }
         }
-        delP = totalCompleteDel/totalExplored;
+        delP = totalCompleteDel;
     }
 
     private boolean newbfs(){

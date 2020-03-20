@@ -87,13 +87,16 @@ public class Vertex {
                     if(this.piece == this.matching.piece && this.piece.affectedP.equal(cb,cd)){
                         tempEP = 0;
                     }
-                    result+=1;
+                    else {
+                        result+=1;
+                    }
                 }
                 else{
                     tempEP = 0;
                 }
             }
         }
+        assert result >= 0;
         return result;
     }
 
