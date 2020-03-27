@@ -12,10 +12,10 @@ public class TestEdgeMaker {
     public static void test(){
         long start, end;
 
-        Graph graph = new GraphGen(5321312).generate(1000000,128);
+        Graph graph = new GraphGen(5321312).generate(50000,128);
         EdgeMaker em = new EdgeMaker(graph);
         em.graph = graph;
-        double bottleneck = 1;
+        double bottleneck = 3;
         start = System.currentTimeMillis();
         em.reEdgesWeights(bottleneck,4,128,0.1,true);
         end = System.currentTimeMillis();

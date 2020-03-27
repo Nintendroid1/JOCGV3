@@ -33,8 +33,8 @@ public class TestEuclidean {
 //        for(int i = 2; i < 20; i++){
 //            middles.add(i);
 //        }
-            int times = 10;
-            double[] bottlenecks = {0.3};//{1,2,3,4,5,6,7,8,9};
+            int times = 2;
+            double[] bottlenecks = {1};//{1,2,3,4,5,6,7,8,9};
             for (int i : numV) {
                 for (double bottleneck : bottlenecks) {
                     for (int middle : parts) {

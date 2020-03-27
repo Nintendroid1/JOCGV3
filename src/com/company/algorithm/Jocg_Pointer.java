@@ -14,13 +14,14 @@ import java.util.LinkedList;
 
 public class Jocg_Pointer extends Algo{
     private class CycleRegion{
-        public int top,bot;
+        public int top,bot,len;
         public Vertex root;
+        public Vertex leaf;
         public CycleRegion(){
-            top = -1; bot = -1; root = null;
+            top = -1; bot = -1; root = null; leaf = null; len = 0;
         }
         public void init(){
-            top = -1; bot = -1; root = null;
+            top = -1; bot = -1; root = null; leaf = null; len = 0;
         }
     }
 
@@ -168,6 +169,13 @@ public class Jocg_Pointer extends Algo{
 
     ArrayList<Vertex> path;
 
+    private ArrayList<CycleRegion> nCycle;
+
+    private double vInCycle;
+    private double vRemain;
+    private double cRemain;
+    private double cInCyle;
+
 
 
     DataStructure.CycleArray<DataStructure.DisV> zeros;
@@ -194,6 +202,12 @@ public class Jocg_Pointer extends Algo{
         pre_ite=0;
         delP=0;
         delTime=0;
+
+        vInCycle = 0;
+        vRemain = 0;
+        cInCyle = 0;
+        cRemain = 0;
+
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
@@ -233,6 +247,7 @@ public class Jocg_Pointer extends Algo{
                 //tempE = new AdjMatrix(graph.numV);
                 //tempE = new HashMap<>();
                 path = new ArrayList<>();
+                nCycle = new ArrayList<>();
                 //tempE, path will be updated in newdfs
                 count += 1;
                 if(newdfs(v)){
@@ -251,6 +266,16 @@ public class Jocg_Pointer extends Algo{
                             parent = u;
                         }
                     }
+
+                    //count number of cycles
+                    cInCyle += nCycle.size();
+                    for(CycleRegion c:nCycle){
+                        if(c.root.indexInPath == -1){
+                            vRemain+=c.len;
+                            cRemain+=1;
+                        }
+                        vInCycle+=c.len;
+                    }
                 }
 
                 start = System.currentTimeMillis();
@@ -258,15 +283,15 @@ public class Jocg_Pointer extends Algo{
                 if(!exloredV.isEmpty()){
 
                     for(Vertex ev:exloredV){
-//                        if(ev.deepRoot() != null || ev.indexInPath != -1){
-//                            totalCompleteDel+=ev.deleteE_clean_return(currentBFS,count);
-//
-//                        }
-//                        else {
-//                            totalCompleteDel+=ev.deleteE_clean_return(-1,-1);
-//                        }
+                        if(ev.deepRoot() != null || ev.indexInPath != -1){
+                            totalCompleteDel+=ev.deleteE_clean_return(currentBFS,count);
 
-                       totalCompleteDel+= ev.deleteE_clean_return(currentBFS,count);
+                        }
+                        else {
+                            totalCompleteDel+=ev.deleteE_clean_return(-1,-1);
+                        }
+
+//                       totalCompleteDel+= ev.deleteE_clean_return(currentBFS,count);
 
 
                         ev.endInPath = null;
@@ -284,6 +309,9 @@ public class Jocg_Pointer extends Algo{
             }
         }
         delP = totalCompleteDel;
+        double ratioV = vRemain/vInCycle;
+        double ratioC = cRemain/cInCyle;
+        int a= 0;
     }
 
     private boolean newbfs(){
@@ -408,14 +436,16 @@ public class Jocg_Pointer extends Algo{
 
 
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
-                CycleRegion cycleRegion = null;
+                CycleRegion cycleRegion;
                 if(u.matching != null){
                     if(u.matching.explored){
                         if(u.indexInPath != -1){
                             //assert u.piece == v.piece;
                             cycleRegion = new CycleRegion();
-                            cycleRegion.top = v.indexInPath; cycleRegion.bot = u.indexInPath; cycleRegion.root = u;
+                            cycleRegion.top = v.indexInPath; cycleRegion.bot = u.indexInPath; cycleRegion.root = u; cycleRegion.leaf = v;
+                            cycleRegion.len = cycleRegion.top - cycleRegion.bot;
                             tempPath.addC(cycleRegion);
+                            nCycle.add(cycleRegion);
                             //isCycleInPiece(tempPath,cycleRegion);
 
                         }
@@ -424,20 +454,13 @@ public class Jocg_Pointer extends Algo{
                                 && dist(v) == dist(u.endInPath.matching) - graph.getWeight(u.endInPath,u.endInPath.matching)){
                             cycleRegion = new CycleRegion();
                             cycleRegion.top = v.indexInPath; cycleRegion.bot = u.endInPath.indexInPath; cycleRegion.root = u.endInPath;
+                            cycleRegion.leaf = v; cycleRegion.len = cycleRegion.top - cycleRegion.bot;
                             tempPath.addC(cycleRegion);
+                            nCycle.add(cycleRegion);
                             //isCycleInPiece(tempPath,cycleRegion);
+
                         }
 
-//                        if(cycleRegion != null){
-//                            for(int i = cycleRegion.bot; i <= cycleRegion.top; i++){
-//                                Vertex vi = tempPath.path.get(i);
-//                                if(vi.endInPath == null
-//                                        || vi.endInPath.indexInPath == -1
-//                                        || vi.endInPath.indexInPath > cycleRegion.root.indexInPath){
-//                                    vi.endInPath = cycleRegion.root;
-//                                }
-//                            }
-//                        }
 
                         continue;
                     }
