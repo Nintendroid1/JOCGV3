@@ -102,6 +102,7 @@ public class Hop_NoHash extends Algo{
         //In <dist.get(null)> != INF, means <null> has been explored, which means a free vertex has been explored
         if(print){
             System.out.println("Hop bfs returns: " + shortestD);
+            System.out.flush();
         }
 
         return shortestD != INF;

@@ -15,32 +15,33 @@ public class FindBottle {
     static double smallG;
 
     private static double initGuess(Graph graph){
-        double closestX = Double.MAX_VALUE;
-        double closestY = Double.MAX_VALUE;
-        double result = 0;
-        graph.points.sort(new Point.Xcomparator());
-        for(int i = 0; i < graph.points.size()-1;i++){
-            double delta = graph.points.get(i+1).x - graph.points.get(i).x;
-            if(delta < closestX && delta!=0){
-                closestX = delta;
-            }
-        }
-
-        graph.points.sort(new Point.Ycomparator());
-        for(int i = 0; i < graph.points.size()-1;i++){
-            double delta = graph.points.get(i+1).y - graph.points.get(i).y;
-            if(delta < closestY && delta != 0){
-                closestY = delta;
-            }
-        }
-
-        result = Math.sqrt(Math.pow(closestX,2)+Math.pow(closestY,2));
-        return 2*result;
+        return largeG/Math.sqrt(graph.vertices.size());
+//        double closestX = Double.MAX_VALUE;
+//        double closestY = Double.MAX_VALUE;
+//        double result = 0;
+//        graph.points.sort(new Point.Xcomparator());
+//        for(int i = 0; i < graph.points.size()-1;i++){
+//            double delta = graph.points.get(i+1).x - graph.points.get(i).x;
+//            if(delta < closestX && delta!=0){
+//                closestX = delta;
+//            }
+//        }
+//
+//        graph.points.sort(new Point.Ycomparator());
+//        for(int i = 0; i < graph.points.size()-1;i++){
+//            double delta = graph.points.get(i+1).y - graph.points.get(i).y;
+//            if(delta < closestY && delta != 0){
+//                closestY = delta;
+//            }
+//        }
+//
+//        result = Math.sqrt(Math.pow(closestX,2)+Math.pow(closestY,2));
+//        return 5102*result;
 
     }
 
     public static void init(){
-        numV = 100000;
+        numV = 200000;
         partN = 4;
         largeG = 128;
         smallG = 0.01;
@@ -56,6 +57,8 @@ public class FindBottle {
             init();
             GraphGen graphGen = new GraphGen(5);
             Graph graph = graphGen.generate(numV,largeG);
+
+            System.out.println("Generate Graph Finished");
 
             start = System.currentTimeMillis();
             find_HK_Doubling(graph);
@@ -87,6 +90,7 @@ public class FindBottle {
         do{
             bottleneck*=2;
             edgeMaker.reEdges(bottleneck,false);
+            //System.out.println("reEdge finished");
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
