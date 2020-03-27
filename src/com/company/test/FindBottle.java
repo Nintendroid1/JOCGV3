@@ -15,7 +15,9 @@ public class FindBottle {
     static double smallG;
 
     private static double initGuess(Graph graph){
-        return largeG/Math.sqrt(graph.vertices.size());
+        double guess = largeG/Math.sqrt(graph.vertices.size());
+        System.out.println("Initial Guess = " + guess);
+        return guess;
 //        double closestX = Double.MAX_VALUE;
 //        double closestY = Double.MAX_VALUE;
 //        double result = 0;
