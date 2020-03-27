@@ -58,16 +58,17 @@ public class FindBottle {
             Graph graph = graphGen.generate(numV,largeG);
 
             start = System.currentTimeMillis();
-            find_Jocg_Doubling(graph);
-            end = System.currentTimeMillis();
-            jTime += end - start;
-
-            init();
-
-            start = System.currentTimeMillis();
             find_HK_Doubling(graph);
             end = System.currentTimeMillis();
             hTime += end - start;
+
+            init();
+            graph.reset(true);
+
+            start = System.currentTimeMillis();
+            find_Jocg_Doubling(graph);
+            end = System.currentTimeMillis();
+            jTime += end - start;
         }
 
         jTime/=time;
