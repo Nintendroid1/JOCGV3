@@ -1,9 +1,6 @@
 package com.company.algorithm;
 
-import com.company.element.DataStructure;
-import com.company.element.Graph;
-import com.company.element.Label;
-import com.company.element.Vertex;
+import com.company.element.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,6 +30,8 @@ public class Jocg_Pointer extends Algo{
     int shortestD;
     public Graph graph;
 
+    public DataRecorder dr;
+
     ArrayList<Vertex> exloredV;
 
     ArrayList<Vertex> path;
@@ -51,6 +50,8 @@ public class Jocg_Pointer extends Algo{
         zeros = new DataStructure.CycleArray<>(graph.vertices.size()/2+4);
         ones = new DataStructure.CycleArray<>(graph.vertices.size()/2+4);
         twos = new DataStructure.CycleArray<>(graph.vertices.size()/2+4);
+
+        this.dr = new DataRecorder();
     }
 
     public void start(){
@@ -74,17 +75,25 @@ public class Jocg_Pointer extends Algo{
             this.pre_dve2+=hop.dve2;
             this.pre_bve2+=hop.bve2;
             this.pre_ite+=hop.iterate;
+
+            dr.set(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
+            dr.set(dr.pre_dfsVisitedE,hop.dr.get(dr.pre_dfsVisitedE));
+            dr.set(dr.pre_iterationN,hop.dr.get(dr.pre_iterationN));
         }
         if(!graph.pieces.isEmpty()){
             this.pre_ite/=graph.pieces.size();
+            dr.set(dr.pre_iterationN,dr.get(dr.pre_iterationN)/graph.pieces.size());
         }
         end = System.currentTimeMillis();
         preprocess = end - start;
+        dr.set(dr.pre_runningTime,preprocess);
+
         iterate = 0;
         //exloredVtable = new int[graph.vertices.size()/2];
         exloredV = new ArrayList<>();
         while(newbfs()){
             iterate+=1;
+            dr.add(dr.iterationN,1);
             /*
              * visitedE: store all visited edges in the current phase
              * any edges in vistedE won't be explored in the current phase
@@ -122,7 +131,6 @@ public class Jocg_Pointer extends Algo{
                     }
                 }
 
-                start = System.currentTimeMillis();
                 if(!exloredV.isEmpty()){
                     del+=exloredV.size();
                     for(Vertex ev:exloredV){
@@ -131,9 +139,6 @@ public class Jocg_Pointer extends Algo{
                     }
                     exloredV = new ArrayList<>();
                 }
-                end = System.currentTimeMillis();
-
-                delTime+=(end-start);
             }
         }
     }
@@ -183,6 +188,7 @@ public class Jocg_Pointer extends Algo{
             }
             v.reset();
             this.bve+=1;
+            dr.add(dr.jocg_bfsVisitedE,1);
             for(Vertex u:v.edges){
                 this.bve2+=1;
                 if(u == v.matching){
@@ -256,6 +262,8 @@ public class Jocg_Pointer extends Algo{
             if(u.matching != null && u.matching.explored){
                 continue;
             }
+
+            dr.add(dr.jocg_dfsVisitedE,1);
 
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
                 if(u.matching != null){

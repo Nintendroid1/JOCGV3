@@ -1,9 +1,6 @@
 package com.company.algorithm;
 
-import com.company.element.DataStructure;
-import com.company.element.Graph;
-import com.company.element.Label;
-import com.company.element.Vertex;
+import com.company.element.*;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -21,6 +18,8 @@ public class Hop_NoHash extends Algo{
     public int bve2;
     int shortestD;
 
+    public DataRecorder dr;
+
     public Hop_NoHash(Graph graph){
         this.graph = graph;
         this.INF = Integer.MAX_VALUE;
@@ -28,6 +27,7 @@ public class Hop_NoHash extends Algo{
         this.iterate = 0;
         this.print = true;
         this.checkGraph = false;
+        this.dr = new DataRecorder();
     }
 
     public void start(){
@@ -38,6 +38,7 @@ public class Hop_NoHash extends Algo{
         bve2 = 0;
         while(bfs()){
             iterate+=1;
+            dr.add(dr.iterationN,1);
             for(Vertex v:graph.freeV(Label.A)){
                 //assert v.matching == null;
                 dfs(v);
@@ -74,7 +75,7 @@ public class Hop_NoHash extends Algo{
              */
             Vertex v = queue.pop();
             if(v.distance < shortestD){
-                this.bve+=1;
+                dr.add(dr.hk_bfsVisitedE,1);
                 for(Vertex u:v.edges){
                     /*
                      * Because we only apply HK on the current Graph
@@ -104,7 +105,6 @@ public class Hop_NoHash extends Algo{
         //In <dist.get(null)> != INF, means <null> has been explored, which means a free vertex has been explored
         if(print){
             System.out.println("Hop bfs returns: " + shortestD);
-            System.out.flush();
         }
 
         return shortestD != INF;
@@ -156,7 +156,7 @@ public class Hop_NoHash extends Algo{
         if(v == null){
             return true;
         }
-        this.dve+=1;
+        dr.add(dr.hK_dfsVisitedE,1);
         for(Vertex u:v.edges){
             dve2+=1;
             if(!checkGraph || u.piece == v.piece){

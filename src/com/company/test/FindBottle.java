@@ -43,7 +43,7 @@ public class FindBottle {
     }
 
     public static void init(){
-        numV = 200000;
+        numV = 10000;
         partN = 4;
         largeG = 128;
         smallG = 0.01;
