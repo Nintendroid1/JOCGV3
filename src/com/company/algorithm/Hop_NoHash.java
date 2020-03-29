@@ -5,6 +5,7 @@ import com.company.element.Graph;
 import com.company.element.Label;
 import com.company.element.Vertex;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 public class Hop_NoHash extends Algo{
@@ -62,6 +63,7 @@ public class Hop_NoHash extends Algo{
             else{
                 v.distance = INF;
             }
+            v.reset();
         }
 
 
@@ -106,6 +108,44 @@ public class Hop_NoHash extends Algo{
         }
 
         return shortestD != INF;
+    }
+
+    private boolean dfs_(Vertex startV){
+        //v.visitedE = 0
+        ArrayList<Vertex> stack = new ArrayList<>();
+        stack.add(startV);
+        while(!stack.isEmpty()){
+            Vertex v = stack.get(stack.size()-1);
+            Vertex u = v.next();
+            if(u == null){
+                stack.remove(stack.size()-1);
+                v.distance = INF;
+                continue;
+            }
+            if(!checkGraph || u.piece == v.piece){
+                int nextDist;
+                if(u.matching == null){
+                    nextDist = shortestD;
+                }
+                else{
+                    nextDist = u.matching.distance;
+                }
+                if(nextDist == v.distance + 1){
+                    if(u.matching != null){
+                        stack.add(u.matching);
+                    }
+                    else{
+                        for(int i = stack.size() - 1; i >= 0; i-=1){
+                            Vertex lastU = stack.get(i).matching;
+                            u.match(stack.get(i));
+                            u = lastU;
+                        }
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     private boolean dfs(Vertex v){
