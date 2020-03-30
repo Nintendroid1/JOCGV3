@@ -4,15 +4,17 @@ import com.company.algorithm.*;
 import com.company.element.*;
 import com.company.generator.GraphGen;
 
+import java.util.Random;
+
 public class FindBottle {
 
-    static int numV;
-    static double lambda;
-    static int partN;
-    static double largeG;
-    static double smallG;
+    int numV;
+    double lambda;
+    int partN;
+    double largeG;
+    double smallG;
 
-    private static double initGuess(Graph graph){
+    private double initGuess(Graph graph){
         double guess = largeG/Math.sqrt(graph.vertices.size());
         System.out.println("Initial Guess = " + guess);
         return guess;
@@ -40,15 +42,15 @@ public class FindBottle {
 
     }
 
-    public static void init(){
-        numV = 10000;
+    public  void init(){
+        numV = 500000;
         partN = 4;
         largeG = 128;
         smallG = 0.01;
         lambda = 0.01;
     }
 
-    public static ExperimentList.Experiment[] find(){
+    public ExperimentList.Experiment[] find(){
         long start,end;
         double hTime = 0;
         double jTime = 0;
@@ -57,7 +59,7 @@ public class FindBottle {
         ExperimentList.Experiment jEx = null;
         for(int i = 0; i < time; i++){
             init();
-            GraphGen graphGen = new GraphGen(5);
+            GraphGen graphGen = new GraphGen(32+(int)System.currentTimeMillis()+(int)Thread.currentThread().getId());
             Graph graph = graphGen.generate(numV,largeG);
 
             System.out.println("Generate Graph Finished");
@@ -72,11 +74,11 @@ public class FindBottle {
             init();
             graph.reset(true);
 
-            start = System.currentTimeMillis();
-            jEx = find_Jocg_Doubling(graph);
-            end = System.currentTimeMillis();
-            jTime += end - start;
-            jEx.totalRunningTime = jTime;
+//            start = System.currentTimeMillis();
+//            jEx = find_Jocg_Doubling(graph);
+//            end = System.currentTimeMillis();
+//            jTime += end - start;
+//            jEx.totalRunningTime = jTime;
         }
 
         jTime/=time;
@@ -93,7 +95,7 @@ public class FindBottle {
         return experiments;
     }
 
-    public static ExperimentList.Experiment find_HK_Doubling(Graph graph){
+    public ExperimentList.Experiment find_HK_Doubling(Graph graph){
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = initGuess(graph);
@@ -111,7 +113,7 @@ public class FindBottle {
 
     }
 
-    public static ExperimentList.Experiment find_Jocg_Doubling(Graph graph){
+    public ExperimentList.Experiment find_Jocg_Doubling(Graph graph){
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = initGuess(graph);
@@ -128,7 +130,7 @@ public class FindBottle {
     }
 
 
-    public static ExperimentList.Experiment find_Hk_Binary(Graph graph, double head, double tail){
+    public ExperimentList.Experiment find_Hk_Binary(Graph graph, double head, double tail){
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
@@ -150,7 +152,7 @@ public class FindBottle {
         return expe;
     }
 
-    public static ExperimentList.Experiment find_Jocg_Binary(Graph graph, double head, double tail){
+    public ExperimentList.Experiment find_Jocg_Binary(Graph graph, double head, double tail){
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;

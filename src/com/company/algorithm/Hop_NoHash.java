@@ -25,6 +25,8 @@ public class Hop_NoHash extends Algo{
     }
 
     public void start(){
+        dr.set(dr.numV,graph.vertices.size());
+        long start = System.currentTimeMillis();
         while(bfs()){
             dr.add(dr.iterationN,1);
             for(Vertex v:graph.freeV(Label.A)){
@@ -32,6 +34,7 @@ public class Hop_NoHash extends Algo{
                 dfs(v);
             }
         }
+        dr.set(dr.runningTime,System.currentTimeMillis() - start);
     }
 
     private boolean bfs(){

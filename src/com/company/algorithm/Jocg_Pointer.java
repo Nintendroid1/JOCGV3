@@ -43,6 +43,7 @@ public class Jocg_Pointer extends Algo{
     }
 
     public void start(){
+        dr.set(dr.numV,graph.vertices.size());
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
@@ -62,6 +63,7 @@ public class Jocg_Pointer extends Algo{
         preprocess = end - start;
         dr.set(dr.pre_runningTime,preprocess);
 
+        start = System.currentTimeMillis();
         exloredV = new ArrayList<>();
         while(newbfs()){
             dr.add(dr.iterationN,1);
@@ -107,6 +109,7 @@ public class Jocg_Pointer extends Algo{
                 }
             }
         }
+        dr.set(dr.runningTime,System.currentTimeMillis() - start);
     }
 
     private boolean newbfs(){

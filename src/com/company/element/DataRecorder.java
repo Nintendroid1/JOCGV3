@@ -7,6 +7,7 @@ import java.util.List;
 
 public class DataRecorder {
     //This class record important data of an algorithm
+    public String numV = "numV";
     public String iterationN = "iteration";
     //int shortestD;
     public String runningTime = "runningTime";
@@ -21,7 +22,7 @@ public class DataRecorder {
     public String deletedEdgesN = "deletedEdgesN";
     private List<String> nameList;
     private ArrayList<Double> dataList;
-    String[] dataName = new String[]{iterationN,runningTime,pre_runningTime,pre_iterationN,
+    String[] dataName = new String[]{numV,iterationN,runningTime,pre_runningTime,pre_iterationN,
             hk_bfsVisitedE,hK_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
             pre_dfsVisitedE,deletedEdgesN};
 
