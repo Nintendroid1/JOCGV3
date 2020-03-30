@@ -1,9 +1,7 @@
 package com.company.test;
 
 import com.company.algorithm.*;
-import com.company.element.EdgeMaker;
-import com.company.element.Graph;
-import com.company.element.Point;
+import com.company.element.*;
 import com.company.generator.GraphGen;
 
 public class FindBottle {
@@ -50,12 +48,14 @@ public class FindBottle {
         lambda = 0.01;
     }
 
-    public static void find(){
+    public static ExperimentList.Experiment[] find(){
         long start,end;
         double hTime = 0;
         double jTime = 0;
-        int time = 5;
-        for(int i = 0; i < 5; i++){
+        int time = 1;
+        ExperimentList.Experiment hEx = null;
+        ExperimentList.Experiment jEx = null;
+        for(int i = 0; i < time; i++){
             init();
             GraphGen graphGen = new GraphGen(5);
             Graph graph = graphGen.generate(numV,largeG);
@@ -63,17 +63,20 @@ public class FindBottle {
             System.out.println("Generate Graph Finished");
 
             start = System.currentTimeMillis();
-            find_HK_Doubling(graph);
+            hEx = find_HK_Doubling(graph);
             end = System.currentTimeMillis();
             hTime += end - start;
+
+            hEx.totalRunningTime = hTime;
 
             init();
             graph.reset(true);
 
             start = System.currentTimeMillis();
-            find_Jocg_Doubling(graph);
+            jEx = find_Jocg_Doubling(graph);
             end = System.currentTimeMillis();
             jTime += end - start;
+            jEx.totalRunningTime = jTime;
         }
 
         jTime/=time;
@@ -84,9 +87,14 @@ public class FindBottle {
         System.out.println("Jocg search bottleneck takes: " + jTime);
         System.out.println("J/H: " + jTime/hTime);
 
+        ExperimentList.Experiment[] experiments = new ExperimentList.Experiment[2];
+        experiments[0] = hEx;
+        experiments[1] = jEx;
+        return experiments;
     }
 
-    public static void find_HK_Doubling(Graph graph){
+    public static ExperimentList.Experiment find_HK_Doubling(Graph graph){
+        ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = initGuess(graph);
         do{
@@ -94,28 +102,34 @@ public class FindBottle {
             edgeMaker.reEdges(bottleneck,false);
             //System.out.println("reEdge finished");
             Hop_NoHash hop = new Hop_NoHash(graph);
+            expe.add(bottleneck,hop.dr);
             hop.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
 
-        find_Hk_Binary(graph, bottleneck/2, bottleneck);
+        expe.add(find_Hk_Binary(graph, bottleneck/2, bottleneck));
+        return expe;
 
     }
 
-    public static void find_Jocg_Doubling(Graph graph){
+    public static ExperimentList.Experiment find_Jocg_Doubling(Graph graph){
+        ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = initGuess(graph);
         do{
             bottleneck*=2;
             edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,false);
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
+            expe.add(bottleneck,jocg.dr);
             jocg.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
 
-        find_Jocg_Binary(graph, bottleneck/2, bottleneck);
+        expe.add(find_Jocg_Binary(graph, bottleneck/2, bottleneck));
+        return expe;
     }
 
 
-    public static void find_Hk_Binary(Graph graph, double head, double tail){
+    public static ExperimentList.Experiment find_Hk_Binary(Graph graph, double head, double tail){
+        ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
         while(tail-head > lambda*head){
@@ -124,6 +138,7 @@ public class FindBottle {
             edgeMaker.reEdges(bottleneck,resetMatching);
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
+            expe.add(bottleneck,hop.dr);
             if(graph.matchCount() < graph.vertices.size()/2){
                 head = bottleneck;
             }
@@ -132,9 +147,11 @@ public class FindBottle {
             }
         }
         System.out.println(bottleneck);
+        return expe;
     }
 
-    public static void find_Jocg_Binary(Graph graph, double head, double tail){
+    public static ExperimentList.Experiment find_Jocg_Binary(Graph graph, double head, double tail){
+        ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
         while(tail-head > lambda*head){
@@ -143,6 +160,7 @@ public class FindBottle {
             edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             jocg.start();
+            expe.add(bottleneck,jocg.dr);
             if(graph.matchCount() < graph.vertices.size()/2){
                 head = bottleneck;
             }
@@ -151,6 +169,7 @@ public class FindBottle {
             }
         }
         System.out.println(bottleneck);
+        return expe;
     }
 
 

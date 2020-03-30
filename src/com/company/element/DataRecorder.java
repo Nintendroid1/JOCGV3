@@ -20,7 +20,7 @@ public class DataRecorder {
     public String pre_dfsVisitedE = "pre_dfsVisitedE";
     public String deletedEdgesN = "deletedEdgesN";
     private List<String> nameList;
-    private ArrayList<Long> dataList;
+    private ArrayList<Double> dataList;
     String[] dataName = new String[]{iterationN,runningTime,pre_runningTime,pre_iterationN,
             hk_bfsVisitedE,hK_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
             pre_dfsVisitedE,deletedEdgesN};
@@ -29,7 +29,7 @@ public class DataRecorder {
         nameList = Arrays.asList(dataName);
         dataList = new ArrayList<>();
         for(int i = 0; i < nameList.size(); i++){
-            dataList.add((long)0);
+            dataList.add(0.0);
         }
     }
 
@@ -38,7 +38,7 @@ public class DataRecorder {
         dataList.set(index,dataList.get(index)+number);
     }
 
-    public void set(String key, long number){
+    public void set(String key, double number){
         int index = indexOf(key);
         dataList.set(index,number);
     }
@@ -48,14 +48,14 @@ public class DataRecorder {
         return nameList.indexOf(key);
     }
 
-    public long get(String key){
+    public double get(String key){
         return dataList.get(indexOf(key));
     }
 
     public void reset(){
         dataList = new ArrayList<>();
         for(int i = 0; i < nameList.size(); i++){
-            dataList.add((long)0);
+            dataList.add(0.0);
         }
     }
 
@@ -65,6 +65,18 @@ public class DataRecorder {
             result = result.concat(nameList.get(i) +" : " + dataList.get(i) + "\n");
         }
         return result;
+    }
+
+    public void combine(DataRecorder dr){
+        for(int i = 0; i < dataList.size(); i++){
+            dataList.set(i,dataList.get(i)+dr.get(nameList.get(i)));
+        }
+    }
+
+    public void average(double times){
+        for(int i = 0; i < dataList.size(); i++){
+            dataList.set(i,dataList.get(i)/times);
+        }
     }
 
 }

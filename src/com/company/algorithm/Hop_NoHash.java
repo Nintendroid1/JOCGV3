@@ -8,14 +8,9 @@ import java.util.LinkedList;
 public class Hop_NoHash extends Algo{
     public Graph graph;
     private Integer INF;
-    public Integer iterate;
     public boolean print;
     public Integer mode;
     public boolean checkGraph;
-    public int dve;
-    public int bve;
-    public int dve2;
-    public int bve2;
     int shortestD;
 
     public DataRecorder dr;
@@ -24,20 +19,13 @@ public class Hop_NoHash extends Algo{
         this.graph = graph;
         this.INF = Integer.MAX_VALUE;
         this.mode = 0;
-        this.iterate = 0;
         this.print = true;
         this.checkGraph = false;
         this.dr = new DataRecorder();
     }
 
     public void start(){
-        iterate = 0;
-        dve = 0;
-        bve = 0;
-        dve2 = 0;
-        bve2 = 0;
         while(bfs()){
-            iterate+=1;
             dr.add(dr.iterationN,1);
             for(Vertex v:graph.freeV(Label.A)){
                 //assert v.matching == null;
@@ -82,7 +70,7 @@ public class Hop_NoHash extends Algo{
                      * So we check if u is in the Graph
                      * If it is, it's easy to see its matching must be in the current graph.
                      */
-                    bve2+=1;
+                    //bve2+=1;
                     if(!checkGraph || u.piece == v.piece){
                         /*
                          * <dist(u.matching) == INF> means
@@ -158,7 +146,7 @@ public class Hop_NoHash extends Algo{
         }
         dr.add(dr.hK_dfsVisitedE,1);
         for(Vertex u:v.edges){
-            dve2+=1;
+            //dve2+=1;
             if(!checkGraph || u.piece == v.piece){
                 int nextDist;
                 if(u.matching == null){

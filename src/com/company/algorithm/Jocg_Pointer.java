@@ -11,19 +11,7 @@ public class Jocg_Pointer extends Algo{
 
     private int INF;
     private int currentBFS;
-    public int dve;
-    public int dve2;
-    public int bve;
-    public int bve2;
-    public int del;
-    public long delTime;
-    public int iterate;
 
-    public int pre_dve;
-    public int pre_dve2;
-    public int pre_bve2;
-    public int pre_bve;
-    public int pre_ite;
     public long preprocess;
     private long start;
     private long end;
@@ -55,60 +43,38 @@ public class Jocg_Pointer extends Algo{
     }
 
     public void start(){
-        dve=0;
-        dve2=0;
-        bve2=0;
-        bve=0;
-        pre_bve=0;
-        pre_dve=0;
-        pre_ite=0;
-        del=0;
-        delTime=0;
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
             hop.checkGraph = true;
             hop.start();
-            this.pre_dve+=hop.dve;
-            this.pre_bve+=hop.bve;
-            this.pre_dve2+=hop.dve2;
-            this.pre_bve2+=hop.bve2;
-            this.pre_ite+=hop.iterate;
-
+//            this.pre_dve2+=hop.dve2;
+//            this.pre_bve2+=hop.bve2;
             dr.set(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
             dr.set(dr.pre_dfsVisitedE,hop.dr.get(dr.pre_dfsVisitedE));
             dr.set(dr.pre_iterationN,hop.dr.get(dr.pre_iterationN));
         }
         if(!graph.pieces.isEmpty()){
-            this.pre_ite/=graph.pieces.size();
             dr.set(dr.pre_iterationN,dr.get(dr.pre_iterationN)/graph.pieces.size());
         }
         end = System.currentTimeMillis();
         preprocess = end - start;
         dr.set(dr.pre_runningTime,preprocess);
 
-        iterate = 0;
-        //exloredVtable = new int[graph.vertices.size()/2];
         exloredV = new ArrayList<>();
         while(newbfs()){
-            iterate+=1;
             dr.add(dr.iterationN,1);
             /*
              * visitedE: store all visited edges in the current phase
              * any edges in vistedE won't be explored in the current phase
              */
 
-            //visitedE = new AdjMatrix(graph.numV);
-            //visitedE = new HashMap<>();
             for(Vertex v:graph.freeV(Label.A)){
                 /*
                  * tempE: store visited edges in dfs(v) -> an adjacent list
                  * path: store the augmenting path returned by dfs(v)
                  */
-
-                //tempE = new AdjMatrix(graph.numV);
-                //tempE = new HashMap<>();
                 path = new ArrayList<>();
                 //tempE, path will be updated in newdfs
                 int count = 0;
@@ -132,7 +98,7 @@ public class Jocg_Pointer extends Algo{
                 }
 
                 if(!exloredV.isEmpty()){
-                    del+=exloredV.size();
+                    //del+=exloredV.size();
                     for(Vertex ev:exloredV){
                         ev.deleteE_clean(currentBFS,count);
                         ev.explored = false;
@@ -187,10 +153,9 @@ public class Jocg_Pointer extends Algo{
                 continue;
             }
             v.reset();
-            this.bve+=1;
             dr.add(dr.jocg_bfsVisitedE,1);
             for(Vertex u:v.edges){
-                this.bve2+=1;
+                //this.bve2+=1;
                 if(u == v.matching){
                     continue;
                 }
@@ -300,14 +265,12 @@ public class Jocg_Pointer extends Algo{
             v.explored = true;
             exloredV.add(v);
         }
-        dve+=1;
         while(true){
             Vertex u = v.next();
             if(u == null){
                 break;
             }
 
-            dve2+=1;
             if(u.matching != null && u.matching.explored){
                 continue;
             }
@@ -364,7 +327,6 @@ public class Jocg_Pointer extends Algo{
             }
             v.reset();
 
-            this.bve+=1;
             if(v.label == Label.A){
                 //children = v.edges;
 
@@ -464,7 +426,6 @@ public class Jocg_Pointer extends Algo{
 
             v.reset();
 
-            this.bve+=1;
             if(v.label == Label.A){
                 //children = v.edges;
 
@@ -515,8 +476,6 @@ public class Jocg_Pointer extends Algo{
         return shortestD != INF;
     }
 
-
-
     private boolean newdfs_back(Vertex v){
         /*
          * v = u.matching for some u
@@ -538,9 +497,6 @@ public class Jocg_Pointer extends Algo{
             v.explored = true;
             exloredV.add(v);
         }
-
-        dve+=1;
-
         while(true){
             Vertex u = v.next();
 

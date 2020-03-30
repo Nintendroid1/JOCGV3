@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.element.ExperimentList;
 import com.company.test.FindBottle;
 import com.company.test.TestEdgeMaker;
 import com.company.test.TestEuclidean;
@@ -12,12 +13,12 @@ import java.util.Scanner;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
 	    // write your code here
-        //TestEuclidean.test();
+//        TestEuclidean.test();
         //TestPerformance.test1();
-        FindBottle findBottle = new FindBottle();
-        findBottle.find();
+//        FindBottle findBottle = new FindBottle();
+//        findBottle.find();
         //TestEdgeMaker.test();
 
 //        File file = new File("TestManager");
@@ -47,6 +48,41 @@ public class Main {
 //        }else if(head.equals("graphMatching")){
 //
 //        }
+        multiTask();
+        //singleTask();
 
+    }
+
+    public static void multiTask() throws Exception{
+        ParallelTasks tasks = new ParallelTasks();
+        final Runnable waitOneSecond = new Runnable() {
+            public void run()
+            {
+                FindBottle findBottle = new FindBottle();
+                ExperimentList.Experiment[] experiments = findBottle.find();
+                try {
+                    experiments[0].printResult("HK");
+                    experiments[1].printResult("JOCG");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        for(int i = 0; i < 2; i++){
+            tasks.add(waitOneSecond);
+        }
+        final long start = System.currentTimeMillis();
+        tasks.go();
+        System.err.println(System.currentTimeMillis() - start);
+    }
+
+    public static void singleTask(){
+        long start = System.currentTimeMillis();
+        for(int i = 0; i < 12; i++){
+            FindBottle findBottle = new FindBottle();
+            findBottle.find();
+        }
+        System.err.println(System.currentTimeMillis() - start);
     }
 }
