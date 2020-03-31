@@ -29,9 +29,11 @@ public class Hop_NoHash extends Algo{
         long start = System.currentTimeMillis();
         while(bfs()){
             dr.add(dr.iterationN,1);
-            for(Vertex v:graph.freeV(Label.A)){
+            for(Vertex v:graph.vertices){
+                if(v.label == Label.A && v.isFree()){
+                    dfs(v);
+                }
                 //assert v.matching == null;
-                dfs(v);
             }
         }
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
@@ -47,7 +49,10 @@ public class Hop_NoHash extends Algo{
         //set all free As' distance to 0, and push them to the queue
         //set all un-free As' distance to INF
         //Bs' distances are not stored since B->A is always unique (matching)
-        for(Vertex v:graph.V(Label.A)){
+        for(Vertex v:graph.vertices){
+            if(v.label == Label.B){
+                continue;
+            }
             if(v.isFree()){
                 queue.addLast(v);
                 v.distance = 0;

@@ -43,7 +43,7 @@ public class FindBottle {
     }
 
     public  void init(){
-        numV = 500000;
+        numV = 50000;
         partN = 4;
         largeG = 128;
         smallG = 0.01;
@@ -54,7 +54,7 @@ public class FindBottle {
         long start,end;
         double hTime = 0;
         double jTime = 0;
-        int time = 1;
+        int time = 5;
         ExperimentList.Experiment hEx = null;
         ExperimentList.Experiment jEx = null;
         for(int i = 0; i < time; i++){
@@ -74,11 +74,11 @@ public class FindBottle {
             init();
             graph.reset(true);
 
-//            start = System.currentTimeMillis();
-//            jEx = find_Jocg_Doubling(graph);
-//            end = System.currentTimeMillis();
-//            jTime += end - start;
-//            jEx.totalRunningTime = jTime;
+            start = System.currentTimeMillis();
+            jEx = find_Jocg_Doubling(graph);
+            end = System.currentTimeMillis();
+            jTime += end - start;
+            jEx.totalRunningTime = jTime;
         }
 
         jTime/=time;

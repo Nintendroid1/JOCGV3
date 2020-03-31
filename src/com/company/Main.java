@@ -62,14 +62,14 @@ public class Main {
                 ExperimentList.Experiment[] experiments = findBottle.find();
                 try {
                     experiments[0].printResult("HK");
-                    //experiments[1].printResult("JOCG");
+                    experiments[1].printResult("JOCG");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         };
 
-        for(int i = 0; i < 6; i++){
+        for(int i = 0; i < 1; i++){
             tasks.add(waitOneSecond);
             Thread.sleep(50);
         }

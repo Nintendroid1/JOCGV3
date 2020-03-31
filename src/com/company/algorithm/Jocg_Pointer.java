@@ -72,11 +72,14 @@ public class Jocg_Pointer extends Algo{
              * any edges in vistedE won't be explored in the current phase
              */
 
-            for(Vertex v:graph.freeV(Label.A)){
+            for(Vertex v:graph.vertices){
                 /*
                  * tempE: store visited edges in dfs(v) -> an adjacent list
                  * path: store the augmenting path returned by dfs(v)
                  */
+                if(v.label == Label.B || !v.isFree()){
+                    continue;
+                }
                 path = new ArrayList<>();
                 //tempE, path will be updated in newdfs
                 int count = 0;
@@ -114,7 +117,10 @@ public class Jocg_Pointer extends Algo{
 
     private boolean newbfs(){
         shortestD = INF;
-        for(Vertex v:graph.V(Label.A)){
+        for(Vertex v:graph.vertices){
+            if(v.label == Label.B){
+                continue;
+            }
             if(v.isFree()){
                 zeros.addLast(new DataStructure.DisV(v,0));
                 v.distance = 0;
