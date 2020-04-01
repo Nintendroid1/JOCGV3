@@ -14,6 +14,12 @@ public class FindBottle {
     double largeG;
     double smallG;
 
+    int numV_C = 10000;
+    double lambda_C = 0.01;
+    int partN_C = 4;
+    double largeG_C = 128;
+    double smallG_C = 0.01;
+
     private double initGuess(Graph graph){
         double guess = largeG/Math.sqrt(graph.vertices.size());
         System.out.println("Initial Guess = " + guess);
@@ -42,19 +48,27 @@ public class FindBottle {
 
     }
 
+    public FindBottle(int n){
+        numV_C = n;
+    }
+
+    public FindBottle(){
+
+    }
+
     public  void init(){
-        numV = 50000;
-        partN = 4;
-        largeG = 128;
-        smallG = 0.01;
-        lambda = 0.01;
+        numV = numV_C;
+        partN = partN_C;
+        largeG = largeG_C;
+        smallG = smallG_C;
+        lambda = lambda_C;
     }
 
     public ExperimentList.Experiment[] find(){
         long start,end;
         double hTime = 0;
         double jTime = 0;
-        int time = 5;
+        int time = 1;
         ExperimentList.Experiment hEx = null;
         ExperimentList.Experiment jEx = null;
         for(int i = 0; i < time; i++){
@@ -172,35 +186,5 @@ public class FindBottle {
         }
         System.out.println(bottleneck);
         return expe;
-    }
-
-
-
-    /*
-     * graph needs to preserve points so that edge can be generated
-     */
-    public static Double[] find(Algo algo, double head, double tail, double approx){
-//        while (tail - head > approx*tail){
-//            double bottleneck = (tail + head)/2;
-//            algo.graph.resetMatch();
-//            algo.graph.reEdges(bottleneck);
-//            algo.start();
-//
-//            if(algo.graph.perfectMatch()){
-//                tail = bottleneck;
-//            }
-//            else{
-//                head = bottleneck;
-//            }
-//        }
-//
-//        if(!algo.graph.perfectMatch()){
-//            return null;
-//        }
-//        else{
-//            return new Double[]{head,tail};
-//        }
-        return null;
-
     }
 }

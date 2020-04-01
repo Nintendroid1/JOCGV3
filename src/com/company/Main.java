@@ -53,23 +53,46 @@ public class Main {
 
     }
 
+    public static void printExperiment(ExperimentList.Experiment[] experiments) throws IOException {
+        BufferedWriter writer
+                = new BufferedWriter(new FileWriter("EXP_"+System.currentTimeMillis()
+                        +Thread.currentThread().getName()
+                        +".txt"));
+        writer.write("");
+        for(int i = 0; i < 2; i++){
+            if(experiments[i] == null){
+                break;
+            }
+            ExperimentList.Experiment ex = experiments[i];
+            if(i == 0){
+                writer.append("HK_Start\n");
+            }
+            else{
+                writer.append("JOCG_Start\n");
+            }
+            ex.writeResult(writer);
+        }
+        writer.close();
+    }
+
     public static void multiTask() throws Exception{
         ParallelTasks tasks = new ParallelTasks();
         final Runnable waitOneSecond = new Runnable() {
             public void run()
             {
-                FindBottle findBottle = new FindBottle();
+                FindBottle findBottle = new FindBottle(30000);
                 ExperimentList.Experiment[] experiments = findBottle.find();
                 try {
-                    experiments[0].printResult("HK");
-                    experiments[1].printResult("JOCG");
+//                    experiments[0].printResult("HK");
+//                    experiments[1].printResult("JOCG");
+                    printExperiment(experiments);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
         };
 
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < 6; i++){
             tasks.add(waitOneSecond);
             Thread.sleep(50);
         }
