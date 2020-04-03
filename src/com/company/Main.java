@@ -80,7 +80,7 @@ public class Main {
         final Runnable waitOneSecond = new Runnable() {
             public void run()
             {
-                FindBottle findBottle = new FindBottle(10000);
+                FindBottle findBottle = new FindBottle(30000);
                 ExperimentList.Experiment[] experiments = findBottle.find();
                 try {
                     printExperiment(experiments);

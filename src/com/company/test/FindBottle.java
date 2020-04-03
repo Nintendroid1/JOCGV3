@@ -167,7 +167,7 @@ public class FindBottle {
         ArrayList<Double> candidate = edgeMaker.getCandidate(head,tail);
         int head2 = 0; int tail2 = candidate.size();
         bottleneck = Double.MAX_VALUE;
-        while (tail2 - head2 > 3){
+        while (tail2 - head2 > 2){
             int nextIndex = (tail2 + head2)/2;
             boolean resetMatching = (bottleneck > candidate.get(nextIndex));
             bottleneck = candidate.get(nextIndex);
