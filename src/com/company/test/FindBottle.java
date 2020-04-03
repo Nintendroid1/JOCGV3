@@ -182,7 +182,7 @@ public class FindBottle {
                 tail2 = nextIndex;
             }
         }
-        for(int i = head2; i < tail2; i++){
+        for(int i = head2; i <= tail2; i++){
             boolean resetMatching = (bottleneck > candidate.get(i));
             bottleneck = candidate.get(i);
             edgeMaker.reEdges(bottleneck,resetMatching);
