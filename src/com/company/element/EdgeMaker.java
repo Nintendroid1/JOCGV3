@@ -253,6 +253,45 @@ public class EdgeMaker {
         return -1;
     }
 
+    private ArrayList<Double> getCandidate_(List<Point> source,List<Point> target,double head, double tail){
+        ArrayList<Double> result = new ArrayList<>();
+        for(Point s:source){
+            for(Point t:target){
+                if(s.v.label == t.v.label){
+                    continue;
+                }
+                double x = s.x - t.x;
+                double y = s.y - t.y;
+                double d = Math.sqrt(Math.pow(x,2) + Math.pow(y,2));
+                if(d >= head && d <= tail){
+                    result.add(d);
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public ArrayList<Double> getCandidate(double head, double tail){
+        cleanEdges(true);
+        Box box = new Box(partition(points,tail),tail);
+        ArrayList<Double> result = new ArrayList<>();
+        while(true){
+            List<Point> source = box.getNext();
+            if(source == null){
+                break;
+            }
+
+            List<List<Point>> targets = box.getNeighbor();
+            targets.add(source);
+            for(List<Point> target: targets){
+                result.addAll(getCandidate_(source,target,head,tail));
+            }
+        }
+        result.sort(Double::compareTo);
+        return result;
+    }
+
     class Box {
         List<List<List<Point>>> partition;
         int currX, currY, rightY;

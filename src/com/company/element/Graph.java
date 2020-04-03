@@ -71,10 +71,20 @@ public class Graph {
 
 
     public int matchCount(){
-        ArrayList<Vertex> freeA = freeV(Label.A);
-        ArrayList<Vertex> freeB = freeV(Label.B);
-        assert freeA.size() == freeB.size();
-        return this.vertices.size()/2 - freeA.size();
+        int a = 0;
+        int b = 0;
+        for(Vertex v:vertices){
+            if(!v.isFree()){
+                if(v.label == Label.A){
+                    a+=1;
+                }
+                else{
+                    b+=1;
+                }
+            }
+        }
+        assert a == b;
+        return a;
     }
 
     public boolean matchValidCheck(){

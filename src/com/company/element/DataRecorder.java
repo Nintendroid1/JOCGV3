@@ -20,11 +20,12 @@ public class DataRecorder {
     public String pre_bfsVisitedE = "pre_bfsVisitedE";
     public String pre_dfsVisitedE = "pre_dfsVisitedE";
     public String deletedEdgesN = "deletedEdgesN";
+    public String matching_count = "matching_count";
     private List<String> nameList;
     private ArrayList<Double> dataList;
     String[] dataName = new String[]{numV,iterationN,runningTime,pre_runningTime,pre_iterationN,
             hk_bfsVisitedE,hK_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
-            pre_dfsVisitedE,deletedEdgesN};
+            pre_dfsVisitedE,deletedEdgesN,matching_count};
 
     public DataRecorder(){
         nameList = Arrays.asList(dataName);

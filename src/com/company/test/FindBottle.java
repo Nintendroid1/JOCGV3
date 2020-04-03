@@ -4,6 +4,7 @@ import com.company.algorithm.*;
 import com.company.element.*;
 import com.company.generator.GraphGen;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class FindBottle {
@@ -162,6 +163,37 @@ public class FindBottle {
                 tail = bottleneck;
             }
         }
+
+        ArrayList<Double> candidate = edgeMaker.getCandidate(head,tail);
+        int head2 = 0; int tail2 = candidate.size();
+        bottleneck = Double.MAX_VALUE;
+        while (tail2 - head2 > 3){
+            int nextIndex = (tail2 + head2)/2;
+            boolean resetMatching = (bottleneck > candidate.get(nextIndex));
+            bottleneck = candidate.get(nextIndex);
+            edgeMaker.reEdges(bottleneck,resetMatching);
+            Hop_NoHash hop = new Hop_NoHash(graph);
+            hop.start();
+            expe.add(bottleneck,hop.dr);
+            if(graph.matchCount() < graph.vertices.size()/2){
+                head2 = nextIndex;
+            }
+            else{
+                tail2 = nextIndex;
+            }
+        }
+        for(int i = head2; i < tail2; i++){
+            boolean resetMatching = (bottleneck > candidate.get(i));
+            bottleneck = candidate.get(i);
+            edgeMaker.reEdges(bottleneck,resetMatching);
+            Hop_NoHash hop = new Hop_NoHash(graph);
+            hop.start();
+            expe.add(bottleneck,hop.dr);
+            if(graph.matchCount() == graph.vertices.size()/2){
+                break;
+            }
+        }
+
         System.out.println(bottleneck);
         return expe;
     }
@@ -184,6 +216,39 @@ public class FindBottle {
                 tail = bottleneck;
             }
         }
+        ArrayList<Double> candidate = edgeMaker.getCandidate(head,tail);
+        int head2 = 0; int tail2 = candidate.size();
+        bottleneck = Double.MAX_VALUE;
+        while (tail2 - head2 > 3){
+            int nextIndex = (tail2 + head2)/2;
+            boolean resetMatching = (bottleneck > candidate.get(nextIndex));
+            bottleneck = candidate.get(nextIndex);
+            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
+            Jocg_Pointer jocg = new Jocg_Pointer(graph);
+            jocg.start();
+            expe.add(bottleneck,jocg.dr);
+            if(graph.matchCount() < graph.vertices.size()/2){
+                head2 = nextIndex;
+            }
+            else{
+                tail2 = nextIndex;
+            }
+        }
+        for(int i = head2; i <= tail2; i++){
+            if(i >= candidate.size()){
+                continue;
+            }
+            boolean resetMatching = (bottleneck > candidate.get(i));
+            bottleneck = candidate.get(i);
+            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
+            Jocg_Pointer jocg = new Jocg_Pointer(graph);
+            jocg.start();
+            expe.add(bottleneck,jocg.dr);
+            if(graph.matchCount() == graph.vertices.size()/2){
+                break;
+            }
+        }
+
         System.out.println(bottleneck);
         return expe;
     }

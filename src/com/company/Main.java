@@ -80,11 +80,9 @@ public class Main {
         final Runnable waitOneSecond = new Runnable() {
             public void run()
             {
-                FindBottle findBottle = new FindBottle(30000);
+                FindBottle findBottle = new FindBottle(10000);
                 ExperimentList.Experiment[] experiments = findBottle.find();
                 try {
-//                    experiments[0].printResult("HK");
-//                    experiments[1].printResult("JOCG");
                     printExperiment(experiments);
                 } catch (IOException e) {
                     e.printStackTrace();

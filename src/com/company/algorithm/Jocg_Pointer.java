@@ -113,6 +113,7 @@ public class Jocg_Pointer extends Algo{
             }
         }
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
+        dr.set(dr.matching_count,graph.matchCount());
     }
 
     private boolean newbfs(){

@@ -37,6 +37,7 @@ public class Hop_NoHash extends Algo{
             }
         }
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
+        dr.set(dr.matching_count,graph.matchCount());
     }
 
     private boolean bfs(){
