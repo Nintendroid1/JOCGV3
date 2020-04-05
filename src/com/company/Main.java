@@ -77,10 +77,25 @@ public class Main {
 
     public static void multiTask() throws Exception{
         ParallelTasks tasks = new ParallelTasks();
+        int nvs[] = {1000,5000,10000,50000,100000,500000,1000000};
+        class OneShotTask implements Runnable {
+            int numv;
+            OneShotTask(int n) { numv = n; }
+            public void run() {
+                FindBottle findBottle = new FindBottle(numv);
+                ExperimentList.Experiment[] experiments = findBottle.find();
+                try {
+                    printExperiment(experiments);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         final Runnable waitOneSecond = new Runnable() {
             public void run()
             {
-                FindBottle findBottle = new FindBottle(30000);
+                FindBottle findBottle = new FindBottle(10000);
                 ExperimentList.Experiment[] experiments = findBottle.find();
                 try {
                     printExperiment(experiments);
@@ -90,10 +105,13 @@ public class Main {
             }
         };
 
-        for(int i = 0; i < 6; i++){
-            tasks.add(waitOneSecond);
-            Thread.sleep(50);
+        for(int n :nvs){
+            for(int i = 0; i < 12; i++){
+                tasks.add(new OneShotTask(n));
+                Thread.sleep(50);
+            }
         }
+
         final long start = System.currentTimeMillis();
         tasks.go();
         System.err.println(System.currentTimeMillis() - start);
