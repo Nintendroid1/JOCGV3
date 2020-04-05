@@ -35,7 +35,7 @@ public class DataRecorder {
         }
     }
 
-    public void add(String key, long number){
+    public void add(String key, double number){
         int index = indexOf(key);
         dataList.set(index,dataList.get(index)+number);
     }
