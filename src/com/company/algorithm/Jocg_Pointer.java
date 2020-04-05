@@ -44,6 +44,7 @@ public class Jocg_Pointer extends Algo{
 
     public void start(){
         dr.set(dr.numV,graph.vertices.size());
+        dr.set(dr.pre_iterationN,0);
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
@@ -52,13 +53,15 @@ public class Jocg_Pointer extends Algo{
             hop.start();
 //            this.pre_dve2+=hop.dve2;
 //            this.pre_bve2+=hop.bve2;
-            dr.set(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
-            dr.set(dr.pre_dfsVisitedE,hop.dr.get(dr.pre_dfsVisitedE));
-            dr.set(dr.pre_iterationN,hop.dr.get(dr.pre_iterationN));
+            dr.add(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
+            dr.add(dr.pre_dfsVisitedE,hop.dr.get(dr.pre_dfsVisitedE));
+            if(hop.dr.get((dr.pre_iterationN)) > dr.get(dr.pre_iterationN)){
+                dr.set(dr.pre_iterationN,hop.dr.get(dr.pre_iterationN));
+            }
         }
-        if(!graph.pieces.isEmpty()){
-            dr.set(dr.pre_iterationN,dr.get(dr.pre_iterationN)/graph.pieces.size());
-        }
+//        if(!graph.pieces.isEmpty()){
+//            dr.set(dr.pre_iterationN,dr.get(dr.pre_iterationN)/graph.pieces.size());
+//        }
         end = System.currentTimeMillis();
         preprocess = end - start;
         dr.set(dr.pre_runningTime,preprocess);
