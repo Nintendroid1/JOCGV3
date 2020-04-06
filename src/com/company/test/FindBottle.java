@@ -59,7 +59,7 @@ public class FindBottle {
 
     public  void init(){
         numV = numV_C;
-        partN = (int)Math.sqrt(Math.pow(numV,1.0/3.0))-1;
+        partN = 12;//(int)Math.sqrt(Math.pow(numV,1.0/3.0));
         largeG = largeG_C;
         smallG = smallG_C;
         lambda = lambda_C;

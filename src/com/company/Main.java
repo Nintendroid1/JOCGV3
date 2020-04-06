@@ -77,7 +77,7 @@ public class Main {
 
     public static void multiTask() throws Exception{
         ParallelTasks tasks = new ParallelTasks();
-        int nvs[] = {1000,5000,10000,50000,100000,500000,1000000};
+        int nvs[] = {1000000};//{1000,5000,10000};//,50000,100000,500000,1000000};
         class OneShotTask implements Runnable {
             int numv;
             OneShotTask(int n) { numv = n; }
@@ -92,18 +92,18 @@ public class Main {
             }
         }
 
-        final Runnable waitOneSecond = new Runnable() {
-            public void run()
-            {
-                FindBottle findBottle = new FindBottle(10000);
-                ExperimentList.Experiment[] experiments = findBottle.find();
-                try {
-                    printExperiment(experiments);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+//        final Runnable waitOneSecond = new Runnable() {
+//            public void run()
+//            {
+//                FindBottle findBottle = new FindBottle(10000);
+//                ExperimentList.Experiment[] experiments = findBottle.find();
+//                try {
+//                    printExperiment(experiments);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
 
         for(int n :nvs){
             for(int i = 0; i < 12; i++){

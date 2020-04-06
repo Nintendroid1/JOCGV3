@@ -108,7 +108,7 @@ public class EdgeMaker {
         }
 
         ArrayList<Graph> piecesset = new ArrayList<>();
-        Graph[][] pieces = new Graph[partN+1][partN+1];
+        Graph[][] pieces = new Graph[partN][partN];
         for(Point p:points){
             int x = (int)((p.x - bestXshift*smallG)/middleG + 1);
             int y = (int)((p.y - bestYshift*smallG)/middleG + 1);
