@@ -18,11 +18,11 @@ public class EdgeMaker {
     private void cleanEdges(boolean resetMatching){
         for(Vertex v:graph.vertices){
             v.edges = new ArrayList<>();
-            v.matching = null;
         }
         graph.reset(resetMatching);
 
     }
+
 
     public void reEdges(double bottleneck,boolean resetMatching){
         cleanEdges(resetMatching);
@@ -154,6 +154,30 @@ public class EdgeMaker {
         }
     }
 
+    public void changeShift(double bottleneck, int partN, double largeG, double smallG, boolean resetMatching){
+        double middleG = largeG/partN;
+        assert bottleneck < middleG;
+        assert (int)(largeG%smallG) == 0;
+        int bestXshift = new Random().nextInt((int)(middleG/smallG));
+        int bestYshift = new Random().nextInt((int)(middleG/smallG));
+
+        graph.reset(true);
+
+        ArrayList<Graph> piecesset = new ArrayList<>();
+        Graph[][] pieces = new Graph[partN+1][partN+1];
+        for(Point p:points){
+            int x = (int)((p.x - bestXshift*smallG)/middleG + 1);
+            int y = (int)((p.y - bestYshift*smallG)/middleG + 1);
+            if(pieces[x][y] == null){
+                pieces[x][y] = new Graph();
+                piecesset.add(pieces[x][y]);
+            }
+            pieces[x][y].vertices.add(p.v);
+            p.v.piece = pieces[x][y];
+        }
+
+        graph.pieces = piecesset;
+    }
     public void reEdgesFixShift(double bottleneck, int partN, double largeG, double smallG, boolean resetMatching){
         double middleG = largeG/partN;
         assert bottleneck < middleG;

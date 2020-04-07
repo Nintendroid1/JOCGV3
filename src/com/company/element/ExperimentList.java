@@ -25,6 +25,10 @@ public class ExperimentList {
             dataList.addAll(ex.dataList);
         }
 
+        public double getFinalBottleNeck(){
+            return bottleList.get(bottleList.size()-1);
+        }
+
         public void writeResult(BufferedWriter writer) throws IOException {
             writer.append("Total_Running_Time : " + totalRunningTime + "\n");
             for(int i = 0; i < dataList.size(); i++){

@@ -93,22 +93,29 @@ public class Jocg_Pointer extends Algo{
                      * if an path is in an affected piece, add this piece to affectedP
                      */
                     Vertex parent = null;
+                    int apN = 0;
                     for(Vertex uu:path){
                         for(Vertex u:new Vertex[]{uu, uu.matching}){
                             if(parent!=null && parent.piece == u.piece){
                                 //u.piece.affectedP = true;
+                                if(u.piece.affectedP.bfs != currentBFS
+                                        && u.piece.affectedP.dfs != count){
+                                    apN += 1;
+                                }
                                 u.piece.affectedP.bfs = currentBFS;
                                 u.piece.affectedP.dfs = count;
                             }
                             parent = u;
                         }
                     }
+                    dr.add(dr.affected_pieces,apN);
                 }
 
                 if(!exloredV.isEmpty()){
                     //del+=exloredV.size();
                     for(Vertex ev:exloredV){
-                        ev.deleteE_clean(currentBFS,count);
+                        int revisitedN = ev.deleteE_clean(currentBFS,count);
+                        dr.add(dr.number_of_revisited_edges,revisitedN);
                         ev.explored = false;
                     }
                     exloredV = new ArrayList<>();

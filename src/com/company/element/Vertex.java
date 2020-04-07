@@ -17,6 +17,8 @@ public class Vertex {
     private int tempEP;
     public int onezeroP;
 
+    private int revisitedEP;
+
     public Vertex matching;
     public Graph piece;
 
@@ -39,7 +41,9 @@ public class Vertex {
         this.matching = x;
     }
 
-    public void deleteE_clean(int cb, int cd){
+    public int deleteE_clean(int cb, int cd){
+        int revisitedN = Math.min(tempEP,revisitedEP) - visitedEP;
+        revisitedEP = Math.max(revisitedEP,tempEP);
         if(label == Label.A){
             if(tempEP <= onezeroP){
                 visitedEP = tempEP;
@@ -75,6 +79,7 @@ public class Vertex {
 
             }
         }
+        return Math.max(0,revisitedN);
     }
 
     public void allDelte(){
@@ -175,6 +180,7 @@ public class Vertex {
     public void reset(){
         visitedEP = 0;
         tempEP = 0;
+        revisitedEP = 0;
     }
 
     public boolean isFree(){

@@ -49,6 +49,14 @@ public class FindBottle {
 
     }
 
+    public FindBottle(int n, int p, double lg, double sg, double lb){
+        numV_C = n;
+        partN = p;
+        largeG_C = lg;
+        smallG_C = sg;
+        lambda_C = lb;
+    }
+
     public FindBottle(int n){
         numV_C = n;
     }
@@ -59,10 +67,18 @@ public class FindBottle {
 
     public  void init(){
         numV = numV_C;
-        partN = 12;//(int)Math.sqrt(Math.pow(numV,1.0/3.0));
+        partN = partN_C;//(int)Math.sqrt(Math.pow(numV,1.0/3.0));
         largeG = largeG_C;
         smallG = smallG_C;
         lambda = lambda_C;
+    }
+
+
+    public double find(Graph graph){
+        partN_C = (int) Math.pow(graph.vertices.size(),1.0/6.0);
+        init();
+        ExperimentList.Experiment hEx = find_Jocg_Doubling(graph);
+        return hEx.getFinalBottleNeck();
     }
 
     public ExperimentList.Experiment[] find(){

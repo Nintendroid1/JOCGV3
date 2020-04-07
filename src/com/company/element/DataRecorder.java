@@ -21,11 +21,15 @@ public class DataRecorder {
     public String pre_dfsVisitedE = "pre_dfsVisitedE";
     public String deletedEdgesN = "deletedEdgesN";
     public String matching_count = "matching_count";
+    public String number_of_piece = "number_of_piece";
+    public String affected_pieces = "affected_pieces";
+    public String number_of_revisited_edges = "number_of_revisited_edges";
     private List<String> nameList;
     private ArrayList<Double> dataList;
     String[] dataName = new String[]{numV,iterationN,runningTime,pre_runningTime,pre_iterationN,
             hk_bfsVisitedE,hK_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
-            pre_dfsVisitedE,deletedEdgesN,matching_count};
+            pre_dfsVisitedE,deletedEdgesN,matching_count,number_of_piece,affected_pieces,
+            number_of_revisited_edges};
 
     public DataRecorder(){
         nameList = Arrays.asList(dataName);

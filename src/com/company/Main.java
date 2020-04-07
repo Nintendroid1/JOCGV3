@@ -1,10 +1,7 @@
 package com.company;
 
 import com.company.element.ExperimentList;
-import com.company.test.FindBottle;
-import com.company.test.TestEdgeMaker;
-import com.company.test.TestEuclidean;
-import com.company.test.TestPerformance;
+import com.company.test.*;
 
 import java.io.*;
 import java.util.HashMap;
@@ -13,43 +10,14 @@ import java.util.Scanner;
 
 public class Main {
 
+
+
     public static void main(String[] args) throws Exception {
 	    // write your code here
-//        TestEuclidean.test();
-        //TestPerformance.test1();
-//        FindBottle findBottle = new FindBottle();
-//        findBottle.find();
-        //TestEdgeMaker.test();
 
-//        File file = new File("TestManager");
-//        BufferedWriter writer = new BufferedWriter(new FileWriter("TestManagerOut"));
-//        writer.write("");
-//        //System.out.println(file.getAbsolutePath());
-//        Scanner scanner = new Scanner(file);
-//        String head = scanner.nextLine();
-//        if(head == null){
-//            writer.write("Wrong Head!\n");
-//            writer.close();
-//            return;
-//        }
-//        HashMap<String, String> param = new HashMap<>();
-//
-//        String line = scanner.nextLine();
-//        while (line != null){
-//            String[] lineArr = line.split("");
-//            param.put(lineArr[0],lineArr[1]);
-//            line = scanner.nextLine();
-//        }
-//
-//        if(head.equals("findBottle")){
-//            FindBottle findBottle = new FindBottle();
-//            findBottle.resetParam(param);
-//            findBottle.find();
-//        }else if(head.equals("graphMatching")){
-//
-//        }
-        multiTask();
+        //multiTask();
         //singleTask();
+        piectMultiTask();
 
     }
 
@@ -75,6 +43,30 @@ public class Main {
         writer.close();
     }
 
+    public static void piectMultiTask() throws Exception{
+        ParallelTasks tasks = new ParallelTasks();
+        class OneShotTask implements Runnable {
+            int numv;
+            OneShotTask(int n) { numv = n; }
+            public void run() {
+                TestPiece testPiece = new TestPiece();
+                try {
+                    testPiece.test(numv);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        for(int n = 0; n < 10; n++){
+            tasks.add(new OneShotTask(50000));
+            Thread.sleep(50);
+        }
+
+        final long start = System.currentTimeMillis();
+        tasks.go();
+        System.err.println(System.currentTimeMillis() - start);
+
+    }
     public static void multiTask() throws Exception{
         ParallelTasks tasks = new ParallelTasks();
         int nvs[] = {1000000};//{1000,5000,10000};//,50000,100000,500000,1000000};
