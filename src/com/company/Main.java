@@ -15,9 +15,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	    // write your code here
 
-        //multiTask();
+        multiTask();
         //singleTask();
-        piectMultiTask();
+        //piectMultiTask();
 
     }
 
@@ -57,7 +57,7 @@ public class Main {
                 }
             }
         }
-        for(int n = 0; n < 6; n++){
+        for(int n = 0; n < 1; n++){
             tasks.add(new OneShotTask(10000));
             Thread.sleep(50);
         }
@@ -70,7 +70,7 @@ public class Main {
     }
     public static void multiTask() throws Exception{
         ParallelTasks tasks = new ParallelTasks();
-        int nvs[] = {10000};//{1000,5000,10000};//,50000,100000,500000,1000000};
+        int nvs[] = {50000};//{1000,5000,10000};//,50000,100000,500000,1000000};
         class OneShotTask implements Runnable {
             int numv;
             OneShotTask(int n) { numv = n; }
@@ -85,21 +85,8 @@ public class Main {
             }
         }
 
-//        final Runnable waitOneSecond = new Runnable() {
-//            public void run()
-//            {
-//                FindBottle findBottle = new FindBottle(10000);
-//                ExperimentList.Experiment[] experiments = findBottle.find();
-//                try {
-//                    printExperiment(experiments);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        };
-
         for(int n :nvs){
-            for(int i = 0; i < 12; i++){
+            for(int i = 0; i < 1; i++){
                 tasks.add(new OneShotTask(n));
                 Thread.sleep(50);
             }

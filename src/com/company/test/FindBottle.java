@@ -99,11 +99,13 @@ public class FindBottle {
             hEx = find_HK_Doubling(graph);
             end = System.currentTimeMillis();
             hTime += end - start;
-
             hEx.totalRunningTime = hTime;
 
             init();
             graph.reset(true);
+            for(Vertex v:graph.vertices){
+                v.edges = new ArrayList<>();
+            }
 
             start = System.currentTimeMillis();
             jEx = find_Jocg_Doubling(graph);
