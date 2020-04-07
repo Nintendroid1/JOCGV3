@@ -40,6 +40,32 @@ public class GraphGen {
         return graph;
     }
 
+    public Graph copy(Graph graph){
+        int num = graph.vertices.size();
+        ArrayList<Vertex> vertices = new ArrayList<Vertex>(num);
+        ArrayList<Point> points = new ArrayList<>();
+        for(int i = 0; i < num; i++){
+            Point point = graph.vertices.get(i).point;
+            points.add(point);
+            if(i < num/2){
+                vertices.add(new Vertex(i, Label.A));
+            }
+            else{
+                vertices.add(new Vertex(i, Label.B));
+            }
+            vertices.get(i).point = point;
+
+            point.v = vertices.get(i);
+        }
+
+        Graph newGraph = new Graph();
+
+        newGraph.vertices = vertices;
+        newGraph.points = points;
+
+        return newGraph;
+    }
+
 //    public Graph generate(int num, double large, double middle, double small, double bottleneck){
 //
 //        /*

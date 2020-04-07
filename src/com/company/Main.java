@@ -15,9 +15,8 @@ public class Main {
     public static void main(String[] args) throws Exception {
 	    // write your code here
 
-        multiTask();
-        //singleTask();
-        //piectMultiTask();
+        //multiTask();
+        singleTask();
 
     }
 
@@ -86,7 +85,7 @@ public class Main {
         }
 
         for(int n :nvs){
-            for(int i = 0; i < 1; i++){
+            for(int i = 0; i < 6; i++){
                 tasks.add(new OneShotTask(n));
                 Thread.sleep(50);
             }
@@ -99,9 +98,24 @@ public class Main {
 
     public static void singleTask(){
         long start = System.currentTimeMillis();
-        for(int i = 0; i < 12; i++){
-            FindBottle findBottle = new FindBottle();
-            findBottle.find();
+        int numV[] = new int[]{10000,50000,100000,500000};//,100000,500000};
+        for(int n:numV){
+            for(int i = 0; i < 5; i++){
+                FindBottle findBottle = new FindBottle(n);
+                ExperimentList.Experiment[] experiments = findBottle.find();
+                try {
+                    printExperiment(experiments);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                experiments = findBottle.find_reverse();
+                try {
+                    printExperiment(experiments);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         System.err.println(System.currentTimeMillis() - start);
     }

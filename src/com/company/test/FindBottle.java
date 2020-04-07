@@ -90,7 +90,53 @@ public class FindBottle {
         ExperimentList.Experiment jEx = null;
         for(int i = 0; i < time; i++){
             init();
-            GraphGen graphGen = new GraphGen(32+(int)System.currentTimeMillis()+(int)Thread.currentThread().getId());
+            int seed = (int)System.currentTimeMillis()+(int)Thread.currentThread().getId();
+            GraphGen graphGen = new GraphGen(seed);
+            Graph graph = graphGen.generate(numV,largeG);
+
+            System.out.println("Generate Graph Finished");
+
+            start = System.currentTimeMillis();
+            jEx = find_Jocg_Doubling(graph);
+            end = System.currentTimeMillis();
+            jTime += (end - start);
+            jEx.totalRunningTime = jTime;
+
+            init();
+            graph = graphGen.copy(graph);
+
+            start = System.currentTimeMillis();
+            hEx = find_HK_Doubling(graph);
+            end = System.currentTimeMillis();
+            hTime += (end - start);
+            hEx.totalRunningTime = hTime;
+        }
+
+        jTime/=time;
+        hTime/=time;
+
+
+        System.out.println("HK search bottleneck takes: " + hTime);
+        System.out.println("Jocg search bottleneck takes: " + jTime);
+        System.out.println("J/H: " + jTime/hTime);
+
+        ExperimentList.Experiment[] experiments = new ExperimentList.Experiment[2];
+        experiments[0] = hEx;
+        experiments[1] = jEx;
+        return experiments;
+    }
+
+    public ExperimentList.Experiment[] find_reverse(){
+        long start,end;
+        double hTime = 0;
+        double jTime = 0;
+        int time = 1;
+        ExperimentList.Experiment hEx = null;
+        ExperimentList.Experiment jEx = null;
+        for(int i = 0; i < time; i++){
+            init();
+            int seed = (int)System.currentTimeMillis()+(int)Thread.currentThread().getId();
+            GraphGen graphGen = new GraphGen(seed);
             Graph graph = graphGen.generate(numV,largeG);
 
             System.out.println("Generate Graph Finished");
@@ -98,19 +144,16 @@ public class FindBottle {
             start = System.currentTimeMillis();
             hEx = find_HK_Doubling(graph);
             end = System.currentTimeMillis();
-            hTime += end - start;
+            hTime += (end - start);
             hEx.totalRunningTime = hTime;
 
             init();
-            graph.reset(true);
-            for(Vertex v:graph.vertices){
-                v.edges = new ArrayList<>();
-            }
+            graph = graphGen.copy(graph);
 
             start = System.currentTimeMillis();
             jEx = find_Jocg_Doubling(graph);
             end = System.currentTimeMillis();
-            jTime += end - start;
+            jTime += (end - start);
             jEx.totalRunningTime = jTime;
         }
 
@@ -161,7 +204,6 @@ public class FindBottle {
         expe.add(find_Jocg_Binary(graph, bottleneck/2, bottleneck));
         return expe;
     }
-
 
     public ExperimentList.Experiment find_Hk_Binary(Graph graph, double head, double tail){
         ExperimentList.Experiment expe = new ExperimentList.Experiment();

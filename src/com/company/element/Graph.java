@@ -117,6 +117,7 @@ public class Graph {
         return true;
     }
 
+
     public void reEdges(double bottleneck){
         edgeNum = 0;
 
