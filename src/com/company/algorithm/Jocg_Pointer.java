@@ -74,7 +74,7 @@ public class Jocg_Pointer extends Algo{
              * visitedE: store all visited edges in the current phase
              * any edges in vistedE won't be explored in the current phase
              */
-
+            int count = 0;
             for(Vertex v:graph.vertices){
                 /*
                  * tempE: store visited edges in dfs(v) -> an adjacent list
@@ -85,7 +85,7 @@ public class Jocg_Pointer extends Algo{
                 }
                 path = new ArrayList<>();
                 //tempE, path will be updated in newdfs
-                int count = 0;
+
                 if(newdfs(v)){
                     count += 1;
                     /*

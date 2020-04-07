@@ -67,7 +67,7 @@ public class FindBottle {
 
     public  void init(){
         numV = numV_C;
-        partN = partN_C;//(int)Math.sqrt(Math.pow(numV,1.0/3.0));
+        partN = (int)Math.sqrt(Math.pow(numV,1.0/3.0));
         largeG = largeG_C;
         smallG = smallG_C;
         lambda = lambda_C;
@@ -183,7 +183,7 @@ public class FindBottle {
         ArrayList<Double> candidate = edgeMaker.getCandidate(head,tail);
         int head2 = 0; int tail2 = candidate.size();
         bottleneck = Double.MAX_VALUE;
-        while (tail2 - head2 > 2){
+        while (tail2 - head2 > 3){
             int nextIndex = (tail2 + head2)/2;
             boolean resetMatching = (bottleneck > candidate.get(nextIndex));
             bottleneck = candidate.get(nextIndex);
@@ -199,6 +199,9 @@ public class FindBottle {
             }
         }
         for(int i = head2; i <= tail2; i++){
+            if(i >= candidate.size()){
+                continue;
+            }
             boolean resetMatching = (bottleneck > candidate.get(i));
             bottleneck = candidate.get(i);
             edgeMaker.reEdges(bottleneck,resetMatching);

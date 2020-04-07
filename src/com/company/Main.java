@@ -57,8 +57,8 @@ public class Main {
                 }
             }
         }
-        for(int n = 0; n < 10; n++){
-            tasks.add(new OneShotTask(50000));
+        for(int n = 0; n < 6; n++){
+            tasks.add(new OneShotTask(10000));
             Thread.sleep(50);
         }
 
@@ -70,7 +70,7 @@ public class Main {
     }
     public static void multiTask() throws Exception{
         ParallelTasks tasks = new ParallelTasks();
-        int nvs[] = {1000000};//{1000,5000,10000};//,50000,100000,500000,1000000};
+        int nvs[] = {10000};//{1000,5000,10000};//,50000,100000,500000,1000000};
         class OneShotTask implements Runnable {
             int numv;
             OneShotTask(int n) { numv = n; }
