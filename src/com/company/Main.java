@@ -65,6 +65,7 @@ public class Main {
         final long start = System.currentTimeMillis();
         tasks.go();
         System.err.println(System.currentTimeMillis() - start);
+        //
 
     }
     public static void multiTask() throws Exception{
