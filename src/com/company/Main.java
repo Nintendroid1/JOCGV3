@@ -16,7 +16,8 @@ public class Main {
 	    // write your code here
 
         //multiTask();
-        singleTask();
+        piectMultiTask();
+        //singleTask();
 
     }
 
@@ -56,8 +57,8 @@ public class Main {
                 }
             }
         }
-        for(int n = 0; n < 1; n++){
-            tasks.add(new OneShotTask(10000));
+        for(int n = 0; n < 10; n++){
+            tasks.add(new OneShotTask(1000000));
             Thread.sleep(50);
         }
 

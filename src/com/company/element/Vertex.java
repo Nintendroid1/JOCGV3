@@ -41,8 +41,7 @@ public class Vertex {
         this.matching = x;
     }
 
-    public int deleteE_clean(int cb, int cd){
-        int revisitedN = Math.min(tempEP,revisitedEP) - visitedEP;
+    public void deleteE_clean(int cb, int cd){
         revisitedEP = Math.max(revisitedEP,tempEP);
         if(label == Label.A){
             if(tempEP <= onezeroP){
@@ -79,7 +78,6 @@ public class Vertex {
 
             }
         }
-        return Math.max(0,revisitedN);
     }
 
     public void allDelte(){
@@ -156,6 +154,13 @@ public class Vertex {
         }
     }
 
+    public boolean nextRevisit(){
+        if(hasNext()){
+            return tempEP <= revisitedEP;
+        }
+        return false;
+    }
+
     public Vertex next(){
         if(label == Label.A){
             if(hasNext()){
@@ -181,6 +186,7 @@ public class Vertex {
         visitedEP = 0;
         tempEP = 0;
         revisitedEP = 0;
+        explored = false;
     }
 
     public boolean isFree(){

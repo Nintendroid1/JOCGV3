@@ -114,8 +114,8 @@ public class Jocg_Pointer extends Algo{
                 if(!exloredV.isEmpty()){
                     //del+=exloredV.size();
                     for(Vertex ev:exloredV){
-                        int revisitedN = ev.deleteE_clean(currentBFS,count);
-                        dr.add(dr.number_of_revisited_edges,revisitedN);
+                        ev.deleteE_clean(currentBFS,count);
+                        //dr.add(dr.number_of_revisited_edges,revisitedN);
                         ev.explored = false;
                     }
                     exloredV = new ArrayList<>();
@@ -129,6 +129,7 @@ public class Jocg_Pointer extends Algo{
     private boolean newbfs(){
         shortestD = INF;
         for(Vertex v:graph.vertices){
+            v.reset();
             if(v.label == Label.B){
                 continue;
             }
@@ -139,6 +140,7 @@ public class Jocg_Pointer extends Algo{
             else{
                 v.distance = INF;
             }
+
         }
 
         while(!(zeros.isEmpty()&&ones.isEmpty()&&twos.isEmpty())){
@@ -172,14 +174,14 @@ public class Jocg_Pointer extends Algo{
             if(dv.d > v.distance){
                 continue;
             }
-            v.reset();
+            //v.reset();
             dr.add(dr.jocg_bfsVisitedE,1);
             for(Vertex u:v.edges){
                 //this.bve2+=1;
                 if(u == v.matching){
                     continue;
                 }
-                u.reset();
+                //u.reset();
                 int distance;
                 if(u.matching != null){
                     distance =  graph.getWeight(v,u) + graph.getWeight(u,u.matching);
@@ -235,7 +237,7 @@ public class Jocg_Pointer extends Algo{
                 }
                 return true;
             }
-
+            boolean nextRevisit = v.nextRevisit();
             Vertex u = v.next();
             if(u == null){
                 tempPath.remove(tempPath.size()-1);
@@ -246,6 +248,10 @@ public class Jocg_Pointer extends Algo{
             }
             if(u.matching != null && u.matching.explored){
                 continue;
+            }
+
+            if(nextRevisit){
+                dr.add(dr.number_of_revisited_edges,1);
             }
 
             dr.add(dr.jocg_dfsVisitedE,1);

@@ -61,7 +61,7 @@ public class Hop_NoHash extends Algo{
             else{
                 v.distance = INF;
             }
-            v.reset();
+            //v.reset();
         }
 
 
