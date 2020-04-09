@@ -258,12 +258,6 @@ public class Jocg_Pointer extends Algo{
 
                 dr.add(dr.jocg_dfsVisitedE,1);
 
-                if(nextRevisit){
-                    dr.add(dr.number_of_revisited_edges,1);
-                }
-
-                dr.add(dr.jocg_dfsVisitedE,1);
-
                 if(u.matching != null){
                     if(!u.hasNext()){
                         continue;
