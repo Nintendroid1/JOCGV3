@@ -31,9 +31,14 @@ public class TestPiece {
         Hop_NoHash hop = new Hop_NoHash(graph);
         expe.add(bottle,hop.dr);
         hop.start();
-        int standard_partN = (int)Math.pow(numV,1.0/6.0);
-        for(int i = 1; i <= 2*standard_partN; i+=2){
+//        int standard_partN = (int)Math.pow(numV,1.0/6.0);
+        for(int i = 1; i <= 50; i+=2){
             int partN =i;
+
+            if(largeG/partN <= bottle){
+                break;
+            }
+//            System.out.println(i + "ssssssssssssssssssssssssssss");
             edgeMaker.changeShift(bottle,partN,largeG,smallG,true);
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             expe.add(bottle,jocg.dr);
