@@ -86,7 +86,7 @@ public class Main {
         }
 
         for(int n :nvs){
-            for(int i = 0; i < 6; i++){
+            for(int i = 0; i < 10; i++){
                 tasks.add(new OneShotTask(n));
                 Thread.sleep(50);
             }

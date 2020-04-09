@@ -250,13 +250,20 @@ public class Jocg_Pointer extends Algo{
                 continue;
             }
 
-            if(nextRevisit){
-                dr.add(dr.number_of_revisited_edges,1);
-            }
-
-            dr.add(dr.jocg_dfsVisitedE,1);
-
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
+
+                if(nextRevisit){
+                    dr.add(dr.number_of_revisited_edges,1);
+                }
+
+                dr.add(dr.jocg_dfsVisitedE,1);
+
+                if(nextRevisit){
+                    dr.add(dr.number_of_revisited_edges,1);
+                }
+
+                dr.add(dr.jocg_dfsVisitedE,1);
+
                 if(u.matching != null){
                     if(!u.hasNext()){
                         continue;
