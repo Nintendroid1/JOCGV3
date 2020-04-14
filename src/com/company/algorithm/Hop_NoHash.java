@@ -151,7 +151,7 @@ public class Hop_NoHash extends Algo{
         if(v == null){
             return true;
         }
-        dr.add(dr.hK_dfsVisitedE,1);
+        dr.add(dr.hk_dfsVisitedE,1);
         for(Vertex u:v.edges){
             //dve2+=1;
             if(!checkGraph || u.piece == v.piece){

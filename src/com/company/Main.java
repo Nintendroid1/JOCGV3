@@ -1,9 +1,13 @@
 package com.company;
 
 import com.company.element.ExperimentList;
+import com.company.element.Graph;
+import com.company.generator.GraphGen;
+import com.company.generator.TestCaseGen;
 import com.company.test.*;
 
 import java.io.*;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Scanner;
@@ -16,9 +20,36 @@ public class Main {
 	    // write your code here
 
         //multiTask();
-        piectMultiTask();
+//        piectMultiTask();
         //singleTask();
+//        TestCaseGen.generate();
+        int[] numv = new int[]{100,1000,5000,10000};//50000,100000,500000,1000000};
+        for(int nv:numv){
+            for(int i = 0; i < 10; i++){
+                String folderPath = String.format("./Test_Data/%d_%d.txt",nv,i);
+                System.out.println(folderPath);
+                Graph graph = GraphGen.generate(new File(folderPath));
+                FindBottle findBottle = new FindBottle(nv);
+                ExperimentList.Experiment ex = null;
+                String name = "";
+                if(args[0].equals("H")){
+                    ex = findBottle.find_HK(graph);
+                    name = "ResultHK";
+                }
+                else if(args[0].equals("J")){
+                    ex = findBottle.find_Jocg(graph);
+                    name = "ResultJocg";
+                }
+                else{
+                    throw new Exception();
+                }
 
+                BufferedWriter writer = new BufferedWriter(new FileWriter(String.format("%s_%d_%d.txt",name,nv,i)));
+                writer.write("");
+                ex.writeResult(writer);
+                writer.close();
+            }
+        }
     }
 
     public static void printExperiment(ExperimentList.Experiment[] experiments) throws IOException {
@@ -119,5 +150,21 @@ public class Main {
             }
         }
         System.err.println(System.currentTimeMillis() - start);
+    }
+
+    public static void listFile(){
+        String folderPath = "./Test_Data";
+        File folder = new File(folderPath);
+        String[] files = folder.list();
+
+        for (String fileStr: files)
+        {
+            GraphGen graphGen = new GraphGen(1);
+            String filePath = folderPath+"/"+fileStr;
+            File file = new File(filePath);
+            System.out.println(filePath);
+//            Graph graph = graphGen.generate(file);
+//            int a = 0;
+        }
     }
 }

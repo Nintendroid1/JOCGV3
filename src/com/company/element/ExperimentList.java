@@ -30,10 +30,11 @@ public class ExperimentList {
         }
 
         public void writeResult(BufferedWriter writer) throws IOException {
-            writer.append("Total_Running_Time : " + totalRunningTime + "\n");
+            //writer.append("Total_Running_Time : " + totalRunningTime + "\n");
             for(int i = 0; i < dataList.size(); i++){
                 writer.append("Bottleneck_Guess :"+ bottleList.get(i) + "\n");
                 writer.append(dataList.get(i).printResult()+"\n");
+                writer.append("***\n");
             }
 
         }

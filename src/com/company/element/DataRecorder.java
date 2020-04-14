@@ -1,5 +1,6 @@
 package com.company.element;
 
+import javax.xml.stream.util.StreamReaderDelegate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class DataRecorder {
     public String pre_runningTime = "pre_runningTime";
     public String pre_iterationN = "pre_iterationN";
     public String hk_bfsVisitedE = "Hk_bfsVisitedE";
-    public String hK_dfsVisitedE = "HK_dfsVisitedE";
+    public String hk_dfsVisitedE = "HK_dfsVisitedE";
     public String jocg_bfsVisitedE = "Jocg_bfsVisitedE";
     public String jocg_dfsVisitedE = "Jocg_dfsVisitedE";
     public String pre_bfsVisitedE = "pre_bfsVisitedE";
@@ -24,12 +25,13 @@ public class DataRecorder {
     public String number_of_piece = "number_of_piece";
     public String affected_pieces = "affected_pieces";
     public String number_of_revisited_edges = "number_of_revisited_edges";
+    public String generate_edges_time = "generate_edges_time";
     private List<String> nameList;
     private ArrayList<Double> dataList;
     String[] dataName = new String[]{numV,iterationN,runningTime,pre_runningTime,pre_iterationN,
-            hk_bfsVisitedE,hK_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
+            hk_bfsVisitedE,hk_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
             pre_dfsVisitedE,deletedEdgesN,matching_count,number_of_piece,affected_pieces,
-            number_of_revisited_edges};
+            number_of_revisited_edges,generate_edges_time};
 
     public DataRecorder(){
         nameList = Arrays.asList(dataName);

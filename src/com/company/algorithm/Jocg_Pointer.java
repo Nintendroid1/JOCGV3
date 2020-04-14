@@ -54,7 +54,7 @@ public class Jocg_Pointer extends Algo{
 //            this.pre_dve2+=hop.dve2;
 //            this.pre_bve2+=hop.bve2;
             dr.add(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
-            dr.add(dr.pre_dfsVisitedE,hop.dr.get(dr.hK_dfsVisitedE));
+            dr.add(dr.pre_dfsVisitedE,hop.dr.get(dr.hk_dfsVisitedE));
             if(hop.dr.get((dr.iterationN)) > dr.get(dr.pre_iterationN)){
                 dr.set(dr.pre_iterationN,hop.dr.get(dr.iterationN));
             }

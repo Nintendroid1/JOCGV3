@@ -2,6 +2,8 @@ package com.company.generator;
 
 import com.company.element.*;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class GraphGen {
@@ -32,6 +34,36 @@ public class GraphGen {
             point.v = vertices.get(i);
         }
 
+        Graph graph = new Graph();
+
+        graph.vertices = vertices;
+        graph.points = points;
+
+        return graph;
+    }
+
+    public static Graph generate(File file) throws FileNotFoundException {
+        Scanner scanner = new Scanner(file);
+        String line = scanner.nextLine();
+        String[] lines = line.split(" ");
+        int num = Integer.parseInt(lines[0]);
+        ArrayList<Vertex> vertices = new ArrayList<Vertex>();
+        ArrayList<Point> points = new ArrayList<>();
+        for(int i = 0; i < num;i++){
+            line = scanner.nextLine();
+            lines = line.split(" ");
+            Point point = new Point(Double.parseDouble(lines[0]),Double.parseDouble(lines[1]));
+            points.add(point);
+            if(i < num/2){
+                vertices.add(new Vertex(i, Label.A));
+            }
+            else{
+                vertices.add(new Vertex(i, Label.B));
+            }
+            vertices.get(i).point = point;
+
+            point.v = vertices.get(i);
+        }
         Graph graph = new Graph();
 
         graph.vertices = vertices;

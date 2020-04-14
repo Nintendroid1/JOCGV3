@@ -21,6 +21,8 @@ public class FindBottle {
     double largeG_C = 128;
     double smallG_C = 0.01;
 
+    boolean alwaysResetMatch = true;
+
     private double initGuess(Graph graph){
         double guess = largeG/Math.sqrt(graph.vertices.size());
         System.out.println("Initial Guess = " + guess);
@@ -65,6 +67,10 @@ public class FindBottle {
 
     }
 
+    public void allowResetMatch(){
+        alwaysResetMatch = true;
+    }
+
     public  void init(){
         numV = numV_C;
         partN = (int)Math.sqrt(Math.pow(numV,1.0/3.0));
@@ -75,10 +81,24 @@ public class FindBottle {
 
 
     public double find(Graph graph){
-        partN_C = (int) Math.pow(graph.vertices.size(),1.0/6.0);
+        //partN_C = (int) Math.pow(graph.vertices.size(),1.0/6.0);
         init();
         ExperimentList.Experiment hEx = find_Jocg_Doubling(graph);
         return hEx.getFinalBottleNeck();
+    }
+
+    public ExperimentList.Experiment find_HK(Graph graph){
+        //partN_C = (int) Math.pow(graph.vertices.size(),1.0/6.0);
+        init();
+        ExperimentList.Experiment hEx = find_HK_Doubling(graph);
+        return hEx;
+    }
+
+    public ExperimentList.Experiment find_Jocg(Graph graph){
+        init();
+        partN_C = (int) Math.pow(graph.vertices.size(),1.0/6.0);
+        ExperimentList.Experiment jEx = find_Jocg_Doubling(graph);
+        return jEx;
     }
 
     public ExperimentList.Experiment[] find(){
@@ -175,11 +195,15 @@ public class FindBottle {
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = initGuess(graph);
+        long start,end;
         do{
             bottleneck*=2;
-            edgeMaker.reEdges(bottleneck,false);
+            start = System.currentTimeMillis();
+            edgeMaker.reEdges(bottleneck,alwaysResetMatch);
             //System.out.println("reEdge finished");
+            end = System.currentTimeMillis();
             Hop_NoHash hop = new Hop_NoHash(graph);
+            hop.dr.set(hop.dr.generate_edges_time,end-start);
             expe.add(bottleneck,hop.dr);
             hop.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
@@ -193,10 +217,14 @@ public class FindBottle {
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = initGuess(graph);
+        long start,end;
         do{
             bottleneck*=2;
-            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,false);
+            start = System.currentTimeMillis();
+            edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,alwaysResetMatch);
+            end = System.currentTimeMillis();
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
+            jocg.dr.set(jocg.dr.generate_edges_time,end-start);
             expe.add(bottleneck,jocg.dr);
             jocg.start();
         }while (graph.matchCount() < graph.vertices.size()/2);
@@ -209,12 +237,16 @@ public class FindBottle {
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
+        long start,end;
         while(tail-head > lambda*head){
-            boolean resetMatching = (bottleneck > (tail+head)/2);
+            boolean resetMatching = (bottleneck > (tail+head)/2)||alwaysResetMatch;
             bottleneck = (tail + head)/2;
+            start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck,resetMatching);
+            end = System.currentTimeMillis();
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
+            hop.dr.set(hop.dr.generate_edges_time,end-start);
             expe.add(bottleneck,hop.dr);
             if(graph.matchCount() < graph.vertices.size()/2){
                 head = bottleneck;
@@ -229,11 +261,14 @@ public class FindBottle {
         bottleneck = Double.MAX_VALUE;
         while (tail2 - head2 > 3){
             int nextIndex = (tail2 + head2)/2;
-            boolean resetMatching = (bottleneck > candidate.get(nextIndex));
+            boolean resetMatching = (bottleneck > candidate.get(nextIndex))||alwaysResetMatch;
             bottleneck = candidate.get(nextIndex);
+            start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck,resetMatching);
+            end = System.currentTimeMillis();
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
+            hop.dr.set(hop.dr.generate_edges_time,end-start);
             expe.add(bottleneck,hop.dr);
             if(graph.matchCount() < graph.vertices.size()/2){
                 head2 = nextIndex;
@@ -246,11 +281,14 @@ public class FindBottle {
             if(i >= candidate.size()){
                 continue;
             }
-            boolean resetMatching = (bottleneck > candidate.get(i));
+            boolean resetMatching = (bottleneck > candidate.get(i))||alwaysResetMatch;
             bottleneck = candidate.get(i);
+            start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck,resetMatching);
+            end = System.currentTimeMillis();
             Hop_NoHash hop = new Hop_NoHash(graph);
             hop.start();
+            hop.dr.set(hop.dr.generate_edges_time,end-start);
             expe.add(bottleneck,hop.dr);
             if(graph.matchCount() == graph.vertices.size()/2){
                 break;
@@ -265,12 +303,16 @@ public class FindBottle {
         ExperimentList.Experiment expe = new ExperimentList.Experiment();
         EdgeMaker edgeMaker = new EdgeMaker(graph);
         double bottleneck = 0;
+        long start,end;
         while(tail-head > lambda*head){
-            boolean resetMatching = (bottleneck > (tail+head)/2);
+            boolean resetMatching = (bottleneck > (tail+head)/2)||alwaysResetMatch;
             bottleneck = (tail + head)/2;
+            start = System.currentTimeMillis();
             edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
+            end = System.currentTimeMillis();
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             jocg.start();
+            jocg.dr.set(jocg.dr.generate_edges_time,end-start);
             expe.add(bottleneck,jocg.dr);
             if(graph.matchCount() < graph.vertices.size()/2){
                 head = bottleneck;
@@ -284,11 +326,14 @@ public class FindBottle {
         bottleneck = Double.MAX_VALUE;
         while (tail2 - head2 > 3){
             int nextIndex = (tail2 + head2)/2;
-            boolean resetMatching = (bottleneck > candidate.get(nextIndex));
+            boolean resetMatching = (bottleneck > candidate.get(nextIndex))||alwaysResetMatch;
             bottleneck = candidate.get(nextIndex);
+            start = System.currentTimeMillis();
             edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
+            end = System.currentTimeMillis();
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             jocg.start();
+            jocg.dr.set(jocg.dr.generate_edges_time,end-start);
             expe.add(bottleneck,jocg.dr);
             if(graph.matchCount() < graph.vertices.size()/2){
                 head2 = nextIndex;
@@ -301,11 +346,14 @@ public class FindBottle {
             if(i >= candidate.size()){
                 continue;
             }
-            boolean resetMatching = (bottleneck > candidate.get(i));
+            boolean resetMatching = (bottleneck > candidate.get(i))||alwaysResetMatch;
             bottleneck = candidate.get(i);
+            start = System.currentTimeMillis();
             edgeMaker.reEdgesFixShift(bottleneck,partN,largeG,smallG,resetMatching);
+            end = System.currentTimeMillis();
             Jocg_Pointer jocg = new Jocg_Pointer(graph);
             jocg.start();
+            jocg.dr.set(jocg.dr.generate_edges_time,end-start);
             expe.add(bottleneck,jocg.dr);
             if(graph.matchCount() == graph.vertices.size()/2){
                 break;
