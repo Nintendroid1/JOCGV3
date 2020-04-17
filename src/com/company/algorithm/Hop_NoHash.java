@@ -99,9 +99,9 @@ public class Hop_NoHash extends Algo{
                 }
             }
         }
-        if(print){
-            System.out.println("Hop bfs returns: " + shortestD);
-        }
+//        if(print){
+//            System.out.println("Hop bfs returns: " + shortestD);
+//        }
         return shortestD != INF;
     }
 
