@@ -25,10 +25,10 @@ public class Hop_NoHash extends Algo{
     }
 
     public void start(){
-        dr.set(dr.numV,graph.vertices.size());
+//        dr.set(dr.numV,graph.vertices.size());
         long start = System.currentTimeMillis();
         while(bfs()){
-            dr.add(dr.iterationN,1);
+//            dr.add(dr.iterationN,1);
             for(Vertex v:graph.vertices){
                 if(v.label == Label.A && v.isFree()){
                     dfs(v);
@@ -37,7 +37,7 @@ public class Hop_NoHash extends Algo{
             }
         }
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
-        dr.set(dr.matching_count,graph.matchCount());
+//        dr.set(dr.matching_count,graph.matchCount());
     }
 
     private boolean bfs(){
@@ -72,7 +72,7 @@ public class Hop_NoHash extends Algo{
              */
             Vertex v = queue.pop();
             if(v.distance < shortestD){
-                dr.add(dr.hk_bfsVisitedE,1);
+//                dr.add(dr.hk_bfsVisitedE,1);
                 for(Vertex u:v.edges){
                     /*
                      * Because we only apply HK on the current Graph
@@ -151,7 +151,7 @@ public class Hop_NoHash extends Algo{
         if(v == null){
             return true;
         }
-        dr.add(dr.hk_dfsVisitedE,1);
+//        dr.add(dr.hk_dfsVisitedE,1);
         for(Vertex u:v.edges){
             //dve2+=1;
             if(!checkGraph || u.piece == v.piece){

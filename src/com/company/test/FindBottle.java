@@ -21,7 +21,7 @@ public class FindBottle {
     double largeG_C = 128;
     double smallG_C = 0.01;
 
-    boolean alwaysResetMatch = true;
+    boolean alwaysResetMatch = false;
 
     private double initGuess(Graph graph){
         double guess = largeG/Math.sqrt(graph.vertices.size());

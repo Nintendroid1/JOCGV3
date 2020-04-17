@@ -43,8 +43,8 @@ public class Jocg_Pointer extends Algo{
     }
 
     public void start(){
-        dr.set(dr.numV,graph.vertices.size());
-        dr.set(dr.pre_iterationN,0);
+//        dr.set(dr.numV,graph.vertices.size());
+//        dr.set(dr.pre_iterationN,0);
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
@@ -53,11 +53,11 @@ public class Jocg_Pointer extends Algo{
             hop.start();
 //            this.pre_dve2+=hop.dve2;
 //            this.pre_bve2+=hop.bve2;
-            dr.add(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
-            dr.add(dr.pre_dfsVisitedE,hop.dr.get(dr.hk_dfsVisitedE));
-            if(hop.dr.get((dr.iterationN)) > dr.get(dr.pre_iterationN)){
-                dr.set(dr.pre_iterationN,hop.dr.get(dr.iterationN));
-            }
+//            dr.add(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
+//            dr.add(dr.pre_dfsVisitedE,hop.dr.get(dr.hk_dfsVisitedE));
+//            if(hop.dr.get((dr.iterationN)) > dr.get(dr.pre_iterationN)){
+//                dr.set(dr.pre_iterationN,hop.dr.get(dr.iterationN));
+//            }
         }
 //        if(!graph.pieces.isEmpty()){
 //            dr.set(dr.pre_iterationN,dr.get(dr.pre_iterationN)/graph.pieces.size());
@@ -69,7 +69,7 @@ public class Jocg_Pointer extends Algo{
         start = System.currentTimeMillis();
         exloredV = new ArrayList<>();
         while(newbfs()){
-            dr.add(dr.iterationN,1);
+//            dr.add(dr.iterationN,1);
             /*
              * visitedE: store all visited edges in the current phase
              * any edges in vistedE won't be explored in the current phase
@@ -108,7 +108,7 @@ public class Jocg_Pointer extends Algo{
                             parent = u;
                         }
                     }
-                    dr.add(dr.affected_pieces,apN);
+//                    dr.add(dr.affected_pieces,apN);
                 }
 
                 if(!exloredV.isEmpty()){
@@ -123,7 +123,7 @@ public class Jocg_Pointer extends Algo{
             }
         }
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
-        dr.set(dr.matching_count,graph.matchCount());
+//        dr.set(dr.matching_count,graph.matchCount());
     }
 
     private boolean newbfs(){
@@ -175,7 +175,7 @@ public class Jocg_Pointer extends Algo{
                 continue;
             }
             //v.reset();
-            dr.add(dr.jocg_bfsVisitedE,1);
+//            dr.add(dr.jocg_bfsVisitedE,1);
             for(Vertex u:v.edges){
                 //this.bve2+=1;
                 if(u == v.matching){
@@ -252,11 +252,11 @@ public class Jocg_Pointer extends Algo{
 
             if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
 
-                if(nextRevisit){
-                    dr.add(dr.number_of_revisited_edges,1);
-                }
-
-                dr.add(dr.jocg_dfsVisitedE,1);
+//                if(nextRevisit){
+//                    dr.add(dr.number_of_revisited_edges,1);
+//                }
+//
+//                dr.add(dr.jocg_dfsVisitedE,1);
 
                 if(u.matching != null){
                     if(!u.hasNext()){

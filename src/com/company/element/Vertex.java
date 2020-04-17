@@ -42,7 +42,7 @@ public class Vertex {
     }
 
     public void deleteE_clean(int cb, int cd){
-        revisitedEP = Math.max(revisitedEP,tempEP);
+//        revisitedEP = Math.max(revisitedEP,tempEP);
         if(label == Label.A){
             if(tempEP <= onezeroP){
                 visitedEP = tempEP;
