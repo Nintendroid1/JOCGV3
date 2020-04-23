@@ -26,6 +26,7 @@ public class Hop_NoHash extends Algo{
 
     public void start(){
         dr.set(dr.numV,graph.vertices.size());
+        dr.set(dr.number_of_edges,graph.edgeNum);
         long start = System.currentTimeMillis();
         while(bfs()){
             dr.add(dr.iterationN,1);

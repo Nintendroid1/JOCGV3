@@ -26,12 +26,14 @@ public class DataRecorder {
     public String affected_pieces = "affected_pieces";
     public String number_of_revisited_edges = "number_of_revisited_edges";
     public String generate_edges_time = "generate_edges_time";
+    public String w = "w";
+    public String number_of_edges = "number_of_edges";
     private List<String> nameList;
     private ArrayList<Double> dataList;
     String[] dataName = new String[]{numV,iterationN,runningTime,pre_runningTime,pre_iterationN,
             hk_bfsVisitedE,hk_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
             pre_dfsVisitedE,deletedEdgesN,matching_count,number_of_piece,affected_pieces,
-            number_of_revisited_edges,generate_edges_time};
+            number_of_revisited_edges,generate_edges_time,w,number_of_edges};
 
     public DataRecorder(){
         nameList = Arrays.asList(dataName);

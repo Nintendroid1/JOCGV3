@@ -16,7 +16,7 @@ public class TestCaseGen {
             for(int i = 0; i < 10; i++){
                 GraphGen graphGen = new GraphGen((int)System.currentTimeMillis() + i);
                 Graph graph = graphGen.generate(nv,128);
-                BufferedWriter writer = new BufferedWriter(new FileWriter("TestCase_"+nv+"_"+i+".txt"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter(nv+"_"+i+".txt"));
                 writer.write(nv + " " + i + "\n");
                 for(Point p:graph.points){
                     writer.append(p.x + " " + p.y + "\n");

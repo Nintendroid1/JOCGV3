@@ -12,17 +12,19 @@ public class TestEdgeMaker {
     public static void test(){
         long start, end;
 
-        Graph graph = new GraphGen(5321312).generate(1000000,128);
+        Graph graph = new GraphGen(5321312).generate(10000,128);
         EdgeMaker em = new EdgeMaker(graph);
         em.graph = graph;
         double bottleneck = 1;
         start = System.currentTimeMillis();
-        em.reEdgesWeights(bottleneck,4,128,0.1,true);
+        em.reEdgesFixShift(bottleneck,4,128,0.1,true);
+        completeTest(graph,bottleneck);
         end = System.currentTimeMillis();
 
         System.out.println("weighted version takes: " + (end-start));
 
         start = System.currentTimeMillis();
+        completeTest(graph,bottleneck);
         em.reEdges(bottleneck,true);
         end = System.currentTimeMillis();
 

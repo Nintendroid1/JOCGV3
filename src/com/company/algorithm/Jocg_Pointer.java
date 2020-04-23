@@ -44,6 +44,7 @@ public class Jocg_Pointer extends Algo{
 
     public void start(){
         dr.set(dr.numV,graph.vertices.size());
+        dr.set(dr.number_of_edges,graph.edgeNum);
         dr.set(dr.pre_iterationN,0);
         start = System.currentTimeMillis();
         for(Graph g:graph.pieces) {
@@ -124,6 +125,13 @@ public class Jocg_Pointer extends Algo{
         }
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
         dr.set(dr.matching_count,graph.matchCount());
+        int w = 0;
+        for(Vertex v: graph.vertices){
+            if(v.label == Label.A && !v.isFree() && v.piece != v.matching.piece){
+                w+=1;
+            }
+        }
+        dr.set(dr.w,w);
     }
 
     private boolean newbfs(){

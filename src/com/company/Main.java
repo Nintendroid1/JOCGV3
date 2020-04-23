@@ -23,9 +23,12 @@ public class Main {
 //        piectMultiTask();
         //singleTask();
 //        TestCaseGen.generate();
-        int[] numv = new int[]{100,1000,5000,10000};//50000,100000,500000,1000000};
+//        TestEdgeMaker.test();
+        int start = Integer.parseInt(args[1]);
+        int end = Integer.parseInt(args[2]);
+        int[] numv = new int[]{100,1000,5000,10000,50000,100000,500000,1000000};
         for(int nv:numv){
-            for(int i = 0; i < 10; i++){
+            for(int i = start; i < end; i++){
                 String folderPath = String.format("./Test_Data/%d_%d.txt",nv,i);
                 System.out.println(folderPath);
                 Graph graph = GraphGen.generate(new File(folderPath));
