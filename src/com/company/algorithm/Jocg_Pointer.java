@@ -219,7 +219,7 @@ public class Jocg_Pointer extends Algo{
 
 
         }
-        System.out.println("Jocg bfs returns: " + shortestD);
+        //System.out.println("Jocg bfs returns: " + shortestD);
         currentBFS = shortestD;
         //currentBFS = dist.get(null);
         return shortestD != INF;

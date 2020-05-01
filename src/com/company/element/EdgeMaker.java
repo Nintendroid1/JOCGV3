@@ -15,7 +15,7 @@ public class EdgeMaker {
         edgeCount = 0;
     }
 
-    private void cleanEdges(boolean resetMatching){
+    public void cleanEdges(boolean resetMatching){
         for(Vertex v:graph.vertices){
             v.edges = new ArrayList<>();
         }
