@@ -42,9 +42,7 @@ public class ExperimentList {
         public void printResult(String algo) throws IOException {
             BufferedWriter writer
                     = new BufferedWriter(new FileWriter(
-                            algo + "_"+System.currentTimeMillis()
-                                    +Thread.currentThread().getName()
-                                    +".txt"));
+                            algo + ".txt"));
             writer.write("");
 
             for(int i = 0; i < dataList.size(); i++){

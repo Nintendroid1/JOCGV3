@@ -23,7 +23,9 @@ public class Main {
 //        piectMultiTask();
         //singleTask();
 //        TestCaseGen.generate();
-        TestEdgeMaker.test2();
+        //TestEdgeMaker.test2();
+        TestPiece testPiece = new TestPiece();
+        testPiece.test2();
         //mainExpe(args);
     }
 
