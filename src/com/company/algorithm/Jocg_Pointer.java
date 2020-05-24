@@ -64,31 +64,34 @@ public class Jocg_Pointer extends Algo{
                 dr.set(dr.pre_iterationN,hop.dr.get(dr.iterationN));
             }
         }
-
+        //record data
         end = System.currentTimeMillis();
         preprocess = end - start;
         dr.set(dr.pre_runningTime,preprocess);
-
         start = System.currentTimeMillis();
+
+        /*
+         * exploredV stores vertices visited by one DFS
+         * it is initialized after each DFS
+         */
         exloredV = new ArrayList<>();
+
+        /*
+         * if newbfs() returns true
+         * it means there is at least one augmenting path
+         */
         while(newbfs()){
             dr.add(dr.iterationN,1);
-            /*
-             * visitedE: store all visited edges in the current phase
-             * any edges in vistedE won't be explored in the current phase
-             */
             int count = 0;
             for(Vertex v:graph.vertices){
-                /*
-                 * tempE: store visited edges in dfs(v) -> an adjacent list
-                 * path: store the augmenting path returned by dfs(v)
-                 */
                 if(v.label == Label.B || !v.isFree()){
                     continue;
                 }
-                path = new ArrayList<>();
-                //tempE, path will be updated in newdfs
 
+                //start with a free vertex in A
+                path = new ArrayList<>();
+
+                //if newDFS returns ture, path will be updated
                 if(newdfs(v)){
                     count += 1;
                     /*
@@ -113,18 +116,19 @@ public class Jocg_Pointer extends Algo{
                     }
                     dr.add(dr.affected_pieces,apN);
                 }
-
+                //delete edges
                 if(!exloredV.isEmpty()){
-                    //del+=exloredV.size();
+
                     for(Vertex ev:exloredV){
                         ev.deleteE_clean(currentBFS,count);
-                        //dr.add(dr.number_of_revisited_edges,revisitedN);
                         ev.explored = false;
                     }
                     exloredV = new ArrayList<>();
                 }
             }
         }
+
+        //record data
         dr.set(dr.runningTime,System.currentTimeMillis() - start);
         dr.set(dr.matching_count,graph.matchCount());
         int w = 0;
