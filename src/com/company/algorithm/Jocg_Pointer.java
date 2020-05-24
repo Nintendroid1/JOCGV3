@@ -43,26 +43,28 @@ public class Jocg_Pointer extends Algo{
     }
 
     public void start(){
+        //record data
         dr.set(dr.numV,graph.vertices.size());
         dr.set(dr.number_of_edges,graph.edgeNum);
         dr.set(dr.pre_iterationN,0);
         start = System.currentTimeMillis();
+
+
+        //pre-processing
         for(Graph g:graph.pieces) {
             Hop_NoHash hop = new Hop_NoHash(g);
             hop.print = false;
             hop.checkGraph = true;
             hop.start();
-//            this.pre_dve2+=hop.dve2;
-//            this.pre_bve2+=hop.bve2;
+
+            //record data
             dr.add(dr.pre_bfsVisitedE,hop.dr.get(dr.hk_bfsVisitedE));
             dr.add(dr.pre_dfsVisitedE,hop.dr.get(dr.hk_dfsVisitedE));
             if(hop.dr.get((dr.iterationN)) > dr.get(dr.pre_iterationN)){
                 dr.set(dr.pre_iterationN,hop.dr.get(dr.iterationN));
             }
         }
-//        if(!graph.pieces.isEmpty()){
-//            dr.set(dr.pre_iterationN,dr.get(dr.pre_iterationN)/graph.pieces.size());
-//        }
+
         end = System.currentTimeMillis();
         preprocess = end - start;
         dr.set(dr.pre_runningTime,preprocess);
@@ -280,287 +282,6 @@ public class Jocg_Pointer extends Algo{
                 tempPath.add(next);
             }
         }
-        return false;
-    }
-
-
-    private boolean newdfs_recur(Vertex v){
-        /*
-         * v = u.matching for some u
-         * if v == null, we know u is free, so we find an augmenting path
-         */
-
-        if(v == null){
-            return true;
-        }
-        if(v.explored){
-            return false;
-        }
-        else{
-            v.explored = true;
-            exloredV.add(v);
-        }
-        while(true){
-            Vertex u = v.next();
-            if(u == null){
-                break;
-            }
-
-            if(u.matching != null && u.matching.explored){
-                continue;
-            }
-
-            if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
-                if(u.matching != null){
-                    if(!u.hasNext()){
-                        continue;
-                    }
-                }
-                if(newdfs(u.next())){
-                    u.match(v);
-                    path.add(u);
-                    path.add(v);
-                    //v.reserve(0);
-                    return true;
-                }
-            }
-        }
-
-        //set the distance to the explored vertex to INF
-        //so no explored vertex will be explored twice
-        //dist.put(v,INF);
-        return false;
-    }
-
-    private boolean newbfs_temp(){
-        //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
-        DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
-        shortestD = INF;
-        for(Vertex v:graph.vertices){
-            if(v.label == Label.A && v.isFree()){
-                cycleArray.addLast(new DataStructure.DisV(v,0));
-                //marker[v.id] = 1;
-                v.distance = 0;
-            }
-            else{
-                v.distance = INF;
-            }
-        }
-
-        while(!cycleArray.isEmpty()){
-
-            Vertex v;
-            DataStructure.DisV dv;
-            dv = cycleArray.pop();
-            v = dv.v;
-            if(dv.d > v.distance){
-                continue;
-            }
-            //marker[v.id] = 0;
-            if(v.distance > shortestD){
-                continue;
-            }
-            v.reset();
-
-            if(v.label == Label.A){
-                //children = v.edges;
-
-                for(Vertex u:v.edges){
-                    if(u == v.matching){
-                        continue;
-                    }
-                    //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
-                    if(u.distance > v.distance + graph.getWeight(u,v)){
-                        u.distance = v.distance + graph.getWeight(u,v);
-                        if(graph.getWeight(u,v) == 0){
-                            if(u.matching == null){
-                                shortestD = v.distance;
-                            }
-                            else if(graph.getWeight(u,u.matching) == 0
-                                    && u.matching.distance > v.distance){
-                                u.matching.distance = v.distance;
-                                u.reset();
-                                cycleArray.addFirst(new DataStructure.DisV(u.matching,u.matching.distance));
-                            }
-                            else {
-                                cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-                            }
-                        }
-                        else{
-                            cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-                        }
-
-                    }
-
-//                        if(graph.getWeight(u,v) == 0){
-//                            cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-//                            //marker[u.id] = 1;
-//                        }
-//                        else{
-//                            cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-//                            //marker[u.id] = 1;
-//                        }
-                    }
-            }
-            else{
-                //when we find free B
-                if(v.matching == null){
-                    shortestD = v.distance;
-                    continue;
-                }
-
-                Vertex u = v.matching;
-                if(u.distance > v.distance + graph.getWeight(u,v)){
-                    u.distance = v.distance + graph.getWeight(u,v);
-
-                    if(graph.getWeight(u,v) == 0){
-                        cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-                    }
-                    else{
-                        cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-                    }
-                }
-            }
-        }
-
-        System.out.println("Jocg bfs returns: " + shortestD);
-        currentBFS = shortestD;
-        //currentBFS = dist.get(null);
-        return shortestD != INF;
-    }
-
-
-    private boolean newbfs_backup(){
-        //int[][] marker = new int[graph.vertices.size()][graph.vertices.size()];
-        DataStructure.CycleArray<DataStructure.DisV> cycleArray = new DataStructure.CycleArray<>(graph.vertices.size());
-        shortestD = INF;
-        for(Vertex v:graph.vertices){
-            if(v.label == Label.A && v.isFree()){
-                cycleArray.addLast(new DataStructure.DisV(v,0));
-                //marker[v.id] = 1;
-                v.distance = 0;
-            }
-            else{
-                v.distance = INF;
-            }
-        }
-
-        while(!cycleArray.isEmpty()){
-
-            Vertex v;
-            DataStructure.DisV dv;
-            dv = cycleArray.pop();
-            v = dv.v;
-            if(dv.d > v.distance){
-                continue;
-            }
-            //marker[v.id] = 0;
-            if(v.distance > shortestD){
-                continue;
-            }
-
-            v.reset();
-
-            if(v.label == Label.A){
-                //children = v.edges;
-
-                for(Vertex u:v.edges){
-                    if(v.label == Label.A && u == v.matching){
-                        continue;
-                    }
-                    //dist.get(u) > dist.get(v) + graph.getWeight(u,v)
-                    if(u.distance > v.distance + graph.getWeight(u,v)){
-                        u.distance = v.distance + graph.getWeight(u,v);
-
-                        if(graph.getWeight(u,v) == 0){
-                            cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-                            //marker[u.id] = 1;
-                        }
-                        else{
-                            cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-                            //marker[u.id] = 1;
-                        }
-                    }
-                }
-
-            }
-            else{
-                //when we find free B
-                if(v.matching == null){
-                    shortestD = v.distance;
-                    continue;
-                }
-
-                Vertex u = v.matching;
-                if(u.distance > v.distance + graph.getWeight(u,v)){
-                    u.distance = v.distance + graph.getWeight(u,v);
-
-                    if(graph.getWeight(u,v) == 0){
-                        cycleArray.addFirst(new DataStructure.DisV(u,v.distance));
-                    }
-                    else{
-                        cycleArray.addLast(new DataStructure.DisV(u,v.distance+1));
-                    }
-                }
-            }
-        }
-
-        System.out.println("Jocg bfs returns: " + shortestD);
-        currentBFS = shortestD;
-        //currentBFS = dist.get(null);
-        return shortestD != INF;
-    }
-
-    private boolean newdfs_back(Vertex v){
-        /*
-         * v = u.matching for some u
-         * if v == null, we know u is free, so we find an augmenting path
-         */
-
-        if(v == null){
-            return true;
-        }
-
-        //add v to tempE
-        //v (- A
-        //parent (- B
-
-        if(v.explored){
-            return false;
-        }
-        else{
-            v.explored = true;
-            exloredV.add(v);
-        }
-        while(true){
-            Vertex u = v.next();
-
-            if(u == null){
-                break;
-            }
-            if(u.matching != null && u.matching.explored){
-                continue;
-            }
-
-            if(dist(u.matching) - dist(v) == graph.getWeight(u,v) + graph.getWeight(u,u.matching)){
-                if(u.matching != null){
-                    if(!u.hasNext()){
-                        continue;
-                    }
-                }
-
-                if(newdfs(u.next())){
-                    u.match(v);
-                    path.add(u);
-                    path.add(v);
-                    return true;
-                }
-            }
-        }
-
-        //set the distance to the explored vertex to INF
-        //so no explored vertex will be explored twice
-        //dist.put(v,INF);
         return false;
     }
 
