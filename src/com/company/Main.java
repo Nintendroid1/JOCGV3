@@ -24,15 +24,17 @@ public class Main {
         //singleTask();
 //        TestCaseGen.generate();
         //TestEdgeMaker.test2();
-        TestPiece testPiece = new TestPiece();
-        testPiece.test2();
-        //mainExpe(args);
+        //TestPiece testPiece = new TestPiece();
+        //testPiece.test2();
+        
+        //Test Every File
+        mainExpe(args);
     }
 
     public static void mainExpe(String[] args) throws Exception {
         int start = Integer.parseInt(args[1]);
         int end = Integer.parseInt(args[2]);
-        int[] numv = new int[]{100,1000,5000,10000,50000,100000,500000,1000000};
+        int[] numv = new int[]{100}; //new int[]{100,1000,5000,10000,50000,100000,500000,1000000};
         for(int nv:numv){
             for(int i = start; i < end; i++){
                 String folderPath = String.format("./Test_Data/%d_%d.txt",nv,i);
