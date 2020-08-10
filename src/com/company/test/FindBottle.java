@@ -104,7 +104,7 @@ public class FindBottle {
     public ExperimentList.Experiment find_Ford(Graph graph) {
         init();
         partN_C = (int) Math.pow(graph.vertices.size(), 1.0 / 6.0);
-        ExperimentList.Experiment fEx = find_Jocg_Doubling(graph);
+        ExperimentList.Experiment fEx = find_Ford_Doubling(graph);
         return fEx;
     }
 
@@ -112,9 +112,11 @@ public class FindBottle {
         long start, end;
         double hTime = 0;
         double jTime = 0;
+        double fTime = 0;
         int time = 1;
         ExperimentList.Experiment hEx = null;
         ExperimentList.Experiment jEx = null;
+        ExperimentList.Experiment fEx = null;
         for (int i = 0; i < time; i++) {
             init();
             int seed = (int) System.currentTimeMillis() + (int) Thread.currentThread().getId();
@@ -137,19 +139,35 @@ public class FindBottle {
             end = System.currentTimeMillis();
             hTime += (end - start);
             hEx.totalRunningTime = hTime;
+
+            init();
+            graph = graphGen.copy(graph);
+
+            start = System.currentTimeMillis();
+            fEx = find_Ford_Doubling(graph);
+            end = System.currentTimeMillis();
+            fTime += (end - start);
+            fEx.totalRunningTime = fTime;
         }
 
         jTime /= time;
         hTime /= time;
+        fTime /= time;
 
 
         System.out.println("HK search bottleneck takes: " + hTime);
         System.out.println("Jocg search bottleneck takes: " + jTime);
         System.out.println("J/H: " + jTime / hTime);
 
-        ExperimentList.Experiment[] experiments = new ExperimentList.Experiment[2];
+        System.out.println("Ford_Fulk search bottleneck takes: " + fTime);
+        System.out.println("J/F: " + jTime / fTime);
+
+
+
+        ExperimentList.Experiment[] experiments = new ExperimentList.Experiment[3];
         experiments[0] = hEx;
         experiments[1] = jEx;
+        experiments[2] = fEx;
         return experiments;
     }
 
@@ -249,13 +267,11 @@ public class FindBottle {
             bottleneck *= 2;
             start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck, alwaysResetMatch);
-            //System.out.println("reEdge finished");
             end = System.currentTimeMillis();
-            //TODO Replace with Ford_Fulk
-//            Hop_NoHash hop = new Hop_NoHash(graph);
-//            hop.dr.set(hop.dr.generate_edges_time,end-start);
-//            expe.add(bottleneck,hop.dr);
-//            hop.start();
+            Ford_Fulk ford = new Ford_Fulk(graph);
+            ford.dr.set(ford.dr.generate_edges_time,end-start);
+            expe.add(bottleneck,ford.dr);
+            ford.start();
         } while (graph.matchCount() < graph.vertices.size() / 2);
 
         expe.add(find_Ford_Binary(graph, bottleneck / 2, bottleneck));
@@ -403,11 +419,10 @@ public class FindBottle {
             start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck, resetMatching);
             end = System.currentTimeMillis();
-            //TODO
-//            Hop_NoHash hop = new Hop_NoHash(graph);
-//            hop.start();
-//            hop.dr.set(hop.dr.generate_edges_time,end-start);
-//            expe.add(bottleneck,hop.dr);
+            Ford_Fulk ford = new Ford_Fulk(graph);
+            ford.start();
+            ford.dr.set(ford.dr.generate_edges_time,end-start);
+            expe.add(bottleneck,ford.dr);
             if (graph.matchCount() < graph.vertices.size() / 2) {
                 head = bottleneck;
             } else {
@@ -426,11 +441,10 @@ public class FindBottle {
             start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck, resetMatching);
             end = System.currentTimeMillis();
-            //TODO
-//            Hop_NoHash hop = new Hop_NoHash(graph);
-//            hop.start();
-//            hop.dr.set(hop.dr.generate_edges_time,end-start);
-//            expe.add(bottleneck,hop.dr);
+            Ford_Fulk ford = new Ford_Fulk(graph);
+            ford.start();
+            ford.dr.set(ford.dr.generate_edges_time,end-start);
+            expe.add(bottleneck,ford.dr);
             if (graph.matchCount() < graph.vertices.size() / 2) {
                 head2 = nextIndex;
             } else {
@@ -446,11 +460,10 @@ public class FindBottle {
             start = System.currentTimeMillis();
             edgeMaker.reEdges(bottleneck, resetMatching);
             end = System.currentTimeMillis();
-            //TODO
-//            Hop_NoHash hop = new Hop_NoHash(graph);
-//            hop.start();
-//            hop.dr.set(hop.dr.generate_edges_time,end-start);
-//            expe.add(bottleneck,hop.dr);
+            Ford_Fulk ford = new Ford_Fulk(graph);
+            ford.start();
+            ford.dr.set(ford.dr.generate_edges_time,end-start);
+            expe.add(bottleneck,ford.dr);
             if (graph.matchCount() == graph.vertices.size() / 2) {
                 break;
             }

@@ -8,7 +8,6 @@ public class Ford_Fulk extends Algo{
     public boolean print;
     public Integer mode;
     public boolean checkGraph;
-    int shortestD;
 
     public DataRecorder dr;
 
@@ -43,8 +42,7 @@ public class Ford_Fulk extends Algo{
     }
 
     private boolean dfs(Vertex v){
-        //TODO
-//        dr.add(dr.hk_dfsVisitedE,1);
+        dr.add(dr.ford_fulk_dfsVisitedE,1);
 
         for(Vertex u:v.edges) {
             if(u.label == Label.B && !u.explored) {
