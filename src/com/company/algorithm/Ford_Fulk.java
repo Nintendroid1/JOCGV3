@@ -29,7 +29,7 @@ public class Ford_Fulk extends Algo{
             dr.add(dr.iterationN,1);
 
             //Ensure all vertices are no longer considered explored
-            graph.reset(true);
+//            graph.reset(true);
 
             if(v.label == Label.A && v.isFree()){
                 dfs(v);

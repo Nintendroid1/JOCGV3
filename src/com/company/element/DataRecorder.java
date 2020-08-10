@@ -18,6 +18,7 @@ public class DataRecorder {
     public String hk_dfsVisitedE = "HK_dfsVisitedE";
     public String jocg_bfsVisitedE = "Jocg_bfsVisitedE";
     public String jocg_dfsVisitedE = "Jocg_dfsVisitedE";
+    public String ford_fulk_dfsVisitedE = "Ford_fulk_dfsVisitedE";
     public String pre_bfsVisitedE = "pre_bfsVisitedE";
     public String pre_dfsVisitedE = "pre_dfsVisitedE";
     public String deletedEdgesN = "deletedEdgesN";
@@ -28,13 +29,12 @@ public class DataRecorder {
     public String generate_edges_time = "generate_edges_time";
     public String w = "w";
     public String number_of_edges = "number_of_edges";
-    public String ford_fulk_dfsVisitedE = "Ford_fulk_dfsVisitedE";
     private List<String> nameList;
     private ArrayList<Double> dataList;
     String[] dataName = new String[]{numV,iterationN,runningTime,pre_runningTime,pre_iterationN,
-            hk_bfsVisitedE,hk_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,pre_bfsVisitedE,
+            hk_bfsVisitedE,hk_dfsVisitedE,jocg_bfsVisitedE,jocg_dfsVisitedE,ford_fulk_dfsVisitedE, pre_bfsVisitedE,
             pre_dfsVisitedE,deletedEdgesN,matching_count,number_of_piece,affected_pieces,
-            number_of_revisited_edges,generate_edges_time,w,number_of_edges, ford_fulk_dfsVisitedE};
+            number_of_revisited_edges,generate_edges_time,w,number_of_edges};
 
     public DataRecorder(){
         nameList = Arrays.asList(dataName);
