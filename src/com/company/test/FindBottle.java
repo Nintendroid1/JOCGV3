@@ -96,7 +96,7 @@ public class FindBottle {
 
     public ExperimentList.Experiment find_Jocg(Graph graph) {
         init();
-        partN_C = (int) Math.pow(graph.vertices.size(), 1.0 / 6.0);
+        // partN_C = (int) Math.pow(graph.vertices.size(), 1.0 / 6.0);
         ExperimentList.Experiment jEx = find_Jocg_Doubling(graph);
         return jEx;
     }
